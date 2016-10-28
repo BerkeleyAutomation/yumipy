@@ -4,15 +4,26 @@ Author: Jacky Liang
 '''
 import logging
 from yumi_state import YuMiState
-from alan.core import RigidTransform
+from core import RigidTransform
 
 class YuMiConstants:
 
     IP = '192.168.125.1'
-    PORT_L = 5000
-    PORT_L_SUB = 5010
-    PORT_R = 5001
-    PORT_R_SUB = 5011
+
+    PORTS = {
+        "left" : {
+            "server":5000,
+            "joints":5010,
+            "poses":5012,
+            "torques":5014
+        },
+        "right" : {
+            "server":5001,
+            "joints":5011,
+            "poses":5013,
+            "torques":5015
+        },
+    }
     
     BUFSIZE = 4096
     MOTION_TIMEOUT = 8

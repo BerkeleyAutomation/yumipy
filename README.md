@@ -1,6 +1,4 @@
-Code for the ALAN project on YuMi.
-
-## YuMi Python Interface
+# YuMi Python Interface
 ## AutoLab, UC Berkeley
 
 This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the control_stable branch before installing and using. 

@@ -8,7 +8,7 @@ from yumi_constants import YuMiConstants as YMC
 
 class YuMiRobot:
 
-    def __init__(self, ip=YMC.IP, port_l = YMC.PORT_L, port_r = YMC.PORT_R, tcp = YMC.TCP_DEFAULT_GRIPPER,
+    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False):
         '''Initializes a YuMiRobot

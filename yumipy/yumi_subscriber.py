@@ -14,17 +14,15 @@ from time import sleep
 from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_exceptions import YuMiCommException
-from yumi_util import message_to_state, message_to_pose
+from yumi_util import message_to_state, message_to_pose, message_to_torques
 
-_RAW_RES = namedtuple('_RAW_RES', 'type_code time message')
+_RAW_RES = namedtuple('_RAW_RES', 'time message')
 
 class _YuMiSubscriberEthernet(Process):
 
-    def __init__(self, pose_q, state_q, ops_q, ip, port, bufsize, timeout):
+    def __init__(self, data_q, ip, port, bufsize, timeout):
         Process.__init__(self)
-        self._pose_q = pose_q
-        self._state_q = state_q
-        self._ops_q = ops_q
+        self._data_q = data_q
 
         self._ip = ip
         self._port = port
@@ -42,13 +40,6 @@ class _YuMiSubscriberEthernet(Process):
 
         try:
             while not self._end_run:
-                if not self._ops_q.empty():
-                    op_name = self._ops_q.get()
-                    attr = '_{0}'.format(op_name)
-                    if hasattr(self, attr):
-                        getattr(self, attr)()
-                    else:
-                        logging.error("Unknown op {0}. Skipping".format(op_name))
                         
                 raw_res = None
                 try:
@@ -62,24 +53,14 @@ class _YuMiSubscriberEthernet(Process):
 
                 raw_res = raw_res[raw_res.rfind("#")+1:]
                 tokens = raw_res.split()
-                res = _RAW_RES(int(tokens[0]), float(tokens[1]), ' '.join(tokens[2:]))
+                res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
 
-                if res.type_code == YMC.SUB_CODES['pose']:
-                    if self._pose_q.full():
-                        try:
-                            self._pose_q.get_nowait()
-                        except Empty:
-                            pass
-                    self._pose_q.put(res)
-                elif res.type_code == YMC.SUB_CODES['state']:
-                    if self._state_q.full():
-                        try:
-                            self._state_q.get_nowait()
-                        except Empty:
-                            pass
-                    self._state_q.put(res)
-                else:
-                    raise YuMiCommException("Unknown subscriber message type! Got {0}".format(res.type_code))
+                if self._data_q.full():
+                    try:
+                        self._data_q.get_nowait()
+                    except Empty:
+                        pass
+                self._data_q.put(res)
 
         except KeyboardInterrupt:
             self._stop()
@@ -102,25 +83,30 @@ class _YuMiSubscriberEthernet(Process):
 
 class _YuMiArmSubscriber:
 
-    def __init__(self, port, name, ip=YMC.IP, bufsize=YMC.BUFSIZE, comm_timeout=YMC.COMM_TIMEOUT):
+    def __init__(self, name, ip=YMC.IP, bufsize=YMC.BUFSIZE, comm_timeout=YMC.COMM_TIMEOUT):
         self._name = name
         self._to_frame = "yumi_{0}".format(name)        
         self._comm_timeout = comm_timeout
         self._bufsize = bufsize
         self._ip = ip
-        self._port = port
         self._time_offset = 0
 
     def _start(self):
         self._state_q = Queue(maxsize=1)
         self._pose_q = Queue(maxsize=1)
-        self._ops_q = Queue()
+        self._torque_q = Queue(maxsize=1)
 
-        self._sub_ethernet = _YuMiSubscriberEthernet(self._pose_q, self._state_q, self._ops_q, self._ip, self._port, self._bufsize, self._comm_timeout)
-        self._sub_ethernet.start()
+        self._sub_pose = _YuMiSubscriberEthernet(self._pose_q, self._ip, YMC.PORTS[self._name]["poses"], self._bufsize, self._comm_timeout)
+        self._sub_state = _YuMiSubscriberEthernet(self._state_q, self._ip, YMC.PORTS[self._name]["joints"], self._bufsize, self._comm_timeout)
+        self._sub_torque = _YuMiSubscriberEthernet(self._torque_q, self._ip, YMC.PORTS[self._name]["torques"], self._bufsize, self._comm_timeout)
+        
+        self._sub_pose.start()
+        self._sub_state.start()
+        self._sub_torque.start()
 
         self._last_state = None
         self._last_pose = None
+        self._last_torque = None
 
     def _stop(self):
         self._sub_ethernet.terminate()
@@ -165,6 +151,24 @@ class _YuMiArmSubscriber:
         time_stamp, state = self._last_state
         return time_stamp - self._time_offset, state.copy()
 
+    def get_torque(self):
+        '''Get the current torque readings of each joint of this arm and corresponding timestamp.
+
+        Returns
+        -------
+        out : float (seconds since start or last call to reset, whichever one is more recent), numpy array
+
+        Raises
+        ------
+        YuMiCommException
+            If communication times out or socket error.
+        '''
+        if not self._torque_q.empty() or self._last_torque is None:
+            res = self._torque_q.get(block=True)
+            self._last_torque = res.time, message_to_torques(res.message)
+        time_stamp, torque = self._last_torque
+        return time_stamp - self._time_offset, torque.copy()
+
 class YuMiSubscriber:
 
     def __init__(self, include_left=True, include_right=True):
@@ -189,10 +193,10 @@ class YuMiSubscriber:
 
         self._arms = {}
         if include_left:
-            self.left = _YuMiArmSubscriber(YMC.PORT_L_SUB, "left")
+            self.left = _YuMiArmSubscriber("left")
             self._arms['left'] = self.left
         if include_right:
-            self.right = _YuMiArmSubscriber(YMC.PORT_R_SUB, "right")
+            self.right = _YuMiArmSubscriber("right")
             self._arms['right'] = self.right
         self._started = False
         

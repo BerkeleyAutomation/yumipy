@@ -133,7 +133,7 @@ class _YuMiEthernet(Process):
 
 class YuMiArm:
 
-    def __init__(self, name, ip=YMC.IP, port=YMC.PORT_L, bufsize=YMC.BUFSIZE,
+    def __init__(self, name, ip=YMC.IP, port=YMC.PORTS["left"]["server"], bufsize=YMC.BUFSIZE,
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
                  from_frame='tool', to_frame='base',
                  debug=YMC.DEBUG,
