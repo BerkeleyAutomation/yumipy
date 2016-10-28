@@ -11,21 +11,21 @@ class YuMiRobot:
     def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False):
-        '''Initializes a YuMiRobot
-        
+        """Initializes a YuMiRobot
+
         Parameters
         ----------
             ip : string formatted IP Address, optional
-                    IP address of YuMi. 
+                    IP address of YuMi.
                     Defaults to YuMiConstants.IP
             port_l : int, optional
-                    Port of left arm server. 
+                    Port of left arm server.
                     Defaults to YuMiConstants.PORT_L
             port_r : int, optional
-                    Port of right arm server. 
+                    Port of right arm server.
                     Defaults to YuMiConstants.PORT_R
             tcp : RigidTransform, optional
-                    Tool Center Point Offset of the endeffectors. 
+                    Tool Center Point Offset of the endeffectors.
                     Defaults to YuMiConstants.TCP_DEFAULT_GRIPPER
             include_left : bool, optional
                     If True, the left arm is included and instantiated.
@@ -47,37 +47,37 @@ class YuMiRobot:
         ------
         YuMiCommException
             If communication times out or socket error.
-        '''
+        """
         if not include_left and not include_right:
             raise Exception("Must include one of the arms for YuMiRobot!")
-        
-        self.tcp = tcp     
+
+        self.tcp = tcp
         self._arms = []
-        
+
         if include_left:
-            self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories, 
+            self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
                                 log_state_histories=log_state_histories)
             self._arms.append(self.left)
         if include_right:
-            self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories, 
+            self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
                                 log_state_histories=log_state_histories)
             self._arms.append(self.right)
-        
+
         self.set_tool(self.tcp)
         self.set_z('fine')
-        
+
     def reset(self):
         '''Calls the reset function for each instantiated arm object.
         '''
         for arm in self._arms:
             arm.reset()
-        
+
     def stop(self):
         '''Calls the stop function for each instantiated arm object.
         '''
         for arm in self._arms:
-            arm.stop()           
-            
+            arm.stop()
+
     def open_grippers(self):
         ''' Calls open_gripper function for each instantiated arm object.
         '''
@@ -90,14 +90,14 @@ class YuMiRobot:
     def goto_state_sync(self, left_state, right_state):
         '''Commands both arms to go to assigned states in sync. Sync means both
         motions will end at the same time.
-        
+
         Parameters
         ----------
             left_state : YuMiState
                     Target state for left arm
             right_state : YuMiState
                     Target state for right arm
-        
+
         Raises
         ------
         YuMiCommException
@@ -107,14 +107,14 @@ class YuMiRobot:
         '''
         if len(self._arms) != 2:
             raise Exception("Cannot goto state sync when not both arms are included!")
-            
+
         self.left._goto_state_sync(left_state)
         self.right._goto_state_sync(right_state)
-    
+
     def goto_pose_sync(self, left_pose, right_pose):
         '''Commands both arms to go to assigned poses in sync. Sync means both
         motions will end at the same time.
-        
+
         Parameters
         ----------
             left_pose : RigidTransform
@@ -131,13 +131,13 @@ class YuMiRobot:
         '''
         if len(self._arms) != 2:
             raise Exception("Cannot goto pose sync when not both arms are included!")
-            
+
         self.left._goto_pose_sync(left_pose)
         self.right._goto_pose_sync(right_pose)
-        
+
     def set_v(self, n):
         '''Sets speed for both arms using n as the speed number.
-        
+
         Parameters
         ----------
             n: int
@@ -152,10 +152,10 @@ class YuMiRobot:
         speed_data = YuMiRobot.get_v(n)
         for arm in self._arms:
             arm.set_speed(speed_data)
-        
+
     def set_z(self, name):
         '''Sets zoning settings for both arms according to name.
-        
+
         Parameters
         ----------
             name : str
@@ -169,10 +169,10 @@ class YuMiRobot:
         zone_data = YuMiRobot.get_z(name)
         for arm in self._arms:
             arm.set_zone(zone_data)
-        
+
     def set_tool(self, pose):
         '''Sets TCP (Tool Center Point) for both arms using given pose as offset
-        
+
         Parameters
         ----------
             pose : RigidTransform
@@ -181,11 +181,11 @@ class YuMiRobot:
         Raises
         ------
         YuMiCommException
-            If communication times out or socket error.                
+            If communication times out or socket error.
         '''
         for arm in self._arms:
             arm.set_tool(pose)
-        
+
     def reset_home(self):
         '''Moves both arms to home position
 
@@ -200,7 +200,7 @@ class YuMiRobot:
             self.left.goto_state(YMC.L_HOME_STATE, wait_for_res=True)
         if hasattr(self, 'right'):
             self.right.goto_state(YMC.R_HOME_STATE, wait_for_res=True)
-    
+
     def calibrate_grippers(self):
         '''Calibrates grippers for instantiated arms.
 
@@ -215,14 +215,14 @@ class YuMiRobot:
     @staticmethod
     def construct_speed_data(tra, rot):
         '''Constructs a speed data tuple that's in the same format as ones used in RAPID.
-        
+
         Parameters
         ----------
             tra : float
                     translational speed (milimeters per second)
             rot : float
                     rotational speed (degrees per second)
-            
+
         Returns:
             A tuple of correctly formatted speed data: (tra, rot, tra, rot)
         '''
@@ -230,13 +230,13 @@ class YuMiRobot:
 
     @staticmethod
     def get_v(n):
-        '''Gets the corresponding speed data for n as the speed number. 
-        
+        '''Gets the corresponding speed data for n as the speed number.
+
         Parameters
         ----------
             n : int
                     speed number. If n = 100, will return the same speed data as v100 in RAPID
-            
+
         Returns
         -------
             Corresponding speed data tuple using n as speed number
@@ -245,28 +245,28 @@ class YuMiRobot:
 
     @staticmethod
     def get_z(name):
-        '''Gets the corresponding speed data for n as the speed number. 
-        
+        '''Gets the corresponding speed data for n as the speed number.
+
         Parameters
         ----------
             name : str
                     Name of zone setting. ie: "z10", "z200", "fine"
-            
+
         Returns
         -------
             Corresponding zone data dict to be used in set_z
-        '''        
+        '''
         values = YuMiRobot.ZONE_VALUES[name]
         point_motion = 1 if name == 'fine' else 0
         return {
             'point_motion': point_motion,
             'values': values
         }
-        
+
     @staticmethod
     def construct_zone_data(pzone_tcp, pzone_ori, zone_ori):
         '''Constructs tuple for zone data
-        
+
         Parameters
         ----------
             pzone_tcp : float
@@ -275,7 +275,7 @@ class YuMiRobot:
                     path zone size for orientation
             zone_ori : float
                     zone size for orientation
-            
+
         Returns:
             A tuple of correctly formatted zone data: (pzone_tcp, pzone_ori, zone_ori)
         '''
@@ -283,17 +283,17 @@ class YuMiRobot:
 
     ZONE_VALUES = {
         'fine' : (0,0,0),#these values actually don't matter for fine
-        'z0'  : (.3,.3,.03), 
-        'z1'  : (1,1,.1), 
-        'z5'  : (5,8,.8), 
-        'z10' : (10,15,1.5), 
-        'z15' : (15,23,2.3), 
-        'z20' : (20,30,3), 
-        'z30' : (30,45,4.5), 
-        'z50' : (50,75,7.5), 
-        'z100': (100,150,15), 
+        'z0'  : (.3,.3,.03),
+        'z1'  : (1,1,.1),
+        'z5'  : (5,8,.8),
+        'z10' : (10,15,1.5),
+        'z15' : (15,23,2.3),
+        'z20' : (20,30,3),
+        'z30' : (30,45,4.5),
+        'z50' : (50,75,7.5),
+        'z100': (100,150,15),
         'z200': (200,300,30)
     }
-    
+
 if __name__ == '__main__':
     logging.getLogger().setLevel(YMC.LOGGING_LEVEL)

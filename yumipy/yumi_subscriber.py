@@ -40,7 +40,7 @@ class _YuMiSubscriberEthernet(Process):
 
         try:
             while not self._end_run:
-                        
+
                 raw_res = None
                 try:
                     raw_res = self._socket.recv(self._bufsize)
@@ -85,7 +85,7 @@ class _YuMiArmSubscriber:
 
     def __init__(self, name, ip=YMC.IP, bufsize=YMC.BUFSIZE, comm_timeout=YMC.COMM_TIMEOUT):
         self._name = name
-        self._to_frame = "yumi_{0}".format(name)        
+        self._to_frame = "yumi_{0}".format(name)
         self._comm_timeout = comm_timeout
         self._bufsize = bufsize
         self._ip = ip
@@ -99,7 +99,7 @@ class _YuMiArmSubscriber:
         self._sub_pose = _YuMiSubscriberEthernet(self._pose_q, self._ip, YMC.PORTS[self._name]["poses"], self._bufsize, self._comm_timeout)
         self._sub_state = _YuMiSubscriberEthernet(self._state_q, self._ip, YMC.PORTS[self._name]["joints"], self._bufsize, self._comm_timeout)
         self._sub_torque = _YuMiSubscriberEthernet(self._torque_q, self._ip, YMC.PORTS[self._name]["torques"], self._bufsize, self._comm_timeout)
-        
+
         self._sub_pose.start()
         self._sub_state.start()
         self._sub_torque.start()
@@ -109,7 +109,9 @@ class _YuMiArmSubscriber:
         self._last_torque = None
 
     def _stop(self):
-        self._sub_ethernet.terminate()
+        self._sub_pose.terminate()
+        self._sub_state.terminate()
+        self._sub_torque.terminate()
 
     def _reset_time(self):
         self._time_offset += self.get_pose()[0]
@@ -129,8 +131,8 @@ class _YuMiArmSubscriber:
         if not self._pose_q.empty() or self._last_pose is None:
             res = self._pose_q.get(block=True)
             self._last_pose = res.time, message_to_pose(res.message, self._to_frame)
-            
-        time_stamp, pose = self._last_pose            
+
+        time_stamp, pose = self._last_pose
         return time_stamp - self._time_offset, pose.copy()
 
     def get_state(self):
@@ -173,7 +175,7 @@ class YuMiSubscriber:
 
     def __init__(self, include_left=True, include_right=True):
         '''Initializes a YuMiSubscriber
-        
+
         Parameters
         ----------
             include_left : bool, optional
@@ -199,7 +201,7 @@ class YuMiSubscriber:
             self.right = _YuMiArmSubscriber("right")
             self._arms['right'] = self.right
         self._started = False
-        
+
     def stop(self):
         '''Calls the stop function for each instantiated arm subscriber object.
         '''
