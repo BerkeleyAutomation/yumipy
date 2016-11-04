@@ -116,8 +116,14 @@ class _YuMiArmSubscriber:
     def _reset_time(self):
         self._time_offset += self.get_pose()[0]
 
-    def get_pose(self):
+    def get_pose(self, timestamp=True):
         '''Get the current pose of this arm.
+
+        Parameters
+        ----------
+        timestamp : bool, optional
+            Returns timestamp along with the pose if True
+            Defaults to True
 
         Returns
         -------
@@ -133,10 +139,18 @@ class _YuMiArmSubscriber:
             self._last_pose = res.time, message_to_pose(res.message, self._to_frame)
 
         time_stamp, pose = self._last_pose
-        return time_stamp - self._time_offset, pose.copy()
+        if timestamp:
+            return time_stamp - self._time_offset, pose.copy()
+        return pose.copy()
 
-    def get_state(self):
+    def get_state(self, timestamp=True):
         '''Get the current state (joint configuration) of this arm and corresponding timestamp.
+
+        Parameters
+        ----------
+        timestamp : bool, optional
+            Returns timestamp along with the state if True
+            Defaults to True
 
         Returns
         -------
@@ -151,10 +165,18 @@ class _YuMiArmSubscriber:
             res = self._state_q.get(block=True)
             self._last_state = res.time, message_to_state(res.message)
         time_stamp, state = self._last_state
-        return time_stamp - self._time_offset, state.copy()
+        if timestamp:
+            return time_stamp - self._time_offset, state.copy()
+        return state.copy()
 
-    def get_torque(self):
+    def get_torque(self, timestamp=True):
         '''Get the current torque readings of each joint of this arm and corresponding timestamp.
+
+        Parameters
+        ----------
+        timestamp : bool, optional
+            Returns timestamp along with the torque if True
+            Defaults to True
 
         Returns
         -------
@@ -169,7 +191,9 @@ class _YuMiArmSubscriber:
             res = self._torque_q.get(block=True)
             self._last_torque = res.time, message_to_torques(res.message)
         time_stamp, torque = self._last_torque
-        return time_stamp - self._time_offset, torque.copy()
+        if timestamp:
+            return time_stamp - self._time_offset, torque.copy()
+        return torque.copy()
 
 class YuMiSubscriber:
 
