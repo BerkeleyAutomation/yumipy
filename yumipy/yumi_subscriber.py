@@ -116,7 +116,7 @@ class _YuMiArmSubscriber:
     def _reset_time(self):
         self._time_offset += self.get_pose()[0]
 
-    def get_pose(self, timestamp=True):
+    def get_pose(self, timestamp=False):
         '''Get the current pose of this arm.
 
         Parameters
@@ -143,7 +143,7 @@ class _YuMiArmSubscriber:
             return time_stamp - self._time_offset, pose.copy()
         return pose.copy()
 
-    def get_state(self, timestamp=True):
+    def get_state(self, timestamp=False):
         '''Get the current state (joint configuration) of this arm and corresponding timestamp.
 
         Parameters
@@ -169,7 +169,7 @@ class _YuMiArmSubscriber:
             return time_stamp - self._time_offset, state.copy()
         return state.copy()
 
-    def get_torque(self, timestamp=True):
+    def get_torque(self, timestamp=False):
         '''Get the current torque readings of each joint of this arm and corresponding timestamp.
 
         Parameters
