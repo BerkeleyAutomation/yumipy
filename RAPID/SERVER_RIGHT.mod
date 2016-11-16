@@ -198,7 +198,7 @@ MODULE SERVER_R
         VAR jointtarget jointsPose;
         
         !//Motion configuration
-        ConfL\On;
+        ConfL\Off;
         SingArea\Wrist;
         moveCompleted:=TRUE;
 
@@ -455,23 +455,31 @@ MODULE SERVER_R
                 IF nParams=3 THEN
                     cartesianTarget:=Offs(CRobT(),params{1},params{2},params{3});
 
-                    ok:=SERVER_OK;
-                    moveCompleted:=FALSE;
-                    MoveL cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
-                    moveCompleted:=TRUE;
-
+                    IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
+                        ok:=SERVER_OK;
+                        moveCompleted:=FALSE;
+                        MoveL cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
+                        moveCompleted:=TRUE;
+                    ELSE
+                        ok := SERVER_BAD_MSG;
+                        addString := "Unreachable Pose";
+                    ENDIF
+                    
                 ELSEIF nParams=6 THEN
                     cartesianTarget:=RelTool(CRobT(),params{1},params{2},params{3},\Rx:=params{4}\Ry:=params{5}\Rz:=params{6});
 
-                    ok:=SERVER_OK;
-                    moveCompleted:=FALSE;
-                    MoveL cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
-                    moveCompleted:=TRUE;
-
+                    IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
+                        ok:=SERVER_OK;
+                        moveCompleted:=FALSE;
+                        MoveL cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
+                        moveCompleted:=TRUE;
+                    ELSE
+                        ok := SERVER_BAD_MSG;
+                        addString := "Unreachable Pose";
+                    ENDIF
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
-
                 !---------------------------------------------------------------------------------------------------------------
 
             CASE 14:
