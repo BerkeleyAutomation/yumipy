@@ -52,7 +52,8 @@ PROC main()
 		data := data + NumToStr(joints.robax.rax_4,2) + " ";
 		data := data + NumToStr(joints.robax.rax_5,2) + " ";
 		data := data + NumToStr(joints.robax.rax_6,2) + " "; 
-        data:=data+NumToStr(joints.extax.eax_a,2);
+        data := data+NumToStr(joints.extax.eax_a,2);
+        data := data + "!";
         !End of string
 		IF connected = TRUE THEN
 			SocketSend clientSocket \Str:=data;
@@ -61,13 +62,6 @@ PROC main()
         WaitTime LOGGER_PERIOD;
 	ENDWHILE
 	ERROR
-    	IF ERRNO=ERR_SOCK_CLOSED THEN
-    		TPWrite "LOGGER: Client has closed connection.";
-        ELSEIF ERRNO=ERR_SOCK_TIMEOUT THEN
-            TPWrite "LOGGER: Socket timed out.";
-    	ELSE
-    		TPWrite "LOGGER: Connection lost: Unknown problem.";
-    	ENDIF
     	connected:=FALSE;
     	!Closing the server
     	SocketClose clientSocket;
