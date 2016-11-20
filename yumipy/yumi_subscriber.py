@@ -50,8 +50,10 @@ class _YuMiSubscriberEthernet(Process):
                         raise YuMiCommException('Request timed out')
 
                 if raw_res is None or len(raw_res) == 0:
-                    raise YuMiCommException('Empty response!')
+                    print "{0} empty res".format(self._name)
+                    continue
 
+                raw_res = raw_res[:raw_res.rfind("!")]
                 raw_res = raw_res[raw_res.rfind("#")+1:]
                 tokens = raw_res.split()
                 res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
@@ -140,6 +142,7 @@ class _YuMiArmSubscriber:
             self._last_pose = res.time, message_to_pose(res.message, self._to_frame)
 
         time_stamp, pose = self._last_pose
+
         if timestamp:
             return time_stamp - self._time_offset, pose.copy()
         return pose.copy()
