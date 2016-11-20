@@ -53,7 +53,8 @@ PROC main()
 		data := data + NumToStr(position.rot.q1,3) + " ";
 		data := data + NumToStr(position.rot.q2,3) + " ";
 		data := data + NumToStr(position.rot.q3,3) + " ";
-		data := data + NumToStr(position.rot.q4,3); !End of string	
+		data := data + NumToStr(position.rot.q4,3);
+        data := data + "!";
         !End of string
 		IF connected = TRUE THEN
 			SocketSend clientSocket \Str:=data;
@@ -62,13 +63,6 @@ PROC main()
         WaitTime LOGGER_PERIOD;
 	ENDWHILE
 	ERROR
-    	IF ERRNO=ERR_SOCK_CLOSED THEN
-    		TPWrite "LOGGER: Client has closed connection.";
-        ELSEIF ERRNO=ERR_SOCK_TIMEOUT THEN
-            TPWrite "LOGGER: Socket timed out.";
-    	ELSE
-    		TPWrite "LOGGER: Connection lost: Unknown problem.";
-    	ENDIF
     	connected:=FALSE;
     	!Closing the server
     	SocketClose clientSocket;
