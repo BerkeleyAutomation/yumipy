@@ -50,7 +50,6 @@ class _YuMiSubscriberEthernet(Process):
                         raise YuMiCommException('Request timed out')
 
                 if raw_res is None or len(raw_res) == 0:
-                    print "{0} empty res".format(self._name)
                     continue
 
                 raw_res = raw_res[:raw_res.rfind("!")]
