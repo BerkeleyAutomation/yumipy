@@ -7,6 +7,9 @@ from yumi_arm import YuMiArm
 from yumi_constants import YuMiConstants as YMC
 
 class YuMiRobot:
+    """ Interface to both arms of an ABB YuMi robot.
+    Communicates with the robot over Ethernet.
+    """
 
     def __init__(self, ip=YMC.IP, port_l = YMC.PORT_L, port_r = YMC.PORT_R, tcp = YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,

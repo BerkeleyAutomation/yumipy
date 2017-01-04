@@ -19,6 +19,8 @@ from yumi_trajectory import YuMiTrajectory
 from yumi_constants import YuMiConstants as ymc
 
 class YuMiMotionPlanner:
+    """ Client-side motion planner for the ABB YuMi, based on MoveIt!
+    """
     
     def __init__(self, arm='left', planner='RRTstar',
                  goal_pos_tol=0.001,

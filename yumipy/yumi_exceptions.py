@@ -4,11 +4,15 @@ Author: Jacky Liang
 '''
 
 class YuMiCommException(Exception):
+        """ Communication failure. Usually occurs due to timeouts.
+        """
 
 	def __init__(self, *args, **kwargs):
 		Exception.__init__(self, *args, **kwargs)
 
 class YuMiControlException(Exception):
+        """ Failure of control, typically due to a kinematically unreachable pose.
+        """
 
 	def __init__(self, req_packet, res, *args, **kwargs):
 		Exception.__init__(self, *args, **kwargs)

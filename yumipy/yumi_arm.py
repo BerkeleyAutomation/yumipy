@@ -132,6 +132,9 @@ class _YuMiEthernet(Process):
         return res
 
 class YuMiArm:
+    """ Interface to a single arm of an ABB YuMi robot.
+    Communicates with the robot over Ethernet.
+    """
 
     def __init__(self, name, ip=YMC.IP, port=YMC.PORT_L, bufsize=YMC.BUFSIZE,
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
