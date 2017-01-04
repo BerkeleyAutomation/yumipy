@@ -1,9 +1,7 @@
-Code for the ALAN project on YuMi.
-
-## YuMi Python Interface
+# YuMi Python Interface
 ## AutoLab, UC Berkeley
 
-This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the control_stable branch before installing and using. 
+This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the control_stable branch before installing and using.
 
 ### Installation
 Step 1: Install the alan YuMi python interface on the client computer that will communicate with the YuMi:
@@ -20,10 +18,10 @@ y = YuMiRobot()
 # getting the current pose of the right end effector
 pose = y.right.get_pose()
 # move right arm forward by 5cm using goto_pose
-pose.position.x = pose.position.x + 50
+pose.translation[0] += 0.05
 y.right.goto_pose(pose)
 # move right arm back by 5cm using move delta
-y.right.goto_pose_delta((-50,0,0))
+y.right.goto_pose_delta((-0.05,0,0))
 ```
 
 The control and RAPID server code is inspired by the [open-abb-driver](https://github.com/robotics/open_abb).

@@ -2,6 +2,7 @@
 Util functions for converting 
 '''
 import logging
+import numpy as np
 
 METERS_TO_MM = 1000.0
 MM_TO_METERS = 1.0 / METERS_TO_MM
@@ -39,3 +40,9 @@ def message_to_state(message):
 
     except Exception, e:
         logging.error(e)
+
+def message_to_torques(message):
+    tokens = message.split()
+    torque_vals = np.array([float(token) for token in tokens])
+
+    return torque_vals

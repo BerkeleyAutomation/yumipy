@@ -29,7 +29,7 @@ MM_TO_METERS = 1.0 / METERS_TO_MM
 
 class _YuMiEthernet(Process):
 
-    def __init__(self, req_q, res_q, ops_q, ip, port, bufsize, timeout, debug):
+    def __init__(self, req_q, res_q, ip, port, bufsize, timeout, debug):
         Process.__init__(self)
 
         self._ip = ip
@@ -40,10 +40,8 @@ class _YuMiEthernet(Process):
 
         self._req_q = req_q
         self._res_q = res_q
-        self._ops_q = ops_q
 
         self._current_state = None
-        self._end_run = False
 
         self._debug = debug
 
@@ -56,31 +54,23 @@ class _YuMiEthernet(Process):
             self._reset_socket()
 
         try:
-            while not self._end_run:
-
-                if not self._ops_q.empty():
-                    op_name = self._ops_q.get()
-                    attr = '_{0}'.format(op_name)
-                    if hasattr(self, attr):
-                        getattr(self, attr)()
-                    else:
-                        logging.error("Unknown op {0}. Skipping".format(op_name))
-
-                if not self._req_q.empty():
-                    req_packet = self._req_q.get()
-                    res = self._send_request(req_packet)
-                    if req_packet.return_res:
-                        self._res_q.put(res)
-
+            while True:
+                req_packet = self._req_q.get()
+                if req_packet == "stop":
+                    break
+                res = self._send_request(req_packet)
+                if req_packet.return_res:
+                    self._res_q.put(res)
         except KeyboardInterrupt:
             self._stop()
             sys.exit(0)
 
+        self._stop()
+            
     def _stop(self):
         logging.info("Shutting down yumi ethernet interface")
         if not self._debug:
             self._socket.close()
-        self._end_run = True
 
     def _reset_socket(self):
         logging.debug('Opening socket on {0}:{1}'.format(self._ip, self._port))
@@ -99,13 +89,9 @@ class _YuMiEthernet(Process):
         if self._debug:
             raw_res = '-1 1 MOCK RES for {0}'.format(req_packet)
         else:
-            if self._end_run:
-                return
             self._socket.settimeout(req_packet.timeout)
 
             while True:
-                if self._end_run:
-                    break
                 try:
                     self._socket.send(req_packet.req)
                     break
@@ -113,9 +99,6 @@ class _YuMiEthernet(Process):
                     # TODO: better way to handle this mysterious bad file descriptor error
                     if e.errno == 9:
                         self._reset_socket()
-            if self._end_run:
-                return
-
             try:
                 raw_res = self._socket.recv(self._bufsize)
             except socket.error, e:
@@ -136,7 +119,7 @@ class YuMiArm:
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, name, ip=YMC.IP, port=YMC.PORT_L, bufsize=YMC.BUFSIZE,
+    def __init__(self, name, ip=YMC.IP, port=YMC.PORTS["left"]["server"], bufsize=YMC.BUFSIZE,
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
                  from_frame='tool', to_frame='base',
                  debug=YMC.DEBUG,
@@ -193,7 +176,6 @@ class YuMiArm:
         self._bufsize = bufsize
         self._from_frame = from_frame
         self._to_frame = to_frame
-        self._stopping = False
         self._debug = debug
 
         self._name = name
@@ -273,19 +255,15 @@ class YuMiArm:
     def _create_yumi_ethernet(self):
         self._req_q = Queue()
         self._res_q = Queue()
-        self._ops_q = Queue()
 
-        self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ops_q, self._ip, self._port,
+        self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ip, self._port,
                                             self._bufsize, self._comm_timeout, self._debug)
         self._yumi_ethernet.start()
 
     def stop(self):
         '''Stops subprocess for ethernet communication. Allows program to exit gracefully.
         '''
-        req = YuMiArm._construct_req('close_connection')
-        self._request(req, True)
-        self._stopping = True
-        self._ops_q.put("stop")
+        self._req_q.put("stop")
         try:
             self._yumi_ethernet.terminate()
         except Exception:
@@ -303,11 +281,6 @@ class YuMiArm:
 
         self._req_q.put(req_packet)
         if wait_for_res:
-            if self._stopping:
-                return
-            if req == YuMiArm._construct_req('close_connection'):
-                return
-
             try:
                 res = self._res_q.get(block=True, timeout=self._process_timeout)
             except Empty:
