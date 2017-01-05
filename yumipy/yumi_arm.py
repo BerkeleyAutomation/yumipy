@@ -9,7 +9,7 @@ import logging
 import socket
 import sys
 import os
-from time import time
+from time import sleep, time
 from collections import namedtuple
 import numpy as np
 from core import RigidTransform
@@ -61,6 +61,9 @@ class _YuMiEthernet(Process):
                 res = self._send_request(req_packet)
                 if req_packet.return_res:
                     self._res_q.put(res)
+
+                sleep(YMC.PROCESS_SLEEP_TIME)
+
         except KeyboardInterrupt:
             self._stop()
             sys.exit(0)
@@ -283,7 +286,7 @@ class YuMiArm:
         if wait_for_res:
             try:
                 res = self._res_q.get(block=True, timeout=self._process_timeout)
-            except Empty:
+            except (IOError, Empty):
                 raise YuMiCommException("Request timed out: {0}".format(req_packet))
 
             logging.debug('res: {0}'.format(res))
