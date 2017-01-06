@@ -123,6 +123,13 @@ class YuMiConstants:
     R_AWAY_POSE = RigidTransform(translation=[0.15, -0.4, 0.22], rotation=[0.38572, 0.39318, 0.60945, 0.57027])
     L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
+    L_THINKING_POSES = [
+        RigidTransform(translation=[0.32, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.30, 0.10, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.28, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.30, 0.14, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    ]
+
     R_READY_STATE = YuMiState([51.16, -99.4, 21.57, -107.19, 84.11, 94.61, -36.00])
     L_READY_STATE = YuMiState([-51.16, -99.4, 21.57, 107.19, 84.11, 94.61, 36.00])
 
