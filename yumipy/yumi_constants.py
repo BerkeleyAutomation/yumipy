@@ -29,6 +29,7 @@ class YuMiConstants:
     MOTION_TIMEOUT = 8
     COMM_TIMEOUT = 5
     PROCESS_TIMEOUT = 10
+    PROCESS_SLEEP_TIME = 0.01
 
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
@@ -121,20 +122,40 @@ class YuMiConstants:
 
     R_AWAY_POSE = RigidTransform(translation=[0.15, -0.4, 0.22], rotation=[0.38572, 0.39318, 0.60945, 0.57027])
     L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
-    
+
+    L_THINKING_POSES = [
+        RigidTransform(translation=[0.32, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.30, 0.10, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.28, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
+        RigidTransform(translation=[0.30, 0.14, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    ]
+
+    R_READY_STATE = YuMiState([51.16, -99.4, 21.57, -107.19, 84.11, 94.61, -36.00])
+    L_READY_STATE = YuMiState([-51.16, -99.4, 21.57, 107.19, 84.11, 94.61, 36.00])
+
+    L_PREGRASP_POSE = RigidTransform(translation=[0.30, 0.20, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+
+    L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.45, -0.05, 0.15], rotation=[0, 0, 1, 0])
+        
     L_RAISED_STATE = YuMiState([5.5, -99.46, 20.52, -21.03, 67, -22.31, 110.11])
     L_RAISED_POSE = RigidTransform(translation=[-0.0073, 0.39902, 0.31828], rotation=[0.54882, 0.07398, 0.82585, -0.10630])
     
     L_FORWARD_STATE = YuMiState([-21.71, -142.45, 43.82, 31.14, 10.43, -40.67, 106.63])
     L_FORWARD_POSE = RigidTransform(translation=[0.13885, 0.21543, 0.19774], rotation=[0.55491, 0.07064, 0.82274, -0.1009])
 
-    L_PREDROP_POSE = RigidTransform(translation=[0.596, 0.185, 0.259],
+    L_PREDROP_POSE = RigidTransform(translation=[0.55, 0.0, 0.20],
                                     rotation=[0.09815, -0.20528, 0.97156, -0.06565])
-    L_DROP_POSES = [
-        RigidTransform(translation=[0.44, 0.455, 0.26], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.44, 0.385, 0.26], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.31, 0.385, 0.26], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.31, 0.455, 0.26], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
+    L_PACKAGE_DROP_POSES = [
+        RigidTransform(translation=[0.33, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.33, 0.33, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.23, 0.33, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.23, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
+    ]
+    L_REJECT_DROP_POSES = [
+        RigidTransform(translation=[0.60, 0.42, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.60, 0.35, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.54, 0.35, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.54, 0.42, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
     ]
 
     BOX_CLOSE_SEQUENCE = [

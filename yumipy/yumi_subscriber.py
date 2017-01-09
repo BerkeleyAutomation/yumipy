@@ -84,7 +84,6 @@ class _YuMiSubscriberEthernet(Process):
         logging.debug('Socket successfully opened!')
 
 class _YuMiArmSubscriber:
-
     def __init__(self, name, ip=YMC.IP, bufsize=YMC.BUFSIZE, comm_timeout=YMC.COMM_TIMEOUT):
         self._name = name
         self._to_frame = "yumi_{0}".format(name)
@@ -199,6 +198,9 @@ class _YuMiArmSubscriber:
         return torque.copy()
 
 class YuMiSubscriber:
+    """ Interface to stream pose and state information from an ABB YuMI robot
+    over ethernet.
+    """
 
     def __init__(self, include_left=True, include_right=True):
         '''Initializes a YuMiSubscriber
