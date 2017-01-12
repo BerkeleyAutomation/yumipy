@@ -5,7 +5,7 @@ MODULE SERVER_L
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     VAR num x;
-    
+
     !//Robot configuration
     PERS tooldata currentTool:=[TRUE,[[0,0,156],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
     PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
@@ -106,11 +106,11 @@ MODULE SERVER_L
             ENDIF
         ENDIF
     ENDPROC
-    
+
     FUNC bool isPoseReachable(robtarget pose, PERS tooldata tool, PERS wobjdata wobj)
         VAR bool reachable := True;
         VAR jointtarget joints;
-        
+
         joints := CalcJointT(pose, tool, \WObj:=wobj);
         RETURN reachable;
 
@@ -118,20 +118,20 @@ MODULE SERVER_L
             reachable := FALSE;
             TRYNEXT;
     ENDFUNC
-    
+
     FUNC bool isJointsReachable(jointtarget joints, PERS tooldata tool, PERS wobjdata wobj)
         VAR bool reachable := True;
         VAR robtarget pose;
-        
+
         pose := CalcRobT(joints, tool \Wobj:=wobj);
         cartesianTarget := pose;
         RETURN reachable;
 
         ERROR
             reachable := FALSE;
-            TRYNEXT;            
+            TRYNEXT;
     ENDFUNC
-        
+
     !//Handshake between server and client:
     !// - Creates socket.
     !// - Waits for incoming TCP connection.
@@ -160,7 +160,7 @@ MODULE SERVER_L
         currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
         currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
         currentSpeed:=[1000,1000,1000,1000];
-        !currentZone:=[FALSE,0.3,0.3,0.3,0.03,0.3,0.03]; 
+        !currentZone:=[FALSE,0.3,0.3,0.3,0.03,0.3,0.03];
         currentZone:=fine;
         !z0
 
@@ -171,13 +171,13 @@ MODULE SERVER_L
 
     FUNC string FormateRes(string clientMessage)
         VAR string message;
-        
+
         message:=NumToStr(instructionCode,0);
         message:=message+" "+NumToStr(ok,0);
         message:=message+" "+ clientMessage;
 
-        RETURN message;        
-    ENDFUNC 
+        RETURN message;
+    ENDFUNC
 
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !//SERVER: Main procedure
@@ -185,7 +185,7 @@ MODULE SERVER_L
 
     PROC main()
         VAR progdisp progdisp1;
-        
+
         !//Local variables
         VAR string receivedString;
         !//Received string
@@ -201,7 +201,7 @@ MODULE SERVER_L
         !//Drop and reconnection happened during serving a command
         VAR robtarget cartesianPose;
         VAR jointtarget jointsPose;
-        
+
         !//Motion configuration
         ConfL\Off;
         SingArea\Wrist;
@@ -214,13 +214,13 @@ MODULE SERVER_L
         ServerCreateAndConnect ipController,serverPort;
         connected:=TRUE;
         reconnect:=FALSE;
-        
+
         !//Server Loop
         WHILE TRUE DO
-            
+
             !//For message sending post-movement
             should_send_res:=TRUE;
-            
+
             !//Initialization of program flow variables
             ok:=SERVER_OK;
             !//Has communication dropped after receiving a command?
@@ -298,7 +298,7 @@ MODULE SERVER_L
                     addString:=addString+NumToStr(cartesianPose.rot.q2,3)+" ";
                     addString:=addString+NumToStr(cartesianPose.rot.q3,3)+" ";
                     addString:=addString+NumToStr(cartesianPose.rot.q4,3);
-                    !End of string	
+                    !End of string
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -465,7 +465,7 @@ MODULE SERVER_L
                         ok := SERVER_BAD_MSG;
                         addString := "Unreachable Pose";
                     ENDIF
-                    
+
                 ELSEIF nParams=6 THEN
                     cartesianTarget:=RelTool(CRobT(),params{1},params{2},params{3},\Rx:=params{4}\Ry:=params{5}\Rz:=params{6});
 
@@ -556,7 +556,7 @@ MODULE SERVER_L
                     Hand_Initialize\Calibrate;
                     ok:=SERVER_OK;
 
-                    ! set maxSpeed, holdForce, physicalLimit (0-25 mm), and calibrate                    
+                    ! set maxSpeed, holdForce, physicalLimit (0-25 mm), and calibrate
                 ELSEIF nParams=3 THEN
                     Hand_Initialize\maxSpd:=params{1}\holdForce:=params{2}\phyLimit:=params{3}\Calibrate;
                     ok:=SERVER_OK;
@@ -569,7 +569,7 @@ MODULE SERVER_L
                 ! Set Max Speed
                 IF nParams=1 THEN
                     Hand_SetMaxSpeed params{1};
-                    ! between 0-20 mm/s 
+                    ! between 0-20 mm/s
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -577,7 +577,7 @@ MODULE SERVER_L
 
                 !---------------------------------------------------------------------------------------------------------------
             CASE 24:
-                ! Set gripping force 
+                ! Set gripping force
                 IF nParams=0 THEN
                     Hand_SetHoldForce params{1};
                     ! between 0-20 Newtons
@@ -588,7 +588,7 @@ MODULE SERVER_L
 
                 !---------------------------------------------------------------------------------------------------------------
             CASE 25:
-                ! Move the gripper to a specified position 
+                ! Move the gripper to a specified position
                 IF nParams=1 THEN
                     Hand_MoveTo params{1};
                     ! between 0-25 mm or 0-phyLimit if phyLimit is set in CASE 22
@@ -655,7 +655,7 @@ MODULE SERVER_L
             CASE 32:
                 !Get Buffer Size)
                 IF nParams=0 THEN
-                    addString:=NumToStr(BUFFER_POS,2);
+                    addString:=NumToStr(BUFFER_POS,0);
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -761,7 +761,7 @@ MODULE SERVER_L
                     ok:=SERVER_BAD_MSG;
                 ENDIF
             CASE 100:
-                ! LEFT ARM: Send robot to home    
+                ! LEFT ARM: Send robot to home
                 IF nParams=0 THEN
                     MoveAbsJ jposHomeYuMiL\NoEOffs,currentSpeed,fine,tool0;
                     ok:=SERVER_OK;
@@ -774,7 +774,7 @@ MODULE SERVER_L
             ENDTEST
             !---------------------------------------------------------------------------------------------------------------
             !Compose the acknowledge string to send back to the client
-            IF connected and reconnected=FALSE and SocketGetStatus(clientSocket)=SOCKET_CONNECTED and should_send_res THEN                                
+            IF connected and reconnected=FALSE and SocketGetStatus(clientSocket)=SOCKET_CONNECTED and should_send_res THEN
                 IF reconnect THEN
                     connected:=FALSE;
                     !//Closing the server
@@ -790,10 +790,10 @@ MODULE SERVER_L
                 ENDIF
             ENDIF
         ENDWHILE
-        
-    ERROR 
+
+    ERROR
         ok:=SERVER_BAD_MSG;
-        should_send_res:=FALSE;    
+        should_send_res:=FALSE;
 
         TEST ERRNO
             CASE ERR_HAND_WRONGSTATE:
@@ -810,10 +810,10 @@ MODULE SERVER_L
                 connected:=TRUE;
                 should_send_res:=TRUE;
                 RETRY;
-                
+
             CASE ERR_HAND_NOTCALIBRATED:
                 SocketSend clientSocket\Str:=FormateRes( "ERR_HAND_NOTCALIBRATED: "+NumToStr(ERRNO,0));
-                
+
                 ! Gripper not calibrated.
                 Hand_Initialize\Calibrate;
                 RETRY;
@@ -830,21 +830,21 @@ MODULE SERVER_L
                 MoveL cartesianTarget,v300,fine,currentTool\WObj:=currentWobj;
                 !MotionSup\On;
                 RestoPath;
-                
+
                 !StartMoveRetry;
                 !RETRY;
                 !TRYNEXT;
-                
+
             CASE ERR_ROBLIMIT:
                 ! Position is reachable but at least one axis is outside joint limit or limits exceeded for at least one coupled joint (function CalcJoinT)
                 SocketSend clientSocket\Str:=FormateRes("ERR_ROBLIMIT: "+NumToStr(ERRNO,0));
                 RETRY;
-                
+
             CASE ERR_OUTSIDE_REACH:
                 ! The position (robtarget) is outisde the robot's working area for function CalcJoinT.
                 SocketSend clientSocket\Str:=FormateRes("ERR_OUTSIDE_REACH: "+NumToStr(ERRNO,0));
                 RETRY;
-                
+
             DEFAULT:
                 SocketSend clientSocket\Str:=FormateRes("Default Error: "+NumToStr(ERRNO,0));
                 connected:=FALSE;
@@ -858,5 +858,5 @@ MODULE SERVER_L
                 RETRY;
         ENDTEST
     ENDPROC
-    
+
 ENDMODULE
