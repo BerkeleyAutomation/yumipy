@@ -90,6 +90,15 @@ class YuMiRobot:
         else:
             self._arms[0].open_gripper()
 
+    def close_grippers(self):
+        ''' Calls close_gripper function for each instantiated arm object.
+        '''
+        if len(self._arms) == 2:
+            self.left.close_gripper(wait_for_res=False)
+            self.right.close_gripper(wait_for_res=True)
+        else:
+            self._arms[0].close_gripper()
+
     def goto_state_sync(self, left_state, right_state):
         '''Commands both arms to go to assigned states in sync. Sync means both
         motions will end at the same time.

@@ -19,7 +19,7 @@ from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
-
+from setproctitle import setproctitle
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
 _REQ_PACKET = namedtuple('_REQ_PACKET', 'req timeout return_res')
@@ -46,6 +46,7 @@ class _YuMiEthernet(Process):
         self._debug = debug
 
     def run(self):
+        setproctitle('python._YuMiEthernet')
         logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
 
         if self._debug:
@@ -69,9 +70,9 @@ class _YuMiEthernet(Process):
             sys.exit(0)
 
         self._stop()
-            
+
     def _stop(self):
-        logging.info("Shutting down yumi ethernet interface")
+        logging.debug("Shutting down yumi ethernet interface")
         if not self._debug:
             self._socket.close()
 

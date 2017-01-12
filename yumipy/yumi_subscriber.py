@@ -10,7 +10,7 @@ import sys
 from collections import namedtuple
 import logging
 from time import sleep
-
+from setproctitle import setproctitle
 from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_exceptions import YuMiCommException
@@ -35,13 +35,12 @@ class _YuMiSubscriberEthernet(Process):
         self._socket = None
 
     def run(self):
+        setproctitle('python._YuMiSubscriberEthernet.{0}'.format(self._name))
         logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
 
         self._reset_socket()
-
         try:
             while not self._end_run:
-
                 raw_res = None
                 try:
                     raw_res = self._socket.recv(self._bufsize)
@@ -50,7 +49,8 @@ class _YuMiSubscriberEthernet(Process):
                         raise YuMiCommException('Request timed out')
 
                 if raw_res is None or len(raw_res) == 0:
-                    continue
+                    self._stop()
+                    break
 
                 raw_res = raw_res[:raw_res.rfind("!")]
                 raw_res = raw_res[raw_res.rfind("#")+1:]
@@ -239,6 +239,7 @@ class YuMiSubscriber:
 
         for sub in self._arms.values():
             sub._stop()
+        self._started = False
 
     def start(self):
         '''Calls the start function for each instantiated arm subscriber object.
