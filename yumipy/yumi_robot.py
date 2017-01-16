@@ -11,22 +11,13 @@ class YuMiRobot:
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
+    def __init__(self, tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False):
         """Initializes a YuMiRobot
 
         Parameters
         ----------
-            ip : string formatted IP Address, optional
-                    IP address of YuMi.
-                    Defaults to YuMiConstants.IP
-            port_l : int, optional
-                    Port of left arm server.
-                    Defaults to YuMiConstants.PORT_L
-            port_r : int, optional
-                    Port of right arm server.
-                    Defaults to YuMiConstants.PORT_R
             tcp : RigidTransform, optional
                     Tool Center Point Offset of the endeffectors.
                     Defaults to YuMiConstants.TCP_DEFAULT_GRIPPER
@@ -58,11 +49,11 @@ class YuMiRobot:
         self._arms = []
 
         if include_left:
-            self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
+            self.left = YuMiArm('left', debug=debug, log_pose_histories=log_pose_histories,
                                 log_state_histories=log_state_histories)
             self._arms.append(self.left)
         if include_right:
-            self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
+            self.right = YuMiArm('right', debug=debug, log_pose_histories=log_pose_histories,
                                 log_state_histories=log_state_histories)
             self._arms.append(self.right)
 

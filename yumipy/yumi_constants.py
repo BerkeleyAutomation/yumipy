@@ -8,17 +8,22 @@ from core import RigidTransform
 
 class YuMiConstants:
 
+    METERS_TO_MM = 1000.0
+    MM_TO_METERS = 1.0 / METERS_TO_MM
+
     IP = '192.168.125.1'
 
     PORTS = {
         "left" : {
             "server":5000,
+            'gripper':5002,
             "joints":5010,
             "poses":5012,
             "torques":5014
         },
         "right" : {
             "server":5001,
+            "gripper":5003,
             "joints":5011,
             "poses":5013,
             "torques":5015

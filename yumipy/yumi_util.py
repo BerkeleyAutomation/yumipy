@@ -1,13 +1,11 @@
 '''
-Util functions for converting 
+Util functions for converting
 '''
 import logging
 import numpy as np
 
-METERS_TO_MM = 1000.0
-MM_TO_METERS = 1.0 / METERS_TO_MM
-
 from yumi_state import YuMiState
+from yumi_constants import YuMiConstants as YMC
 from core import RigidTransform
 
 def message_to_pose(message, from_frame):
@@ -18,7 +16,7 @@ def message_to_pose(message, from_frame):
         pose_vals = [float(token) for token in tokens]
         q = pose_vals[3:]
         t = pose_vals[:3]
-        R = RigidTransform.rotation_from_quaternion(q) 
+        R = RigidTransform.rotation_from_quaternion(q)
         pose = RigidTransform(R, t, from_frame=from_frame)
         pose.position = pose.position * MM_TO_METERS
 
@@ -35,7 +33,7 @@ def message_to_state(message):
             raise Exception("Invalid format for states! Got: \n{0}".format(message))
         state_vals = [float(token) for token in tokens]
         state = YuMiState(state_vals)
-        
+
         return state
 
     except Exception, e:
@@ -46,3 +44,22 @@ def message_to_torques(message):
     torque_vals = np.array([float(token) for token in tokens])
 
     return torque_vals
+
+def construct_req(code_name, body=''):
+    req = '{0:d} {1}#'.format(YMC.CMD_CODES[code_name], body)
+    return req
+
+def iter_to_str(template, iterable):
+    result = ''
+    for val in iterable:
+        result += template.format(val).rstrip('0').rstrip('.') + ' '
+    return result
+
+def get_pose_body(pose):
+    if not isinstance(pose, RigidTransform):
+        raise ValueError('Can only parse RigidTransform objects')
+    pose = pose.copy()
+    pose.position = pose.position * YMC.METERS_TO_MM
+    body = '{0}{1}'.format(iter_to_str('{:.1f}', pose.position.tolist()),
+                                        iter_to_str('{:.5f}', pose.quaternion.tolist()))
+    return body
