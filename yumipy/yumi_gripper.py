@@ -13,14 +13,14 @@ from yumi_util import iter_to_str, construct_req
 from yumi_ethernet import _YuMiEthernet, _REQ_PACKET, _RES
 
 class YuMiGripper:
-    """ Interface to a single arm of an ABB YuMi robot.
+    """ Interface to a single gripper of an ABB YuMi robot.
     Communicates with the robot over Ethernet.
     """
 
     def __init__(self, name, motion_timeout=YMC.MOTION_TIMEOUT,
                 comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
                  debug=YMC.DEBUG):
-        '''Initializes a YuMiGripper interface. This interface will communicate with one arm (port) on the YuMi Robot.
+        '''Initializes a YuMiGripper interface. This interface will communicate with one gripper (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
 
         Parameters
