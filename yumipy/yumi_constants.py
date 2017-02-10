@@ -32,6 +32,9 @@ class YuMiConstants:
     PROCESS_SLEEP_TIME = 0.01
     MOTION_BUFFER_SIZE = 512
 
+    MAX_GRIPPER_WIDTH = 0.02
+    MAX_GRIPPER_FORCE = 20
+
     # used to rate limit real-time YuMi controls (in seconds)
     COMM_PERIOD = 0.04
 
