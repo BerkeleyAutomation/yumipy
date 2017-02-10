@@ -20,10 +20,11 @@ _RAW_RES = namedtuple('_RAW_RES', 'time message')
 
 class _YuMiSubscriberEthernet(Process):
 
-    def __init__(self, name, data_q, ip, port, bufsize, timeout):
+    def __init__(self, name, data_q, cmd_q, ip, port, bufsize, timeout):
         Process.__init__(self)
         self._name = name
         self._data_q = data_q
+        self._cmd_q = cmd_q
 
         self._ip = ip
         self._port = port
@@ -40,38 +41,43 @@ class _YuMiSubscriberEthernet(Process):
 
         self._reset_socket()
         try:
-            while not self._end_run:
-                raw_res = None
-                try:
-                    raw_res = self._socket.recv(self._bufsize)
-                except socket.error, e:
-                    if e.errno == 114: # request time out
-                        raise YuMiCommException('Request timed out')
-
-                if raw_res is None or len(raw_res) == 0:
-                    self._stop()
-                    break
-
-                raw_res = raw_res[:raw_res.rfind("!")]
-                raw_res = raw_res[raw_res.rfind("#")+1:]
-                tokens = raw_res.split()
-                res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
-
-                if self._data_q.full():
+            while True:
+                if self._cmd_q.qsize() > 0:
+                    cmd = self._cmd_q.get()
+                    if cmd == 'stop':
+                        break
+                else:
+                    raw_res = None
                     try:
-                        self._data_q.get_nowait()
-                    except Empty:
-                        pass
-                self._data_q.put(res)
+                        raw_res = self._socket.recv(self._bufsize)
+                    except socket.error, e:
+                        if e.errno == 114: # request time out
+                            raise YuMiCommException('Request timed out')
 
+                    if raw_res is None or len(raw_res) == 0:
+                        self._stop()
+                        break
+
+                    raw_res = raw_res[:raw_res.rfind("!")]
+                    raw_res = raw_res[raw_res.rfind("#")+1:]
+                    tokens = raw_res.split()
+                    res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
+
+                    if self._data_q.full():
+                        try:
+                            self._data_q.get_nowait()
+                        except Empty:
+                            pass
+                    self._data_q.put(res)
+                sleep(1e-3)
         except KeyboardInterrupt:
-            self._stop()
-            sys.exit(0)
+            pass
+        self._stop()
+        sys.exit(0)
 
     def _stop(self):
         logging.debug("Shutting down yumi subscriber ethernet interface for {0}".format(self._name))
         self._socket.close()
-        self._end_run = True
 
     def _reset_socket(self):
         logging.debug('Opening socket on {0}:{1} for subscription'.format(self._ip, self._port))
@@ -96,10 +102,13 @@ class _YuMiArmSubscriber:
         self._state_q = Queue(maxsize=1)
         self._pose_q = Queue(maxsize=1)
         self._torque_q = Queue(maxsize=1)
+        self._cmd_q_state = Queue()
+        self._cmd_q_pose = Queue()
+        self._cmd_q_torque = Queue()
 
-        self._sub_pose = _YuMiSubscriberEthernet("{0}_poses".format(self._name), self._pose_q, self._ip, YMC.PORTS[self._name]["poses"], self._bufsize, self._comm_timeout)
-        self._sub_state = _YuMiSubscriberEthernet("{0}_joints".format(self._name), self._state_q, self._ip, YMC.PORTS[self._name]["joints"], self._bufsize, self._comm_timeout)
-        self._sub_torque = _YuMiSubscriberEthernet("{0}_torques".format(self._name), self._torque_q, self._ip, YMC.PORTS[self._name]["torques"], self._bufsize, self._comm_timeout)
+        self._sub_pose = _YuMiSubscriberEthernet("{0}_poses".format(self._name), self._pose_q, self._cmd_q_pose, self._ip, YMC.PORTS[self._name]["poses"], self._bufsize, self._comm_timeout)
+        self._sub_state = _YuMiSubscriberEthernet("{0}_joints".format(self._name), self._state_q, self._cmd_q_state,  self._ip, YMC.PORTS[self._name]["joints"], self._bufsize, self._comm_timeout)
+        self._sub_torque = _YuMiSubscriberEthernet("{0}_torques".format(self._name), self._torque_q, self._cmd_q_torque, self._ip, YMC.PORTS[self._name]["torques"], self._bufsize, self._comm_timeout)
 
         self._sub_pose.start()
         self._sub_state.start()
@@ -110,9 +119,9 @@ class _YuMiArmSubscriber:
         self._last_torque = None
 
     def _stop(self):
-        self._sub_pose.terminate()
-        self._sub_state.terminate()
-        self._sub_torque.terminate()
+        self._cmd_q_pose.put('stop')
+        self._cmd_q_state.put('stop')
+        self._cmd_q_torque.put('stop')
 
     def _reset_time(self):
         self._time_offset += self.get_pose()[0]
