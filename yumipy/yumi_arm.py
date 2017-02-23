@@ -19,6 +19,9 @@ from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
+import rospy
+import pickle
+from generic_remote_func import *
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
@@ -1074,5 +1077,87 @@ class YuMiArm:
         req = YuMiArm._construct_req('reset_home')
         return self._request(req, wait_for_res)
 
+class YuMiArm_remote:
+    """ Interface to remotely control a single arm of an ABB YuMi robot.
+    Communicates over ROS with an arm server.
+    """
+    def __init__(self, name):
+        """ Initializes a YuMiArm interface.
+        This interface will communicate with a ROS arm server over the network.
+
+        Parameters
+        ----------
+        name : string
+            Name of the arm {'left', 'right'}.
+            Class will attempt to communicate with node {name}_arm_server
+        """
+        self.side = name.lower()
+    
+    def __getattr__(self, name):
+        """ Override the get attribute method so that function calls become server requests
+            
+        Note that this must still return a function so that the arguments are captured
+        """
+        def handle_remote_call(*args, **kwargs):
+            """ Handle the remote call to some YuMiArm function.
+            """
+            rospy.wait_for_service('{}_arm'.format(self.side), timeout = 10)
+            try:
+                arm = rospy.ServiceProxy('{}_arm'.format(self.side), GenericFunction)
+                response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
+                return pickle.loads(response.ret)
+            except rospy.ServiceException, e:
+                print "Service call failed: %s"%e
+        return handle_remote_call
+
+class YuMiArmFactory:
+    """ Factory class for YuMiArm interfaces. """
+
+    @staticmethod
+    def YuMiArm(arm_type, name, **kwargs):
+        """Initializes a YuMiArm interface. 
+
+        Parameters
+        ----------
+        arm_type : string
+            Type of arm. One of {'local', 'remote'}
+            'local' creates a local YuMiArm class that communicates over ethernet
+            'remote' creates a YuMiArm class that communicates over ROS with a server
+        name : string
+            Name of arm. One of {'left', 'right'}
+        **kwargs : keyword arguments
+            Used for local YuMiArm class only. See YuMiArm class for specifications
+            Ignored for remote YuMiArm
+        """
+        if arm_type == 'local':
+            return YuMiArm(name, **kwargs)
+        elif arm_type == 'remote':
+            return YuMiArm_remote(name)
+        else:
+            raise ValueError('YuMiArm type {} not supported'.format(arm_type))
+
+
 if __name__ == '__main__':
-     logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
+    logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
+
+    if len(sys.argv) == 2:
+        side = sys.argv[1].lower()
+        if side in {'left', 'right'}:
+            arm = YuMiArmFactory.YuMiArm('local', side)
+            yumi_methods = YuMiArm.__dict__
+
+            def handle_request(req):
+                func = pickle.loads(req.func)
+                args = pickle.loads(req.args)
+                kwargs = pickle.loads(req.kwargs)
+                logging.info("Handling request to call method {0} for {1} arm".format(func, side))
+                return GenericFunctionResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
+
+            def arm_server():
+                rospy.init_node('{}_arm_server'.format(side))
+                s = rospy.Service('{}_arm'.format(side), GenericFunction, handle_request)
+                logging.info("{} arm is ready".format(side))
+
+            arm_server()
+            rospy.spin()
+
