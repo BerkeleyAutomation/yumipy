@@ -21,6 +21,7 @@ from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
 import pickle
 
+# Check if ROS and the service file can be imported
 ROS_ENABLED = False
 try:
     import rospy
