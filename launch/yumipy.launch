@@ -1,0 +1,4 @@
+<launch>
+  <node name="left_arm" pkg="yumipy" type="yumi_ros_service.py" args="left"/>
+  <node name="right_arm" pkg="yumipy" type="yumi_ros_service.py" args="right"/>
+</launch>

@@ -19,9 +19,15 @@ from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
-import rospy
 import pickle
-from generic_remote_func import *
+
+ROS_ENABLED = False
+try:
+    import rospy
+    from yumipy.srv import *
+    ROS_ENABLED = True
+except ImportError:
+    continue
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
@@ -1101,9 +1107,9 @@ class YuMiArm_remote:
         def handle_remote_call(*args, **kwargs):
             """ Handle the remote call to some YuMiArm function.
             """
-            rospy.wait_for_service('{}_arm'.format(self.side), timeout = 10)
+            rospy.wait_for_service('{0}{1}_arm'.format(rospy.get_namespace(), self.side), timeout = 10)
             try:
-                arm = rospy.ServiceProxy('{}_arm'.format(self.side), GenericFunction)
+                arm = rospy.ServiceProxy('{}_arm'.format(self.side), ROSYumiArm)
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
                 return pickle.loads(response.ret)
             except rospy.ServiceException, e:
@@ -1132,32 +1138,14 @@ class YuMiArmFactory:
         if arm_type == 'local':
             return YuMiArm(name, **kwargs)
         elif arm_type == 'remote':
-            return YuMiArm_remote(name)
+            if ROS_ENABLED:
+                return YuMiArm_remote(name)
+            else:
+                raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
         else:
             raise ValueError('YuMiArm type {} not supported'.format(arm_type))
 
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
-
-    if len(sys.argv) == 2:
-        side = sys.argv[1].lower()
-        if side in {'left', 'right'}:
-            arm = YuMiArmFactory.YuMiArm('local', side)
-            yumi_methods = YuMiArm.__dict__
-
-            def handle_request(req):
-                func = pickle.loads(req.func)
-                args = pickle.loads(req.args)
-                kwargs = pickle.loads(req.kwargs)
-                logging.info("Handling request to call method {0} for {1} arm".format(func, side))
-                return GenericFunctionResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
-
-            def arm_server():
-                rospy.init_node('{}_arm_server'.format(side))
-                s = rospy.Service('{}_arm'.format(side), GenericFunction, handle_request)
-                logging.info("{} arm is ready".format(side))
-
-            arm_server()
-            rospy.spin()
 
