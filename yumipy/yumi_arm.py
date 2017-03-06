@@ -28,7 +28,7 @@ try:
     from yumipy.srv import *
     ROS_ENABLED = True
 except ImportError:
-    continue
+    pass
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
