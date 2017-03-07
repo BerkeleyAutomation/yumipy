@@ -25,10 +25,13 @@ import pickle
 ROS_ENABLED = False
 try:
     import rospy
-    from yumipy.srv import *
-    ROS_ENABLED = True
+    try:
+        from yumipy.srv import *
+        ROS_ENABLED = True
+    except ImportError:
+        logging.warning("yumipy not installed as catkin package, yumi over ros will be unavailable")
 except ImportError:
-    pass
+    logging.warning("rospy could not be imported, yumi over ros will be unavailable")
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
