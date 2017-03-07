@@ -1110,7 +1110,7 @@ class YuMiArm_remote:
             """
             rospy.wait_for_service('{0}{1}_arm'.format(rospy.get_namespace(), self.side), timeout = 10)
             try:
-                arm = rospy.ServiceProxy('{}_arm'.format(self.side), ROSYumiArm)
+                arm = rospy.ServiceProxy('{0}{}_arm'.format(rospy.get_namespace(), self.side), ROSYumiArm)
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
                 return pickle.loads(response.ret)
             except rospy.ServiceException, e:
