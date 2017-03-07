@@ -9,8 +9,8 @@ except ImportError:
 
 if __name__ == '__main__':
     # Check that the "arm side" argument is passed in and is either "left" or "right"
-    if(len(sys.argv) != 2):
-        raise RuntimeError("Incorrect number of arguments (expected 2)")
+    if(len(sys.argv) < 2):
+        raise RuntimeError("Not enough arguments (expected at least 1 for arm side)")
     side = sys.argv[1].lower()
     if side not in {'left', 'right'}:
         raise RuntimeError("Arm name must be in {'left', 'right'}")
