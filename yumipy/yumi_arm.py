@@ -1137,7 +1137,7 @@ class YuMiArm_remote:
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
                 return pickle.loads(response.ret)
             except rospy.ServiceException, e:
-                raise RuntimError("Service call failed: {0}".format(str(e)))
+                raise RuntimeError("Service call failed: {0}".format(str(e)))
         return handle_remote_call
 
 class YuMiArmFactory:
