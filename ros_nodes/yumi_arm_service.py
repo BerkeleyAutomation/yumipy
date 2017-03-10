@@ -19,7 +19,7 @@ if __name__ == '__main__':
     arm = YuMiArmFactory.YuMiArm('local', side)
     yumi_methods = YuMiArm.__dict__
 
-    # Define how requests are handled (Call the corresponding method in the local class
+    # Define how requests are handled (Call the corresponding method in the local class)
     def handle_request(req):
         func = pickle.loads(req.func)
         args = pickle.loads(req.args)

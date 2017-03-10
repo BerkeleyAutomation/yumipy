@@ -1089,9 +1089,9 @@ class YuMiArm:
 
 class YuMiArm_remote:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
-    Communicates over ROS with an arm server.
+    Communicates over ROS to a yumi arm server (initialize with rosrun yumipy yumi_arm_service.py)
     """
-    def __init__(self, name):
+    def __init__(self, name, namespace = None):
         """ Initializes a YuMiArm interface.
         This interface will communicate with a ROS arm server over the network.
 
@@ -1100,24 +1100,44 @@ class YuMiArm_remote:
         name : string
             Name of the arm {'left', 'right'}.
             Class will attempt to communicate with node {name}_arm_server
+        namespace : string
+            Namespace of server node. If None is passed in the namespace of the current program
+            is used (result of rospy.get_namespace())
+            
+            Defaults to None
         """
         self.side = name.lower()
+        if namespace == None:
+            self.namespace = rospy.get_namespace()
+        else:
+            self.namespace = namespace 
     
     def __getattr__(self, name):
-        """ Override the get attribute method so that function calls become server requests
+        """ Override the __getattr__ method so that function calls become server requests
             
         Note that this must still return a function so that the arguments are captured
+        Also note that this ONLY works for functions, if accessing properties of the remote class is desired
+        accessor/mutator functions on the server-side yumi_arm are required.
+        
+        Also, the wait_for_res argument is NOT available remotely and will always be set to True
+        This is to prevent odd desynchronized crashes
         """
         def handle_remote_call(*args, **kwargs):
             """ Handle the remote call to some YuMiArm function.
             """
-            rospy.wait_for_service('{0}{1}_arm'.format(rospy.get_namespace(), self.side), timeout = 10)
+            try:
+                rospy.wait_for_service('{0}{1}_arm'.format(self.namespace, self.side), timeout = 10)
+            except rospy.ROSException:
+                raise RuntimeError("Service call timed out: Service {0}{1}_arm cannot be reached"
+                                   .format(self.namespace, self.side))
             try:
                 arm = rospy.ServiceProxy('{0}{1}_arm'.format(rospy.get_namespace(), self.side), ROSYumiArm)
+                if 'wait_for_res' in kwargs:
+                    kwargs['wait_for_res'] = True
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
                 return pickle.loads(response.ret)
             except rospy.ServiceException, e:
-                print "Service call failed: %s"%e
+                raise RuntimError("Service call failed: {0}".format(str(e)))
         return handle_remote_call
 
 class YuMiArmFactory:
