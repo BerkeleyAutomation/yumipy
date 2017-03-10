@@ -13,13 +13,13 @@ class YuMiConstants:
     PORTS = {
         "left" : {
             "server":5000,
-            "joints":5010,
+            "states":5010,
             "poses":5012,
             "torques":5014
         },
         "right" : {
             "server":5001,
-            "joints":5011,
+            "states":5011,
             "poses":5013,
             "torques":5015
         },
@@ -122,6 +122,21 @@ class YuMiConstants:
 
     R_AWAY_POSE = RigidTransform(translation=[0.15, -0.4, 0.22], rotation=[0.38572, 0.39318, 0.60945, 0.57027])
     L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+
+    AXIS_ALIGNED_STATES = {
+        'inwards': {
+            'right': YuMiState([75, -90, 0, -30, 90, -10, -45]),
+            'left': YuMiState([-75, -90, 0, 30, 90, 10, 45])
+        },
+        'forwards': {
+            'right': YuMiState([36.42, -117.3, 35.59, 50.42, 46.19, 66.02, -100.28]),
+            'left': YuMiState([-36.42, -117.3, 35.59, -50.42, 46.19, 113.98, 100.28])
+        },
+        'downwards': {
+            'right': YuMiState([-60.0, -110.0, 35.0, 116.0, 100.0, -90.0, 30.0]),
+            'left': YuMiState([60.0, -110.0, 35.0, -116.0, 100.0, -90.0, -30.0])
+        }
+    }
 
     L_THINKING_POSES = [
         RigidTransform(translation=[0.32, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
