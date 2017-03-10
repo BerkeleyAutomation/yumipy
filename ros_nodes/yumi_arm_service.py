@@ -8,6 +8,9 @@ except ImportError:
     raise RuntimeError("yumi_ros_service unavailable outside of catkin package")
 
 if __name__ == '__main__':
+    # Enable logger
+    logging.getLogger().setLevel(logging.INFO)
+    
     # Check that the "arm side" argument is passed in and is either "left" or "right"
     if(len(sys.argv) < 2):
         raise RuntimeError("Not enough arguments (expected at least 1 for arm side)")
