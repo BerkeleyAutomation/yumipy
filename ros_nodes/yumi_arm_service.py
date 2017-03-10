@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import logging
-try:
-    import rospy
-except ImportError:
-    raise RuntimeError("Failed to import ROS dependencies in yumi_arm service, service will not work")
+import rospy
 try:
     from yumipy.yumi_arm import *
     from yumipy.srv import *
