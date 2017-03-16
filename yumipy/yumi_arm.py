@@ -1151,8 +1151,8 @@ class YuMiArmFactory:
         ----------
         arm_type : string
             Type of arm. One of {'local', 'remote'}
-            'local' creates a local YuMiArm class that communicates over ethernet
-            'remote' creates a YuMiArm class that communicates over ROS with a server
+            'local'  creates a local YuMiArm object that communicates over ethernet
+            'remote' creates a YuMiArm object that communicates over ROS with a server
         name : string
             Name of arm. One of {'left', 'right'}
         **kwargs : keyword arguments
