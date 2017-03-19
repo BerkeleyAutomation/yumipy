@@ -1089,28 +1089,24 @@ class YuMiArm:
 
 class YuMiArm_remote:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
-    Communicates over ROS to a yumi arm server (initialize with rosrun yumipy yumi_arm_service.py)
+    Communicates over ROS to a yumi arm server (initialize through rosrun or by 
     """
-    def __init__(self, name, namespace = None):
+    def __init__(self, arm_service, namespace = None):
         """ Initializes a YuMiArm interface.
         This interface will communicate with a ROS arm server over the network.
 
         Parameters
         ----------
-        name : string
-            Name of the arm {'left', 'right'}.
-            Class will attempt to communicate with node {name}_arm_server
-        namespace : string
-            Namespace of server node. If None is passed in the namespace of the current program
-            is used (result of rospy.get_namespace())
-            
-            Defaults to None
+        arm_service : string
+            ROSYumiArm service to interface with. If the ROSYumiArm services are started through
+            yumi_arms.launch they will be called left_arm and right_arm
+        namespace : string, optional
+            Namespace to prepend to arm_service. If None, current namespace is prepended.
         """
-        self.side = name.lower()
         if namespace == None:
-            self.namespace = rospy.get_namespace()
+            self.arm_service = rospy.get_namespace() + arm_service
         else:
-            self.namespace = namespace 
+            self.arm_service = namespace + arm_service
     
     def __getattr__(self, name):
         """ Override the __getattr__ method so that function calls become server requests
@@ -1126,12 +1122,12 @@ class YuMiArm_remote:
             """ Handle the remote call to some YuMiArm function.
             """
             try:
-                rospy.wait_for_service('{0}{1}_arm'.format(self.namespace, self.side), timeout = 10)
+                rospy.wait_for_service(self.arm_service, timeout = 10)
             except rospy.ROSException:
-                raise RuntimeError("Service call timed out: Service {0}{1}_arm cannot be reached"
-                                   .format(self.namespace, self.side))
+                raise RuntimeError("Service call timed out: Service {0} cannot be reached"
+                                   .format(self.arm_service))
             try:
-                arm = rospy.ServiceProxy('{0}{1}_arm'.format(rospy.get_namespace(), self.side), ROSYumiArm)
+                arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
                 if 'wait_for_res' in kwargs:
                     kwargs['wait_for_res'] = True
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
@@ -1154,16 +1150,23 @@ class YuMiArmFactory:
             'local'  creates a local YuMiArm object that communicates over ethernet
             'remote' creates a YuMiArm object that communicates over ROS with a server
         name : string
-            Name of arm. One of {'left', 'right'}
+            Name of arm. One of {'left', 'right'}.
+            
+            For local YuMiArm, the port kwarg is set to PORTS[{name}]["server"],
+            where PORTS is defined in yumi_constants.py
+            
+            For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'
+            This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
+            (or None if yumi_arms.launch was launched in the current namespace)
         **kwargs : keyword arguments
             Used for local YuMiArm class only. See YuMiArm class for specifications
             Ignored for remote YuMiArm
         """
         if arm_type == 'local':
-            return YuMiArm(name, **kwargs)
+            return YuMiArm(name, port=YMC.PORTS[name]["server"], **kwargs)
         elif arm_type == 'remote':
             if ROS_ENABLED:
-                return YuMiArm_remote(name)
+                return YuMiArm_remote('yumi_robot/{0}_arm'.format(name))
             else:
                 raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
         else:

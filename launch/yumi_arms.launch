@@ -1,4 +1,9 @@
 <launch>
-  <node name="left_arm" pkg="yumipy" type="yumi_arm_service.py" args="left"/>
-  <node name="right_arm" pkg="yumipy" type="yumi_arm_service.py" args="right"/>
+  <!-- Namespace for the node and services -->
+  <arg name="name"   default="yumi_robot" />
+  
+  <group ns="$(arg name)">
+    <node name="left_arm" pkg="yumipy" type="yumi_arm_service.py" args="left -v"/>
+    <node name="right_arm" pkg="yumipy" type="yumi_arm_service.py" args="right -v"/>
+  </group>
 </launch>
