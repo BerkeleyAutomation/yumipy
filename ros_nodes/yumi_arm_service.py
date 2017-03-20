@@ -13,6 +13,9 @@ except ImportError:
     raise RuntimeError("yumi_ros_service unavailable outside of catkin package")
 
 if __name__ == '__main__':
+    # Initialize server. Name is generic as it will be overwritten by launch anyways
+    rospy.init_node('arm_server')
+    
     name = rospy.get_param('~name')
     verbose = rospy.get_param('~display_output')
     
@@ -29,8 +32,6 @@ if __name__ == '__main__':
             print("Handling request to call method {0} for {1} arm".format(func, name))
         return ROSYumiArmResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
     
-    # Initialize server and service
-    rospy.init_node('{}_arm'.format(name))
     s = rospy.Service('{}_arm'.format(name), ROSYumiArm, handle_request)
     print("{} arm is ready".format(name))
 
