@@ -13,8 +13,8 @@ except ImportError:
     raise RuntimeError("yumi_ros_service unavailable outside of catkin package")
 
 if __name__ == '__main__':
-    name = rospy.get_param(~name)
-    verbose = rospy.get_param(~display_output)
+    name = rospy.get_param('~name')
+    verbose = rospy.get_param('~display_output')
     
     # Get local YuMiArm and its method dict
     arm = YuMiArmFactory.YuMiArm('local', name)
