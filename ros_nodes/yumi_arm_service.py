@@ -29,11 +29,11 @@ if __name__ == '__main__':
         args = pickle.loads(req.args)
         kwargs = pickle.loads(req.kwargs)
         if verbose:
-            print("Handling request to call method {0} for {1} arm".format(func, name))
+            rospy.loginfo("Handling request to call method {0} for {1} arm".format(func, name))
         return ROSYumiArmResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
     
-    s = rospy.Service('{}_arm'.format(name), ROSYumiArm, handle_request)
-    print("{} arm is ready".format(name))
+    s = rospy.Service('{0}_arm'.format(name), ROSYumiArm, handle_request)
+    rospy.loginfo("{0} arm is ready".format(name))
 
     # Keep process alive
     rospy.spin()

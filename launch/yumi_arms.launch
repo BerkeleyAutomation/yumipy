@@ -8,12 +8,12 @@
   <arg name="right_name"   default="right" />
   
   <group ns="$(arg robot)">
-    <node name="$(arg left_name)_arm" pkg="yumipy" type="yumi_arm_service.py">
+    <node name="$(arg left_name)_arm" pkg="yumipy" type="yumi_arm_service.py" output="screen">
       <param name="name"            value="$(arg left_name)" />
       <param name="display_output"  value="$(arg display_output)" />
     </node>
     
-    <node name="$(arg right_name)_arm" pkg="yumipy" type="yumi_arm_service.py">
+    <node name="$(arg right_name)_arm" pkg="yumipy" type="yumi_arm_service.py" output="screen">
       <param name="name"            value="$(arg right_name)" />
       <param name="display_output"  value="$(arg display_output)" />
     </node>
