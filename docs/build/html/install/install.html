@@ -30,11 +30,7 @@
   
 
   
-        <link rel="index" title="Index"
-              href="../genindex.html"/>
-        <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/>
-        <link rel="prev" title="Berkeley AutoLab yumipy Documentation" href="../index.html"/> 
+    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -83,18 +79,18 @@
           
             
             
-                <p class="caption"><span class="caption-text">Installation Guide</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Instructions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+                <!-- Local TOC -->
+                <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Installation Instructions</a><ul>
+<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
+<li><a class="reference internal" href="#installation">Installation</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+<li><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
 </ul>
 </li>
 </ul>
-
+</div>
             
           
         </div>
@@ -115,7 +111,7 @@
         <div class="rst-content">
           
 
- 
+
 
 
 
@@ -149,7 +145,7 @@ installed with <cite>pip</cite>.</p>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
 <p>You can clone or download our source code from <a class="reference external" href="https://github.com/jacky-liang/yumipy">Github</a>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:jacky-liang/yumipy.git
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone git@github.com:jacky-liang/yumipy.git
 </pre></div>
 </div>
 </div>
@@ -157,15 +153,15 @@ installed with <cite>pip</cite>.</p>
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install <cite>yumipy</cite> in your current Python environment, simply
 change directories into the <cite>yumipy</cite> repository and run</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -e .
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
 </pre></div>
 </div>
 <p>Alternatively, you can run</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install /path/to/yumipy
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install /path/to/yumipy
 </pre></div>
 </div>
 <p>to install <cite>yumipy</cite> from anywhere.</p>
@@ -173,7 +169,7 @@ change directories into the <cite>yumipy</cite> repository and run</p>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <p>To test your installation, run</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ python setup.py test
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ python setup.py test
 </pre></div>
 </div>
 <p>with the robot on and calibrated.</p>
@@ -184,12 +180,12 @@ change directories into the <cite>yumipy</cite> repository and run</p>
 <p>Building <cite>yumipy</cite>&#8216;s documentation requires a few extra dependencies &#8211;
 specifically, <a class="reference external" href="http://www.sphinx-doc.org/en/1.4.8/">sphinx</a> and a few plugins.</p>
 <p>To install the dependencies required, simply run</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
 </pre></div>
 </div>
 <p>Then, go to the <cite>docs</cite> directory and run <cite>make</cite> with the appropriate target.
 For example,</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ cd docs/
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ cd docs/
 $ make html
 </pre></div>
 </div>
@@ -202,13 +198,6 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
            </div>
           </div>
           <footer>
-  
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-      
-      
-        <a href="../index.html" class="btn btn-neutral" title="Berkeley AutoLab yumipy Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
-      
-    </div>
   
 
   <hr/>
@@ -240,7 +229,8 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: ''
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

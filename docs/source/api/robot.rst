@@ -2,7 +2,7 @@ Controlling the Robot
 =====================
 
 YuMiArmFactory
-~~~~~~~
+~~~~~~~~~~~~~~
 .. autoclass:: yumipy.YuMiArmFactory
 
 YuMiArm
@@ -10,8 +10,8 @@ YuMiArm
 .. autoclass:: yumipy.YuMiArm
 
 ROS remote YuMiArm
-~~~~~~~
-.. autoclass:: yumipy.yumi_arm.YuMiArm_remote
+~~~~~~~~~~~~~~~~~~
+.. autoclass:: yumipy.YuMiArm_ROS
 
 YuMiRobot
 ~~~~~~~~~

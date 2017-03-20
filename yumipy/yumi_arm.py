@@ -1087,22 +1087,19 @@ class YuMiArm:
         req = YuMiArm._construct_req('reset_home')
         return self._request(req, wait_for_res)
 
-class YuMiArm_remote:
+class YuMiArm_ROS:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
-    Communicates over ROS to a yumi arm server (initialize through rosrun or by 
+    Communicates over ROS to a yumi arm server (initialize through roslaunch)
+
+    Parameters
+    ----------
+    arm_service : string
+        ROSYumiArm service to interface with. If the ROSYumiArm services are started through
+        yumi_arms.launch they will be called left_arm and right_arm
+    namespace : string, optional
+        Namespace to prepend to arm_service. If None, current namespace is prepended.
     """
     def __init__(self, arm_service, namespace = None):
-        """ Initializes a YuMiArm interface.
-        This interface will communicate with a ROS arm server over the network.
-
-        Parameters
-        ----------
-        arm_service : string
-            ROSYumiArm service to interface with. If the ROSYumiArm services are started through
-            yumi_arms.launch they will be called left_arm and right_arm
-        namespace : string, optional
-            Namespace to prepend to arm_service. If None, current namespace is prepended.
-        """
         if namespace == None:
             self.arm_service = rospy.get_namespace() + arm_service
         else:
@@ -1111,11 +1108,11 @@ class YuMiArm_remote:
     def __getattr__(self, name):
         """ Override the __getattr__ method so that function calls become server requests
             
-        Note that this must still return a function so that the arguments are captured
+        Note that this must still return a function so that the arguments are captured.
         Also note that this ONLY works for functions, if accessing properties of the remote class is desired
         accessor/mutator functions on the server-side yumi_arm are required.
         
-        Also, the wait_for_res argument is NOT available remotely and will always be set to True
+        Also, the wait_for_res argument is NOT available remotely and will always be set to True.
         This is to prevent odd desynchronized crashes
         """
         def handle_remote_call(*args, **kwargs):
@@ -1147,7 +1144,9 @@ class YuMiArmFactory:
         ----------
         arm_type : string
             Type of arm. One of {'local', 'remote'}
+            
             'local'  creates a local YuMiArm object that communicates over ethernet
+            
             'remote' creates a YuMiArm object that communicates over ROS with a server
         name : string
             Name of arm. One of {'left', 'right'}.
@@ -1155,22 +1154,29 @@ class YuMiArmFactory:
             For local YuMiArm, the port kwarg is set to PORTS[{name}]["server"],
             where PORTS is defined in yumi_constants.py
             
-            For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'
+            For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'.
             This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
             (or None if yumi_arms.launch was launched in the current namespace)
-        **kwargs : keyword arguments
-            Used for local YuMiArm class only. See YuMiArm class for specifications
-            Ignored for remote YuMiArm
+        **kwargs : dict 
+            Keyword arguments.
+            See YuMiArm or YuMiArm_ROS class for specifications
+            
+            The namespace kwarg is ignored for local yumi arm and everything but the namespace kwarg is ignored
+            for remote yumi arm.
         """
         if arm_type == 'local':
+            if 'namespace' in kwargs:
+                del kwargs['namespace']
             return YuMiArm(name, port=YMC.PORTS[name]["server"], **kwargs)
         elif arm_type == 'remote':
             if ROS_ENABLED:
-                return YuMiArm_remote('yumi_robot/{0}_arm'.format(name))
+                if 'namespace' in kwargs:
+                    return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = kwargs['namespace'])
+                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name))
             else:
                 raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
         else:
-            raise ValueError('YuMiArm type {} not supported'.format(arm_type))
+            raise ValueError('YuMiArm type {0} not supported'.format(arm_type))
 
 
 if __name__ == '__main__':
