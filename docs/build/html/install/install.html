@@ -87,6 +87,7 @@
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#testing">Testing</a></li>
 <li><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+<li><a class="reference internal" href="#using-ros-functionality">Using ROS functionality</a></li>
 </ul>
 </li>
 </ul>
@@ -141,6 +142,7 @@
 which can be installed using <cite>pip install</cite> on the source repo.</p>
 <p>Any other dependencies will be installed automatically when <cite>yumipy</cite> is
 installed with <cite>pip</cite>.</p>
+<p>To use the remote yumi functionality, <a class="reference external" href="http://wiki.ros.org/">ROS</a> is needed.</p>
 </div>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
@@ -191,6 +193,29 @@ $ make html
 </div>
 <p>will generate a set of web pages. Any documentation files
 generated in this manner can be found in <cite>docs/build</cite>.</p>
+</div>
+<div class="section" id="using-ros-functionality">
+<h2>Using ROS functionality<a class="headerlink" href="#using-ros-functionality" title="Permalink to this headline">¶</a></h2>
+<p>To use the yumi-over-ros functionality, first install yumipy as a catkin package</p>
+<p>To do this, <a class="reference external" href="http://wiki.ros.org/catkin/Tutorials/create_a_workspace">create a catkin workspace</a>, then clone yumipy into the src folder</p>
+<p>Now, in the catkin workspace directory, run</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>catkin_make
+. devel/setup.bash
+</pre></div>
+</div>
+<p>and yumipy will be active as a catkin package. Note that this DOES NOT persist across terminal sessions.</p>
+<p>After doing this, in order to run the local server, run</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>rosrun yumipy yumi_arms.launch
+</pre></div>
+</div>
+<p>This will start servers for the two arms.</p>
+<p>After doing this, we can initialize a yumi remote interface</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yumipy</span> <span class="kn">import</span> <span class="n">YuMiArmFactory</span>
+<span class="n">yumi_arm_left</span> <span class="o">=</span> <span class="n">YuMiArmFactory</span><span class="o">.</span><span class="n">YuMiArm</span><span class="p">(</span><span class="s1">&#39;remote&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
+<span class="n">yumi_arm_right</span> <span class="o">=</span> <span class="n">YuMiArmFactory</span><span class="o">.</span><span class="n">YuMiArm</span><span class="p">(</span><span class="s1">&#39;remote&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>yumi_arm_left and yumi_arm right can be used the same way YuMiArm objects are (functions only, properties cannot be accessed)</p>
 </div>
 </div>
 

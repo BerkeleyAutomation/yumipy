@@ -11,6 +11,10 @@ which can be installed using `pip install` on the source repo.
 Any other dependencies will be installed automatically when `yumipy` is
 installed with `pip`.
 
+To use the remote yumi functionality, `ROS`_ is needed.
+
+.. _ROS: http://wiki.ros.org/
+
 Cloning the Repository
 ~~~~~~~~~~~~~~~~~~~~~~
 You can clone or download our source code from `Github`_. ::
@@ -66,3 +70,32 @@ For example, ::
 will generate a set of web pages. Any documentation files
 generated in this manner can be found in `docs/build`.
 
+Using ROS functionality
+~~~~~~~~~~~~~~~~~~~~~~~
+To use the yumi-over-ros functionality, first install yumipy as a catkin package
+
+To do this, `create a catkin workspace`_, then clone yumipy into the src folder
+
+.. _create a catkin workspace: http://wiki.ros.org/catkin/Tutorials/create_a_workspace
+
+Now, in the catkin workspace directory, run ::
+
+    catkin_make
+    . devel/setup.bash
+
+and yumipy will be active as a catkin package. Note that this DOES NOT persist across terminal sessions.
+
+
+After doing this, in order to run the local server, run ::
+
+    rosrun yumipy yumi_arms.launch
+
+This will start servers for the two arms.
+
+After doing this, we can initialize a yumi remote interface ::
+
+    from yumipy import YuMiArmFactory
+    yumi_arm_left = YuMiArmFactory.YuMiArm('remote', 'left')
+    yumi_arm_right = YuMiArmFactory.YuMiArm('remote', 'right')
+
+yumi_arm_left and yumi_arm right can be used the same way YuMiArm objects are (functions only, properties cannot be accessed)

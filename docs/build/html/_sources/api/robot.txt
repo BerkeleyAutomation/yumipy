@@ -9,8 +9,8 @@ YuMiArm
 ~~~~~~~
 .. autoclass:: yumipy.YuMiArm
 
-ROS remote YuMiArm
-~~~~~~~~~~~~~~~~~~
+YuMiArm_ROS
+~~~~~~~~~~~
 .. autoclass:: yumipy.YuMiArm_ROS
 
 YuMiRobot

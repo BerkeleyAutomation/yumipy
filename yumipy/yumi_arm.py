@@ -1089,7 +1089,7 @@ class YuMiArm:
 
 class YuMiArm_ROS:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
-    Communicates over ROS to a yumi arm server (initialize through roslaunch)
+    Communicates over ROS to a yumi arm server (initialize server through roslaunch)
 
     Parameters
     ----------
