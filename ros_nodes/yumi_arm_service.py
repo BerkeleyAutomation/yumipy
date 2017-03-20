@@ -2,8 +2,6 @@
 """
 ROS node with service that allows for controlling the YuMi remotely
 """
-
-import logging
 import argparse
 import rospy
 try:
@@ -16,8 +14,11 @@ if __name__ == '__main__':
     # Initialize server. Name is generic as it will be overwritten by launch anyways
     rospy.init_node('arm_server')
     
-    name = rospy.get_param('~name')
-    verbose = rospy.get_param('~display_output')
+    # Arguments:
+    # name:    string,           name of arm to initialize a server for
+    # verbose: bool, optional    if True, logs a line for every function call handled. 
+    name    = rospy.get_param('~name')
+    verbose = rospy.get_param('~display_output', True)
     
     # Get local YuMiArm and its method dict
     arm = YuMiArmFactory.YuMiArm('local', name)

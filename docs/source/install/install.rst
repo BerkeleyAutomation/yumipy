@@ -15,6 +15,8 @@ To use the remote yumi functionality, `ROS`_ is needed.
 
 .. _ROS: http://wiki.ros.org/
 
+This package was tested in ROS Jade. Other versions may or may not work.
+
 Cloning the Repository
 ~~~~~~~~~~~~~~~~~~~~~~
 You can clone or download our source code from `Github`_. ::
