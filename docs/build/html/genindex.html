@@ -31,6 +31,9 @@
   
 
   
+        <link rel="index" title="Index"
+              href="#"/>
+        <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="yumipy 0.0.1 documentation" href="index.html"/> 
 
   
@@ -80,8 +83,18 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"></div>
+                <p class="caption"><span class="caption-text">Installation Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install/install.html">Installation Instructions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/logging.html">Streaming the Robot State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/motion_planning.html">Client-Side Motion Planning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/robot.html">Controlling the Robot</a></li>
+</ul>
+
             
           
         </div>
@@ -110,7 +123,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>Index</li>
+    <li></li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -147,6 +160,20 @@
   <dt><a href="api/robot.html#yumipy.YuMiArm_ROS.__getattr__">__getattr__() (yumipy.YuMiArm_ROS method)</a>
   </dt>
 
+      
+  <dt><a href="api/robot.html#yumipy.YuMiArm.__init__">__init__() (yumipy.YuMiArm method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="api/robot.html#yumipy.YuMiRobot.__init__">(yumipy.YuMiRobot method)</a>
+  </dt>
+
+        
+  <dt><a href="api/logging.html#yumipy.YuMiSubscriber.__init__">(yumipy.YuMiSubscriber method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -161,12 +188,12 @@
   <dt><a href="api/robot.html#yumipy.YuMiArm.buffer_add_single">buffer_add_single() (yumipy.YuMiArm method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiArm.buffer_clear">buffer_clear() (yumipy.YuMiArm method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiArm.buffer_move">buffer_move() (yumipy.YuMiArm method)</a>
   </dt>
@@ -189,12 +216,12 @@
   <dt><a href="api/robot.html#yumipy.YuMiRobot.calibrate_grippers">calibrate_grippers() (yumipy.YuMiRobot method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiArm.close_gripper">close_gripper() (yumipy.YuMiArm method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiRobot.construct_speed_data">construct_speed_data() (yumipy.YuMiRobot static method)</a>
   </dt>
@@ -327,12 +354,12 @@
   <dt><a href="api/robot.html#yumipy.YuMiArm.ping">ping() (yumipy.YuMiArm method)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/motion_planning.html#yumipy.YuMiMotionPlanner.plan_linear_path">plan_linear_path() (yumipy.YuMiMotionPlanner method)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/motion_planning.html#yumipy.YuMiMotionPlanner.plan_shortest_path">plan_shortest_path() (yumipy.YuMiMotionPlanner method)</a>
   </dt>
@@ -353,6 +380,8 @@
   </dt>
 
       </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiArm.reset_home">reset_home() (yumipy.YuMiArm method)</a>
   </dt>
@@ -363,8 +392,6 @@
   </dt>
 
       </dl></dd>
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="api/robot.html#yumipy.YuMiArm.reset_settings">reset_settings() (yumipy.YuMiArm method)</a>
   </dt>
@@ -474,6 +501,10 @@
   </dt>
 
       
+  <dt><a href="api/robot.html#yumipy.YuMiRobot">YuMiRobot (class in yumipy)</a>
+  </dt>
+
+      
   <dt><a href="api/logging.html#yumipy.YuMiState">YuMiState (class in yumipy)</a>
   </dt>
 
@@ -520,8 +551,7 @@
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="_static/jquery.js"></script>

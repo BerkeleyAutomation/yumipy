@@ -30,7 +30,12 @@
   
 
   
-    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/> 
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/>
+        <link rel="next" title="Exceptions" href="../api/exceptions.html"/>
+        <link rel="prev" title="Berkeley AutoLab yumipy Documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,19 +84,26 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Installation Instructions</a><ul>
-<li><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
-<li><a class="reference internal" href="#installation">Installation</a></li>
-<li><a class="reference internal" href="#testing">Testing</a></li>
-<li><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
-<li><a class="reference internal" href="#using-ros-functionality">Using ROS functionality</a></li>
+                <p class="caption"><span class="caption-text">Installation Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-ros-functionality">Using ROS functionality</a></li>
 </ul>
 </li>
 </ul>
-</div>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/logging.html">Streaming the Robot State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/motion_planning.html">Client-Side Motion Planning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/robot.html">Controlling the Robot</a></li>
+</ul>
+
             
           
         </div>
@@ -112,7 +124,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -143,11 +155,12 @@ which can be installed using <cite>pip install</cite> on the source repo.</p>
 <p>Any other dependencies will be installed automatically when <cite>yumipy</cite> is
 installed with <cite>pip</cite>.</p>
 <p>To use the remote yumi functionality, <a class="reference external" href="http://wiki.ros.org/">ROS</a> is needed.</p>
+<p>This package was tested in ROS Jade. Other versions may or may not work.</p>
 </div>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
 <p>You can clone or download our source code from <a class="reference external" href="https://github.com/jacky-liang/yumipy">Github</a>.</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ git clone git@github.com:jacky-liang/yumipy.git
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:jacky-liang/yumipy.git
 </pre></div>
 </div>
 </div>
@@ -155,15 +168,15 @@ installed with <cite>pip</cite>.</p>
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>To install <cite>yumipy</cite> in your current Python environment, simply
 change directories into the <cite>yumipy</cite> repository and run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -e .
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -e .
 </pre></div>
 </div>
 <p>or</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r requirements.txt
 </pre></div>
 </div>
 <p>Alternatively, you can run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install /path/to/yumipy
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install /path/to/yumipy
 </pre></div>
 </div>
 <p>to install <cite>yumipy</cite> from anywhere.</p>
@@ -171,7 +184,7 @@ change directories into the <cite>yumipy</cite> repository and run</p>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <p>To test your installation, run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ python setup.py test
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ python setup.py test
 </pre></div>
 </div>
 <p>with the robot on and calibrated.</p>
@@ -182,12 +195,12 @@ change directories into the <cite>yumipy</cite> repository and run</p>
 <p>Building <cite>yumipy</cite>&#8216;s documentation requires a few extra dependencies &#8211;
 specifically, <a class="reference external" href="http://www.sphinx-doc.org/en/1.4.8/">sphinx</a> and a few plugins.</p>
 <p>To install the dependencies required, simply run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt
 </pre></div>
 </div>
 <p>Then, go to the <cite>docs</cite> directory and run <cite>make</cite> with the appropriate target.
 For example,</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>$ cd docs/
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ cd docs/
 $ make html
 </pre></div>
 </div>
@@ -199,18 +212,18 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
 <p>To use the yumi-over-ros functionality, first install yumipy as a catkin package</p>
 <p>To do this, <a class="reference external" href="http://wiki.ros.org/catkin/Tutorials/create_a_workspace">create a catkin workspace</a>, then clone yumipy into the src folder</p>
 <p>Now, in the catkin workspace directory, run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>catkin_make
-. devel/setup.bash
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">catkin_make</span>
+<span class="o">.</span> <span class="n">devel</span><span class="o">/</span><span class="n">setup</span><span class="o">.</span><span class="n">bash</span>
 </pre></div>
 </div>
 <p>and yumipy will be active as a catkin package. Note that this DOES NOT persist across terminal sessions.</p>
 <p>After doing this, in order to run the local server, run</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span>rosrun yumipy yumi_arms.launch
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">rosrun</span> <span class="n">yumipy</span> <span class="n">yumi_arms</span><span class="o">.</span><span class="n">launch</span>
 </pre></div>
 </div>
 <p>This will start servers for the two arms.</p>
 <p>After doing this, we can initialize a yumi remote interface</p>
-<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yumipy</span> <span class="kn">import</span> <span class="n">YuMiArmFactory</span>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yumipy</span> <span class="k">import</span> <span class="n">YuMiArmFactory</span>
 <span class="n">yumi_arm_left</span> <span class="o">=</span> <span class="n">YuMiArmFactory</span><span class="o">.</span><span class="n">YuMiArm</span><span class="p">(</span><span class="s1">&#39;remote&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
 <span class="n">yumi_arm_right</span> <span class="o">=</span> <span class="n">YuMiArmFactory</span><span class="o">.</span><span class="n">YuMiArm</span><span class="p">(</span><span class="s1">&#39;remote&#39;</span><span class="p">,</span> <span class="s1">&#39;right&#39;</span><span class="p">)</span>
 </pre></div>
@@ -223,6 +236,15 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../index.html" class="btn btn-neutral" title="Berkeley AutoLab yumipy Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -254,8 +276,7 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>

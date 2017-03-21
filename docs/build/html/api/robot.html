@@ -30,7 +30,11 @@
   
 
   
-    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/> 
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/>
+        <link rel="prev" title="Client-Side Motion Planning" href="motion_planning.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -79,17 +83,24 @@
           
             
             
-                <!-- Local TOC -->
-                <div class="local-toc"><ul>
-<li><a class="reference internal" href="#">Controlling the Robot</a><ul>
-<li><a class="reference internal" href="#yumiarmfactory">YuMiArmFactory</a></li>
-<li><a class="reference internal" href="#yumiarm">YuMiArm</a></li>
-<li><a class="reference internal" href="#yumiarm-ros">YuMiArm_ROS</a></li>
-<li><a class="reference internal" href="#yumirobot">YuMiRobot</a></li>
+                <p class="caption"><span class="caption-text">Installation Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation Instructions</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="logging.html">Streaming the Robot State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="motion_planning.html">Client-Side Motion Planning</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Controlling the Robot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#yumiarmfactory">YuMiArmFactory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yumiarm">YuMiArm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yumiarm-ros">YuMiArm_ROS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yumirobot">YuMiRobot</a></li>
 </ul>
 </li>
 </ul>
-</div>
+
             
           
         </div>
@@ -110,7 +121,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -138,11 +149,11 @@
 <h2>YuMiArmFactory<a class="headerlink" href="#yumiarmfactory" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiArmFactory">
-<em class="property">class </em><tt class="descclassname">yumipy.</tt><tt class="descname">YuMiArmFactory</tt><a class="headerlink" href="#yumipy.YuMiArmFactory" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiArmFactory</code><a class="headerlink" href="#yumipy.YuMiArmFactory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Factory class for YuMiArm interfaces.</p>
 <dl class="staticmethod">
 <dt id="yumipy.YuMiArmFactory.YuMiArm">
-<em class="property">static </em><tt class="descname">YuMiArm</tt><big>(</big><em>arm_type</em>, <em>name</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArmFactory.YuMiArm" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">YuMiArm</code><span class="sig-paren">(</span><em>arm_type</em>, <em>name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArmFactory.YuMiArm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a YuMiArm interface.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -160,7 +171,7 @@ where PORTS is defined in yumi_constants.py</p>
 This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
 (or None if yumi_arms.launch was launched in the current namespace)</p>
 </li>
-<li><strong>**kwargs</strong> &#8211; <p>Keyword arguments.
+<li><strong>**kwargs</strong> (<em>dict</em>) &#8211; <p>Keyword arguments.
 See YuMiArm or YuMiArm_ROS class for specifications</p>
 <p>The namespace kwarg is ignored for local yumi arm and everything but the namespace kwarg is ignored
 for remote yumi arm.</p>
@@ -179,29 +190,70 @@ for remote yumi arm.</p>
 <h2>YuMiArm<a class="headerlink" href="#yumiarm" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiArm">
-<em class="property">class </em><tt class="descclassname">yumipy.</tt><tt class="descname">YuMiArm</tt><big>(</big><em>name</em>, <em>ip='192.168.125.1'</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame='tool'</em>, <em>to_frame='base'</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiArm</code><span class="sig-paren">(</span><em>name</em>, <em>ip='192.168.125.1'</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame='tool'</em>, <em>to_frame='base'</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to a single arm of an ABB YuMi robot.
 Communicates with the robot over Ethernet.</p>
 <dl class="method">
+<dt id="yumipy.YuMiArm.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>ip='192.168.125.1'</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame='tool'</em>, <em>to_frame='base'</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
+This uses a subprocess to handle non-blocking socket communication with the RAPID server.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<em>string</em>) &#8211; Name of the arm {&#8216;left&#8217;, &#8216;right&#8217;}</li>
+<li><strong>ip</strong> (<em>string formated ip address, optional</em>) &#8211; IP of YuMi Robot.
+Default uses the one in YuMiConstants</li>
+<li><strong>port</strong> (<em>int, optional</em>) &#8211; Port of target arm&#8217;s server.
+Default uses the port for the left arm from YuMiConstants.</li>
+<li><strong>bufsize</strong> (<em>int, optional</em>) &#8211; Buffer size for ethernet responses</li>
+<li><strong>motion_timeout</strong> (<em>float, optional</em>) &#8211; Timeout for motion commands.
+Default from YuMiConstants.MOTION_TIMEOUT</li>
+<li><strong>comm_timeout</strong> (<em>float, optional</em>) &#8211; Timeout for non-motion ethernet communication.
+Default from YuMiConstants.COMM_TIMEOUT</li>
+<li><strong>process_timeout</strong> (<em>float, optional</em>) &#8211; Timeout for ethernet process communication.
+Default from YuMiConstants.PROCESS_TIMEOUT</li>
+<li><strong>from_frame</strong> (<em>string, optional</em>) &#8211; String name of robot arm frame.
+Default to &#8220;tool&#8221;</li>
+<li><strong>to_frame</strong> (<em>string, optional</em>) &#8211; String name of reference for robot frame
+Default to &#8220;base&#8221;</li>
+<li><strong>debug</strong> (<em>bool, optional</em>) &#8211; Boolean to indicate whether or not in debug mode. If in debug mode no ethernet communication is attempted. Mock responses will be returned.
+Default to YuMiConstants.DEBUG</li>
+<li><strong>log_pose_histories</strong> (<em>bool, optional</em>) &#8211; If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
+Defaults to False</li>
+<li><strong>log_state_histories</strong> (<em>bool, optional</em>) &#8211; If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
+Defaults to False</li>
+<li><strong>motion_planner</strong> (<em>YuMiMotionPlanner, optional</em>) &#8211; If given, will use for planning trajectories in joint space.
+Defaults to None</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="yumipy.YuMiArm.reset_settings">
-<tt class="descname">reset_settings</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.reset_settings" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset_settings</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.reset_settings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.reset">
-<tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.reset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the underlying yumi ethernet process and socket, and resets all the settings.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_motion_planner">
-<tt class="descname">set_motion_planner</tt><big>(</big><em>motion_planner</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_motion_planner" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_motion_planner</code><span class="sig-paren">(</span><em>motion_planner</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_motion_planner" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motion_planner</strong> (<em>YuMiMotionPlanner</em>) &#8211; Sets the current motion planner to the given motion planner.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motion_planner</strong> (<a class="reference internal" href="motion_planning.html#yumipy.YuMiMotionPlanner" title="yumipy.YuMiMotionPlanner"><em>YuMiMotionPlanner</em></a>) &#8211; Sets the current motion planner to the given motion planner.</td>
 </tr>
 </tbody>
 </table>
@@ -209,7 +261,7 @@ Communicates with the robot over Ethernet.</p>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.flush_pose_histories">
-<tt class="descname">flush_pose_histories</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.flush_pose_histories" title="Permalink to this definition">¶</a></dt>
+<code class="descname">flush_pose_histories</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.flush_pose_histories" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -222,7 +274,7 @@ Communicates with the robot over Ethernet.</p>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.flush_state_histories">
-<tt class="descname">flush_state_histories</tt><big>(</big><em>filename</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.flush_state_histories" title="Permalink to this definition">¶</a></dt>
+<code class="descname">flush_state_histories</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.flush_state_histories" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -235,13 +287,13 @@ Communicates with the robot over Ethernet.</p>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.stop">
-<tt class="descname">stop</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.stop" title="Permalink to this definition">¶</a></dt>
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stops subprocess for ethernet communication. Allows program to exit gracefully.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.ping">
-<tt class="descname">ping</tt><big>(</big><em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.ping" title="Permalink to this definition">¶</a></dt>
+<code class="descname">ping</code><span class="sig-paren">(</span><em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.ping" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pings the remote server.
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -254,8 +306,7 @@ Communicates with the robot over Ethernet.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Namedtuple (raw_res, data) from ping command.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -263,7 +314,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.get_state">
-<tt class="descname">get_state</tt><big>(</big><em>raw_res=False</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.get_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_state</code><span class="sig-paren">(</span><em>raw_res=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.get_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current state (joint configuration) of this arm.
 :param raw_res: If True, will return raw_res namedtuple instead of YuMiState</p>
 <blockquote>
@@ -277,8 +328,7 @@ If communication times out or socket error.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">out</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -286,7 +336,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.get_pose">
-<tt class="descname">get_pose</tt><big>(</big><em>raw_res=False</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.get_pose" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_pose</code><span class="sig-paren">(</span><em>raw_res=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.get_pose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the current pose of this arm to base frame of the arm.
 :param raw_res: If True, will return raw_res namedtuple instead of YuMiState</p>
 <blockquote>
@@ -300,8 +350,7 @@ If communication times out or socket error.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">out</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -309,8 +358,10 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.is_pose_reachable">
-<tt class="descname">is_pose_reachable</tt><big>(</big><em>pose</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.is_pose_reachable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if a given pose is reachable (incurs no kinematic/joint-space limitations and self collisions)</p>
+<code class="descname">is_pose_reachable</code><span class="sig-paren">(</span><em>pose</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.is_pose_reachable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a given pose is reachable (incurs no kinematic/joint-space limitations and self collisions)
+:param pose:
+:type pose: RigidTransform</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -319,8 +370,7 @@ If communication times out or socket error.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">True if pose is reachable, False otherwise.</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -328,7 +378,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.goto_state">
-<tt class="descname">goto_state</tt><big>(</big><em>state</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.goto_state" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_state</code><span class="sig-paren">(</span><em>state</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.goto_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commands the YuMi to goto the given state (joint angles)
 :param state:
 :type state: YuMiState
@@ -342,8 +392,7 @@ If communication times out or socket error.</td>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
 <li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) if state logging is not enabled and wait_for_res is False</em></li>
-<li><em>{</em> &#8211;
-&#8216;time&#8217;: &lt;flaot&gt;,
+<li><em>{</em> &#8211; &#8216;time&#8217;: &lt;flaot&gt;,
 &#8216;state&#8217;: &lt;YuMistate&gt;,
 &#8216;res&#8217;: &lt;namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;)&gt;</li>
 <li><em>} otherwise. The time field indicates the duration it took for the arm to complete the motion.</em></li>
@@ -352,10 +401,8 @@ If communication times out or socket error.</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -365,7 +412,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.goto_pose">
-<tt class="descname">goto_pose</tt><big>(</big><em>pose</em>, <em>linear=True</em>, <em>relative=False</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.goto_pose" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_pose</code><span class="sig-paren">(</span><em>pose</em>, <em>linear=True</em>, <em>relative=False</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.goto_pose" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commands the YuMi to goto the given pose
 :param pose:
 :type pose: RigidTransform
@@ -387,8 +434,7 @@ Defaults to True</li>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
 <li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) if pose logging is not enabled and wait_for_res is False</em></li>
-<li><em>{</em> &#8211;
-&#8216;time&#8217;: &lt;flaot&gt;,
+<li><em>{</em> &#8211; &#8216;time&#8217;: &lt;flaot&gt;,
 &#8216;pose&#8217;: &lt;RigidTransform&gt;,
 &#8216;res&#8217;: &lt;namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;)&gt;</li>
 <li><em>} otherwise. The time field indicates the duration it took for the arm to complete the motion.</em></li>
@@ -397,10 +443,8 @@ Defaults to True</li>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -410,19 +454,19 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.goto_pose_linear_path">
-<tt class="descname">goto_pose_linear_path</tt><big>(</big><em>pose</em>, <em>wait_for_res=True</em>, <em>traj_len=10</em>, <em>eef_delta=0.01</em>, <em>jump_thresh=0.0</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_linear_path" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_pose_linear_path</code><span class="sig-paren">(</span><em>pose</em>, <em>wait_for_res=True</em>, <em>traj_len=10</em>, <em>eef_delta=0.01</em>, <em>jump_thresh=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_linear_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go to a pose via the shortest path in joint space</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.goto_pose_shortest_path">
-<tt class="descname">goto_pose_shortest_path</tt><big>(</big><em>pose</em>, <em>wait_for_res=True</em>, <em>plan_timeout=0.1</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_shortest_path" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_pose_shortest_path</code><span class="sig-paren">(</span><em>pose</em>, <em>wait_for_res=True</em>, <em>plan_timeout=0.1</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_shortest_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Go to a pose via the shortest path in joint space</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.goto_pose_delta">
-<tt class="descname">goto_pose_delta</tt><big>(</big><em>translation</em>, <em>rotation=None</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_delta" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_pose_delta</code><span class="sig-paren">(</span><em>translation</em>, <em>rotation=None</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.goto_pose_delta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goto a target pose by transforming the current pose using the given translation and rotation
 :param translatioin: The translation vector (x, y, z) in meters.
 :type translatioin: list-like with length 3
@@ -445,10 +489,8 @@ Defaults to True</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -458,7 +500,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_tool">
-<tt class="descname">set_tool</tt><big>(</big><em>pose</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_tool" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_tool</code><span class="sig-paren">(</span><em>pose</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_tool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the Tool Center Point (TCP) of the arm using the given pose.
 :param pose:
 :type pose: RigidTransform
@@ -475,8 +517,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -484,7 +525,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_speed">
-<tt class="descname">set_speed</tt><big>(</big><em>speed_data</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_speed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_speed</code><span class="sig-paren">(</span><em>speed_data</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the target speed of the arm&#8217;s movements.
 :param speed_data: Specifies the speed data that will be used by RAPID when executing motions.</p>
 <blockquote>
@@ -502,8 +543,7 @@ Defaults to True</td>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -511,7 +551,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_zone">
-<tt class="descname">set_zone</tt><big>(</big><em>zone_data</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_zone" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_zone</code><span class="sig-paren">(</span><em>zone_data</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_zone" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goto a target pose by transforming the current pose using the given translation and rotation
 :param speed_data: Specifies the speed data that will be used by RAPID when executing motions.</p>
 <blockquote>
@@ -529,8 +569,7 @@ Defaults to True</td>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -538,7 +577,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.move_circular">
-<tt class="descname">move_circular</tt><big>(</big><em>center_pose</em>, <em>target_pose</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.move_circular" title="Permalink to this definition">¶</a></dt>
+<code class="descname">move_circular</code><span class="sig-paren">(</span><em>center_pose</em>, <em>target_pose</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.move_circular" title="Permalink to this definition">¶</a></dt>
 <dd><p>Goto a target pose by following a circular path around the center_pose
 :param center_pose: Pose for the center of the circle for circula movement.
 :type center_pose: RigidTransform
@@ -559,10 +598,8 @@ If communication times out or socket error.</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -572,7 +609,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.buffer_add_single">
-<tt class="descname">buffer_add_single</tt><big>(</big><em>pose</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.buffer_add_single" title="Permalink to this definition">¶</a></dt>
+<code class="descname">buffer_add_single</code><span class="sig-paren">(</span><em>pose</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.buffer_add_single" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add single pose to the linear movement buffer in RAPID
 :param pose:
 :type pose: RigidTransform
@@ -589,8 +626,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -598,7 +634,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.buffer_add_all">
-<tt class="descname">buffer_add_all</tt><big>(</big><em>pose_list</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.buffer_add_all" title="Permalink to this definition">¶</a></dt>
+<code class="descname">buffer_add_all</code><span class="sig-paren">(</span><em>pose_list</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.buffer_add_all" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a list of poses to the linear movement buffer in RAPID
 :param pose_list:
 :type pose_list: list of RigidTransforms
@@ -615,8 +651,7 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -624,7 +659,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.buffer_clear">
-<tt class="descname">buffer_clear</tt><big>(</big><em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.buffer_clear" title="Permalink to this definition">¶</a></dt>
+<code class="descname">buffer_clear</code><span class="sig-paren">(</span><em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.buffer_clear" title="Permalink to this definition">¶</a></dt>
 <dd><p>Clears the linear movement buffer in RAPID
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -639,8 +674,7 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -648,7 +682,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.buffer_size">
-<tt class="descname">buffer_size</tt><big>(</big><em>raw_res=False</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.buffer_size" title="Permalink to this definition">¶</a></dt>
+<code class="descname">buffer_size</code><span class="sig-paren">(</span><em>raw_res=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.buffer_size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the current linear movement buffer size.
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -663,8 +697,7 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -672,7 +705,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.buffer_move">
-<tt class="descname">buffer_move</tt><big>(</big><em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.buffer_move" title="Permalink to this definition">¶</a></dt>
+<code class="descname">buffer_move</code><span class="sig-paren">(</span><em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.buffer_move" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executes the linear movement buffer
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -687,8 +720,7 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -696,7 +728,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.open_gripper">
-<tt class="descname">open_gripper</tt><big>(</big><em>no_wait=False</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.open_gripper" title="Permalink to this definition">¶</a></dt>
+<code class="descname">open_gripper</code><span class="sig-paren">(</span><em>no_wait=False</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.open_gripper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the gripper to the target_width
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -713,10 +745,8 @@ If communication times out or socket error.</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -726,7 +756,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.close_gripper">
-<tt class="descname">close_gripper</tt><big>(</big><em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.close_gripper" title="Permalink to this definition">¶</a></dt>
+<code class="descname">close_gripper</code><span class="sig-paren">(</span><em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.close_gripper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Closes the gripper as close to 0 as possible with maximum force.
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -743,10 +773,8 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -756,7 +784,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.move_gripper">
-<tt class="descname">move_gripper</tt><big>(</big><em>width</em>, <em>no_wait=False</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.move_gripper" title="Permalink to this definition">¶</a></dt>
+<code class="descname">move_gripper</code><span class="sig-paren">(</span><em>width</em>, <em>no_wait=False</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.move_gripper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves the gripper to the given width in meters.
 :param width: Target width in meters
 :type width: float
@@ -779,10 +807,8 @@ Defaults to True</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -792,7 +818,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.calibrate_gripper">
-<tt class="descname">calibrate_gripper</tt><big>(</big><em>max_speed=None</em>, <em>hold_force=None</em>, <em>phys_limit=None</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.calibrate_gripper" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calibrate_gripper</code><span class="sig-paren">(</span><em>max_speed=None</em>, <em>hold_force=None</em>, <em>phys_limit=None</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.calibrate_gripper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calibrates the gripper.
 :param max_speed: Max speed of the gripper in mm/s.</p>
 <blockquote>
@@ -818,8 +844,7 @@ Defaults to True</li>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -830,7 +855,7 @@ If communication times out or socket error.</p>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_gripper_force">
-<tt class="descname">set_gripper_force</tt><big>(</big><em>force</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_gripper_force" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_gripper_force</code><span class="sig-paren">(</span><em>force</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_gripper_force" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the gripper hold force
 :param force: Hold force by the gripper in N.
 :type force: float
@@ -847,8 +872,7 @@ If communication times out or socket error.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -856,7 +880,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_gripper_max_speed">
-<tt class="descname">set_gripper_max_speed</tt><big>(</big><em>max_speed</em>, <em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.set_gripper_max_speed" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_gripper_max_speed</code><span class="sig-paren">(</span><em>max_speed</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_gripper_max_speed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the gripper max speed
 :param max_speed: In mm/s.
 :type max_speed: float
@@ -873,8 +897,7 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -882,8 +905,10 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.get_gripper_width">
-<tt class="descname">get_gripper_width</tt><big>(</big><em>raw_res=False</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.get_gripper_width" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get width of current gripper in meters.</p>
+<code class="descname">get_gripper_width</code><span class="sig-paren">(</span><em>raw_res=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.get_gripper_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get width of current gripper in meters.
+:param raw_res:
+:type raw_res: bool, optional</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -896,10 +921,8 @@ If communication times out or socket error.</td>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -909,7 +932,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiArm.reset_home">
-<tt class="descname">reset_home</tt><big>(</big><em>wait_for_res=True</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm.reset_home" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset_home</code><span class="sig-paren">(</span><em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.reset_home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Resets the arm to home using joints
 :param wait_for_res: If True, will block main process until response received from RAPID server.</p>
 <blockquote>
@@ -926,10 +949,8 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -944,7 +965,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 <h2>YuMiArm_ROS<a class="headerlink" href="#yumiarm-ros" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiArm_ROS">
-<em class="property">class </em><tt class="descclassname">yumipy.</tt><tt class="descname">YuMiArm_ROS</tt><big>(</big><em>arm_service</em>, <em>namespace=None</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm_ROS" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiArm_ROS</code><span class="sig-paren">(</span><em>arm_service</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm_ROS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to remotely control a single arm of an ABB YuMi robot.
 Communicates over ROS to a yumi arm server (initialize server through roslaunch)</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -962,7 +983,7 @@ yumi_arms.launch they will be called left_arm and right_arm</li>
 </table>
 <dl class="method">
 <dt id="yumipy.YuMiArm_ROS.__getattr__">
-<tt class="descname">__getattr__</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#yumipy.YuMiArm_ROS.__getattr__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__getattr__</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm_ROS.__getattr__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override the __getattr__ method so that function calls become server requests</p>
 <p>Note that this must still return a function so that the arguments are captured.
 Also note that this ONLY works for functions, if accessing properties of the remote class is desired
@@ -977,35 +998,68 @@ This is to prevent odd desynchronized crashes</p>
 <div class="section" id="yumirobot">
 <h2>YuMiRobot<a class="headerlink" href="#yumirobot" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt>
-<tt class="descname">YuMiRobot(ip='192.168.125.1', port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]</tt></dt>
-<dt>
-<tt class="descname">[ 0.  1.  0.]</tt></dt>
-<dt>
-<tt class="descname">[ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False)</tt></dt>
+<dt id="yumipy.YuMiRobot">
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiRobot</code><span class="sig-paren">(</span><em>ip='192.168.125.1', port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to both arms of an ABB YuMi robot.
 Communicates with the robot over Ethernet.</p>
 <dl class="method">
+<dt id="yumipy.YuMiRobot.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>ip='192.168.125.1', port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initializes a YuMiRobot</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ip</strong> (<em>string formatted IP Address, optional</em>) &#8211; IP address of YuMi.
+Defaults to YuMiConstants.IP</li>
+<li><strong>port_l</strong> (<em>int, optional</em>) &#8211; Port of left arm server.
+Defaults to YuMiConstants.PORT_L</li>
+<li><strong>port_r</strong> (<em>int, optional</em>) &#8211; Port of right arm server.
+Defaults to YuMiConstants.PORT_R</li>
+<li><strong>tcp</strong> (<em>RigidTransform, optional</em>) &#8211; Tool Center Point Offset of the endeffectors.
+Defaults to YuMiConstants.TCP_DEFAULT_GRIPPER</li>
+<li><strong>include_left</strong> (<em>bool, optional</em>) &#8211; If True, the left arm is included and instantiated.
+Defaults to True</li>
+<li><strong>include_right</strong> (<em>bool, optional</em>) &#8211; If True, the right arm is included and instantiated.
+Defaults to True</li>
+<li><strong>debug</strong> (<em>bool, optional</em>) &#8211; If True, enables debug mode, so no ethernet socket will be created, and all response messages are faked.
+Defaults to YuMiConstants.DEBUG</li>
+<li><strong>log_pose_histories</strong> (<em>bool, optional</em>) &#8211; If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
+Defaults to False</li>
+<li><strong>log_state_histories</strong> (<em>bool, optional</em>) &#8211; If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
+Defaults to False</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="yumipy.YuMiRobot.reset">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">reset</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.reset" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the reset function for each instantiated arm object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.stop">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">stop</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.stop" title="Permalink to this definition">¶</a></dt>
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.stop" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls the stop function for each instantiated arm object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.open_grippers">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">open_grippers</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.open_grippers" title="Permalink to this definition">¶</a></dt>
+<code class="descname">open_grippers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.open_grippers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calls open_gripper function for each instantiated arm object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.goto_state_sync">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">goto_state_sync</tt><big>(</big><em>left_state</em>, <em>right_state</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.goto_state_sync" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_state_sync</code><span class="sig-paren">(</span><em>left_state</em>, <em>right_state</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.goto_state_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commands both arms to go to assigned states in sync. Sync means both
 motions will end at the same time.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1013,16 +1067,14 @@ motions will end at the same time.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>left_state</strong> (<em>YuMiState</em>) &#8211; Target state for left arm</li>
-<li><strong>right_state</strong> (<em>YuMiState</em>) &#8211; Target state for right arm</li>
+<li><strong>left_state</strong> (<a class="reference internal" href="logging.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; Target state for left arm</li>
+<li><strong>right_state</strong> (<a class="reference internal" href="logging.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; Target state for right arm</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1032,7 +1084,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.goto_pose_sync">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">goto_pose_sync</tt><big>(</big><em>left_pose</em>, <em>right_pose</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.goto_pose_sync" title="Permalink to this definition">¶</a></dt>
+<code class="descname">goto_pose_sync</code><span class="sig-paren">(</span><em>left_pose</em>, <em>right_pose</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.goto_pose_sync" title="Permalink to this definition">¶</a></dt>
 <dd><p>Commands both arms to go to assigned poses in sync. Sync means both
 motions will end at the same time.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -1046,10 +1098,8 @@ motions will end at the same time.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1059,7 +1109,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.set_v">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">set_v</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.set_v" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_v</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.set_v" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets speed for both arms using n as the speed number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1068,8 +1118,7 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; speed number. If n = 100, then speed will be set to the corresponding v100
 specified in RAPID. Loosely, n is translational speed in milimeters per second</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1077,7 +1126,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.set_z">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">set_z</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.set_z" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_z</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.set_z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets zoning settings for both arms according to name.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1085,8 +1134,7 @@ If communication times out or socket error.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of zone setting. ie: &#8220;z10&#8221;, &#8220;z200&#8221;, &#8220;fine&#8221;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1094,7 +1142,7 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.set_tool">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">set_tool</tt><big>(</big><em>pose</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.set_tool" title="Permalink to this definition">¶</a></dt>
+<code class="descname">set_tool</code><span class="sig-paren">(</span><em>pose</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.set_tool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets TCP (Tool Center Point) for both arms using given pose as offset</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1102,8 +1150,7 @@ If communication times out or socket error.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pose</strong> (<em>RigidTransform</em>) &#8211; Pose of new TCP as offset from the default TCP</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1111,17 +1158,15 @@ If communication times out or socket error.</td>
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.reset_home">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">reset_home</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.reset_home" title="Permalink to this definition">¶</a></dt>
+<code class="descname">reset_home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.reset_home" title="Permalink to this definition">¶</a></dt>
 <dd><p>Moves both arms to home position</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</li>
-<li><tt class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></tt> &#8211;
-If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1131,14 +1176,13 @@ If commanded pose triggers any motion errors that are catchable by RAPID sever.<
 
 <dl class="method">
 <dt id="yumipy.YuMiRobot.calibrate_grippers">
-<tt class="descclassname">YuMiRobot.</tt><tt class="descname">calibrate_grippers</tt><big>(</big><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.calibrate_grippers" title="Permalink to this definition">¶</a></dt>
+<code class="descname">calibrate_grippers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.calibrate_grippers" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calibrates grippers for instantiated arms.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></tt> &#8211;
-If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1146,7 +1190,7 @@ If communication times out or socket error.</td>
 
 <dl class="staticmethod">
 <dt id="yumipy.YuMiRobot.construct_speed_data">
-<em class="property">static </em><tt class="descclassname">YuMiRobot.</tt><tt class="descname">construct_speed_data</tt><big>(</big><em>tra</em>, <em>rot</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.construct_speed_data" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">construct_speed_data</code><span class="sig-paren">(</span><em>tra</em>, <em>rot</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.construct_speed_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a speed data tuple that&#8217;s in the same format as ones used in RAPID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1158,7 +1202,10 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple of correctly formatted speed data: (tra, rot, tra, rot)</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(tra, rot, tra, rot)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A tuple of correctly formatted speed data</p>
 </td>
 </tr>
 </tbody>
@@ -1167,7 +1214,7 @@ If communication times out or socket error.</td>
 
 <dl class="staticmethod">
 <dt id="yumipy.YuMiRobot.get_v">
-<em class="property">static </em><tt class="descclassname">YuMiRobot.</tt><tt class="descname">get_v</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.get_v" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_v</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.get_v" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the corresponding speed data for n as the speed number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1175,7 +1222,9 @@ If communication times out or socket error.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; speed number. If n = 100, will return the same speed data as v100 in RAPID</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Corresponding speed data tuple using n as speed number</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Corresponding speed data tuple using n as speed number</td>
 </tr>
 </tbody>
 </table>
@@ -1183,7 +1232,7 @@ If communication times out or socket error.</td>
 
 <dl class="staticmethod">
 <dt id="yumipy.YuMiRobot.get_z">
-<em class="property">static </em><tt class="descclassname">YuMiRobot.</tt><tt class="descname">get_z</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.get_z" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">get_z</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.get_z" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets the corresponding speed data for n as the speed number.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1191,7 +1240,9 @@ If communication times out or socket error.</td>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of zone setting. ie: &#8220;z10&#8221;, &#8220;z200&#8221;, &#8220;fine&#8221;</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Corresponding zone data dict to be used in set_z</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Corresponding zone data dict to be used in set_z</td>
 </tr>
 </tbody>
 </table>
@@ -1199,7 +1250,7 @@ If communication times out or socket error.</td>
 
 <dl class="staticmethod">
 <dt id="yumipy.YuMiRobot.construct_zone_data">
-<em class="property">static </em><tt class="descclassname">YuMiRobot.</tt><tt class="descname">construct_zone_data</tt><big>(</big><em>pzone_tcp</em>, <em>pzone_ori</em>, <em>zone_ori</em><big>)</big><a class="headerlink" href="#yumipy.YuMiRobot.construct_zone_data" title="Permalink to this definition">¶</a></dt>
+<em class="property">static </em><code class="descname">construct_zone_data</code><span class="sig-paren">(</span><em>pzone_tcp</em>, <em>pzone_ori</em>, <em>zone_ori</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.construct_zone_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs tuple for zone data</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1212,7 +1263,10 @@ If communication times out or socket error.</td>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple of correctly formatted zone data: (pzone_tcp, pzone_ori, zone_ori)</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(pzone_tcp, pzone_ori, zone_ori)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">A tuple of correctly formatted zone data</p>
 </td>
 </tr>
 </tbody>
@@ -1228,6 +1282,13 @@ If communication times out or socket error.</td>
            </div>
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="motion_planning.html" class="btn btn-neutral" title="Client-Side Motion Planning" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>
@@ -1259,8 +1320,7 @@ If communication times out or socket error.</td>
             VERSION:'0.0.1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: ''
+            HAS_SOURCE:  true
         };
     </script>
       <script type="text/javascript" src="../_static/jquery.js"></script>
