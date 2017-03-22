@@ -8,23 +8,18 @@ from core import RigidTransform
 
 class YuMiConstants:
 
-    METERS_TO_MM = 1000.0
-    MM_TO_METERS = 1.0 / METERS_TO_MM
-
     IP = '192.168.125.1'
 
     PORTS = {
         "left" : {
             "server":5000,
-            'gripper':5002,
-            "joints":5010,
+            "states":5010,
             "poses":5012,
             "torques":5014
         },
         "right" : {
             "server":5001,
-            "gripper":5003,
-            "joints":5011,
+            "states":5011,
             "poses":5013,
             "torques":5015
         },
@@ -36,6 +31,9 @@ class YuMiConstants:
     PROCESS_TIMEOUT = 10
     PROCESS_SLEEP_TIME = 0.01
     MOTION_BUFFER_SIZE = 512
+
+    MAX_GRIPPER_WIDTH = 0.02
+    MAX_GRIPPER_FORCE = 20
 
     # used to rate limit real-time YuMi controls (in seconds)
     COMM_PERIOD = 0.04
@@ -126,6 +124,21 @@ class YuMiConstants:
 
     R_AWAY_POSE = RigidTransform(translation=[0.15, -0.4, 0.22], rotation=[0.38572, 0.39318, 0.60945, 0.57027])
     L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+
+    AXIS_ALIGNED_STATES = {
+        'inwards': {
+            'right': YuMiState([75, -90, 0, -30, 90, -10, -45]),
+            'left': YuMiState([-75, -90, 0, 30, 90, 10, 45])
+        },
+        'forwards': {
+            'right': YuMiState([36.42, -117.3, 35.59, 50.42, 46.19, 66.02, -100.28]),
+            'left': YuMiState([-36.42, -117.3, 35.59, -50.42, 46.19, 113.98, 100.28])
+        },
+        'downwards': {
+            'right': YuMiState([-60.0, -110.0, 35.0, 116.0, 100.0, -90.0, 30.0]),
+            'left': YuMiState([60.0, -110.0, 35.0, -116.0, 100.0, -90.0, -30.0])
+        }
+    }
 
     L_THINKING_POSES = [
         RigidTransform(translation=[0.32, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),

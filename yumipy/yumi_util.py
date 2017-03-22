@@ -4,11 +4,13 @@ Util functions for converting
 import logging
 import numpy as np
 
+METERS_TO_MM = 1000.0
+MM_TO_METERS = 1.0 / METERS_TO_MM
+
 from yumi_state import YuMiState
-from yumi_constants import YuMiConstants as YMC
 from core import RigidTransform
 
-def message_to_pose(message, from_frame):
+def message_to_pose(message, from_frame='yumi'):
     tokens = message.split()
     try:
         if len(tokens) != 7:
@@ -44,22 +46,3 @@ def message_to_torques(message):
     torque_vals = np.array([float(token) for token in tokens])
 
     return torque_vals
-
-def construct_req(code_name, body=''):
-    req = '{0:d} {1}#'.format(YMC.CMD_CODES[code_name], body)
-    return req
-
-def iter_to_str(template, iterable):
-    result = ''
-    for val in iterable:
-        result += template.format(val).rstrip('0').rstrip('.') + ' '
-    return result
-
-def get_pose_body(pose):
-    if not isinstance(pose, RigidTransform):
-        raise ValueError('Can only parse RigidTransform objects')
-    pose = pose.copy()
-    pose.position = pose.position * YMC.METERS_TO_MM
-    body = '{0}{1}'.format(iter_to_str('{:.1f}', pose.position.tolist()),
-                                        iter_to_str('{:.5f}', pose.quaternion.tolist()))
-    return body

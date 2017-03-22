@@ -733,12 +733,15 @@ class YuMiArm:
         req = construct_req('buffer_move')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def open_gripper(self, no_wait=False, wait_for_res=True):
+    def open_gripper(self, no_wait=True, wait_for_res=True):
         '''Opens the gripper to the target_width
         Parameters
         ----------
         wait_for_res : bool, optional
                 If True, will block main process until response received from RAPID server.
+                Defaults to True
+        no_wait : bool, optional
+                If True, the RAPID server will continue without waiting for the gripper to reach its target width
                 Defaults to True
 
         Returns
@@ -755,12 +758,21 @@ class YuMiArm:
         '''
         return self._gripper.open(no_wait=no_wait, wait_for_res=wait_for_res)
 
-    def close_gripper(self, wait_for_res=True):
+    def close_gripper(self, force=20, width=0, no_wait=True, wait_for_res=True):
         '''Closes the gripper as close to 0 as possible with maximum force.
         Parameters
         ----------
         wait_for_res : bool, optional
                 If True, will block main process until response received from RAPID server.
+                Defaults to True
+        force : float, optional
+                Sets the corresponding gripping force in Newtons.
+                Defaults to 20, which is the maximum grip force.
+        width : float, optional
+                Sets the target width of gripper close motion in m. Cannot be greater than max gripper width.
+                Defaults to 0.
+        no_wait : bool, optional
+                If True, the RAPID server will continue without waiting for the gripper to reach its target width
                 Defaults to True
 
         Returns
@@ -775,9 +787,21 @@ class YuMiArm:
         YuMiControlException
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
+<<<<<<< HEAD
         return self._gripper.close(wait_for_res=wait_for_res)
+=======
+        if force < 0 or force > YMC.MAX_GRIPPER_FORCE:
+            raise ValueError("Gripper force can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_FORCE, force))
+        if width < 0 or width > YMC>MAX_GRIPPER_WIDTH:
+            raise ValueError("Gripper width can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_WIDTH, width))
 
-    def move_gripper(self, width, no_wait=False, wait_for_res=True):
+        width = METERS_TO_MM * width
+        body = YuMiArm._iter_to_str('{0:.1f}', [force, width] + ([0] if no_wait else []))
+        req = YuMiArm._construct_req('close_gripper', body)
+        return self._request(req, wait_for_res, timeout=self._motion_timeout)
+>>>>>>> 5233a224637f5936ea2966f2141e5faa9d66b223
+
+    def move_gripper(self, width, no_wait=True, wait_for_res=True):
         '''Moves the gripper to the given width in meters.
         Parameters
         ----------

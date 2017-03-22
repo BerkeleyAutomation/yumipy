@@ -20,10 +20,11 @@ _RAW_RES = namedtuple('_RAW_RES', 'time message')
 
 class _YuMiSubscriberEthernet(Process):
 
-    def __init__(self, name, data_q, ip, port, bufsize, timeout):
+    def __init__(self, name, data_q, cmd_q, ip, port, bufsize, timeout):
         Process.__init__(self)
         self._name = name
         self._data_q = data_q
+        self._cmd_q = cmd_q
 
         self._ip = ip
         self._port = port
@@ -40,38 +41,46 @@ class _YuMiSubscriberEthernet(Process):
 
         self._reset_socket()
         try:
-            while not self._end_run:
-                raw_res = None
-                try:
-                    raw_res = self._socket.recv(self._bufsize)
-                except socket.error, e:
-                    if e.errno == 114: # request time out
-                        raise YuMiCommException('Request timed out')
-
-                if raw_res is None or len(raw_res) == 0:
-                    self._stop()
-                    break
-
-                raw_res = raw_res[:raw_res.rfind("!")]
-                raw_res = raw_res[raw_res.rfind("#")+1:]
-                tokens = raw_res.split()
-                res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
-
-                if self._data_q.full():
+            while True:
+                if self._cmd_q.qsize() > 0:
+                    cmd = self._cmd_q.get()
+                    if cmd == 'stop':
+                        break
+                    if cmd == 'reset':
+                        self._reset_socket()
+                else:
+                    raw_res = None
                     try:
-                        self._data_q.get_nowait()
-                    except Empty:
-                        pass
-                self._data_q.put(res)
+                        raw_res = self._socket.recv(self._bufsize)
+                    except socket.error, e:
+                        if e.errno == 114: # request time out
+                            raise YuMiCommException('Request timed out')
 
+                    if raw_res is None or len(raw_res) == 0:
+                        self._stop()
+                        break
+
+                    raw_res = raw_res[:raw_res.rfind("!")]
+                    raw_res = raw_res[raw_res.rfind("#")+1:]
+                    tokens = raw_res.split()
+                    res = _RAW_RES(float(tokens[0]), ' '.join(tokens[1:]))
+
+                    if self._data_q.full():
+                        try:
+                            self._data_q.get_nowait()
+                        except Empty:
+                            pass
+
+                    self._data_q.put(res)
+                sleep(1e-3)
         except KeyboardInterrupt:
-            self._stop()
-            sys.exit(0)
+            pass
+        self._stop()
+        sys.exit(0)
 
     def _stop(self):
         logging.debug("Shutting down yumi subscriber ethernet interface for {0}".format(self._name))
         self._socket.close()
-        self._end_run = True
 
     def _reset_socket(self):
         logging.debug('Opening socket on {0}:{1} for subscription'.format(self._ip, self._port))
@@ -84,38 +93,65 @@ class _YuMiSubscriberEthernet(Process):
         logging.debug('Socket successfully opened!')
 
 class _YuMiArmSubscriber:
-    def __init__(self, name, ip=YMC.IP, bufsize=YMC.BUFSIZE, comm_timeout=YMC.COMM_TIMEOUT):
+
+    def __init__(self, name, includes):
         self._name = name
         self._to_frame = "yumi_{0}".format(name)
-        self._comm_timeout = comm_timeout
-        self._bufsize = bufsize
-        self._ip = ip
+        self._comm_timeout = YMC.COMM_TIMEOUT
+        self._bufsize = YMC.BUFSIZE
+        self._ip = YMC.IP
         self._time_offset = 0
+        self._qs = {
+            'cmd': {},
+            'data': {}
+        }
+        self.includes = includes
+        for name in self.includes:
+            self._qs['cmd'][name] = Queue()
+            self._qs['data'][name] = Queue(maxsize=1)
+        self.msgs_map = {
+            'states': message_to_state,
+            'torques': message_to_torques,
+            'poses': message_to_pose
+        }
 
     def _start(self):
-        self._state_q = Queue(maxsize=1)
-        self._pose_q = Queue(maxsize=1)
-        self._torque_q = Queue(maxsize=1)
-
-        self._sub_pose = _YuMiSubscriberEthernet("{0}_poses".format(self._name), self._pose_q, self._ip, YMC.PORTS[self._name]["poses"], self._bufsize, self._comm_timeout)
-        self._sub_state = _YuMiSubscriberEthernet("{0}_joints".format(self._name), self._state_q, self._ip, YMC.PORTS[self._name]["joints"], self._bufsize, self._comm_timeout)
-        self._sub_torque = _YuMiSubscriberEthernet("{0}_torques".format(self._name), self._torque_q, self._ip, YMC.PORTS[self._name]["torques"], self._bufsize, self._comm_timeout)
-
-        self._sub_pose.start()
-        self._sub_state.start()
-        self._sub_torque.start()
-
-        self._last_state = None
-        self._last_pose = None
-        self._last_torque = None
+        self._last_datas = {}
+        self._subs = {}
+        for name in self.includes:
+            self._last_datas[name] = None
+            self._subs[name] = _YuMiSubscriberEthernet("{}_{}".format(self._name, name),
+                                                            self._qs['data'][name],
+                                                            self._qs['cmd'][name],
+                                                            self._ip, YMC.PORTS[self._name][name],
+                                                            self._bufsize,
+                                                            self._comm_timeout)
+            self._subs[name].start()
 
     def _stop(self):
-        self._sub_pose.terminate()
-        self._sub_state.terminate()
-        self._sub_torque.terminate()
+        for q in self._qs['cmd'].values():
+            q.put('stop')
+
+    def __del__(self):
+        self._stop()
 
     def _reset_time(self):
         self._time_offset += self.get_pose()[0]
+
+    def _get_data(self, name, timestamp=True):
+        if name not in self.includes:
+            raise ValueError("Subscriber wasn't instantiated to include {}!".format(name))
+
+        data_q = self._qs['data'][name]
+        if not data_q.empty() or self._last_datas[name] is None:
+            res = data_q.get(block=True)
+            self._last_datas[name] = res.time, self.msgs_map[name](res.message)
+
+        time_stamp, data = self._last_datas[name]
+
+        if timestamp:
+            return time_stamp - self._time_offset, data
+        return data
 
     def get_pose(self, timestamp=True):
         '''Get the current pose of this arm.
@@ -135,15 +171,7 @@ class _YuMiArmSubscriber:
         YuMiCommException
             If communication times out or socket error.
         '''
-        if not self._pose_q.empty() or self._last_pose is None:
-            res = self._pose_q.get(block=True)
-            self._last_pose = res.time, message_to_pose(res.message, self._to_frame)
-
-        time_stamp, pose = self._last_pose
-
-        if timestamp:
-            return time_stamp - self._time_offset, pose.copy()
-        return pose.copy()
+        return self._get_data('poses', timestamp=timestamp)
 
     def get_state(self, timestamp=True):
         '''Get the current state (joint configuration) of this arm and corresponding timestamp.
@@ -163,13 +191,7 @@ class _YuMiArmSubscriber:
         YuMiCommException
             If communication times out or socket error.
         '''
-        if not self._state_q.empty() or self._last_state is None:
-            res = self._state_q.get(block=True)
-            self._last_state = res.time, message_to_state(res.message)
-        time_stamp, state = self._last_state
-        if timestamp:
-            return time_stamp - self._time_offset, state.copy()
-        return state.copy()
+        return self._get_data('states', timestamp=timestamp)
 
     def get_torque(self, timestamp=True):
         '''Get the current torque readings of each joint of this arm and corresponding timestamp.
@@ -189,20 +211,16 @@ class _YuMiArmSubscriber:
         YuMiCommException
             If communication times out or socket error.
         '''
-        if not self._torque_q.empty() or self._last_torque is None:
-            res = self._torque_q.get(block=True)
-            self._last_torque = res.time, message_to_torques(res.message)
-        time_stamp, torque = self._last_torque
-        if timestamp:
-            return time_stamp - self._time_offset, torque.copy()
-        return torque.copy()
+        return self._get_data('torques', timestamp=timestamp)
 
 class YuMiSubscriber:
     """ Interface to stream pose and state information from an ABB YuMI robot
     over ethernet.
     """
 
-    def __init__(self, include_left=True, include_right=True):
+    def __init__(self, include_left=True, include_right=True,
+                        left_includes=('torques', 'states', 'poses'),
+                        right_includes=('torques', 'states', 'poses')):
         '''Initializes a YuMiSubscriber
 
         Parameters
@@ -224,10 +242,10 @@ class YuMiSubscriber:
 
         self._arms = {}
         if include_left:
-            self.left = _YuMiArmSubscriber("left")
+            self.left = _YuMiArmSubscriber("left", left_includes)
             self._arms['left'] = self.left
         if include_right:
-            self.right = _YuMiArmSubscriber("right")
+            self.right = _YuMiArmSubscriber("right", right_includes)
             self._arms['right'] = self.right
         self._started = False
 
