@@ -1109,13 +1109,20 @@ class YuMiArm_ROS:
     
     def __getattr__(self, name):
         """ Override the __getattr__ method so that function calls become server requests
-            
-        Note that this must still return a function so that the arguments are captured.
-        Also note that this ONLY works for functions, if accessing properties of the remote class is desired
-        accessor/mutator functions on the server-side yumi_arm are required.
         
-        Also, the wait_for_res argument is NOT available remotely and will always be set to True.
-        This is to prevent odd desynchronized crashes
+        If the name is a method of the YuMiArm class, this returns a function that calls that
+        function on the YuMiArm instance in the server. The wait_for_res argument is not available
+        remotely and will always be set to True. This is to prevent odd desynchronized crashes
+        
+        Otherwise, the name is considered to be an attribute, and getattr is called on the
+        YuMiArm instance in the server. Note that if it isn't an attribute either a RuntimeError
+        will be raised.
+        
+        The difference here is that functions access the server *on call* and non-functions do
+        *on getting the name*
+        
+        Also note that this is __getattr__, so things like __init__ and __dict__ WILL NOT trigger
+        this function as the YuMiArm_ROS object already has these as attributes.
         """
         if name in YuMiArm.__dict__:
             def handle_remote_call(*args, **kwargs):
