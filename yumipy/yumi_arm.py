@@ -1137,7 +1137,7 @@ class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """
 
     @staticmethod
-    def YuMiArm(arm_type, name, **kwargs):
+    def YuMiArm(arm_type, name, namespace = None):
         """Initializes a YuMiArm interface. 
 
         Parameters
@@ -1157,22 +1157,14 @@ class YuMiArmFactory:
             For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'.
             This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
             (or None if yumi_arms.launch was launched in the current namespace)
-        **kwargs : dict 
-            Keyword arguments.
-            See YuMiArm or YuMiArm_ROS class for specifications
-            
-            The namespace kwarg is ignored for local yumi arm and everything but the namespace kwarg is ignored
-            for remote yumi arm.
+        namespace : string
+            ROS namespace of arm. Used by remote YuMiArm only.
         """
         if arm_type == 'local':
-            if 'namespace' in kwargs:
-                del kwargs['namespace']
-            return YuMiArm(name, port=YMC.PORTS[name]["server"], **kwargs)
+            return YuMiArm(name, port=YMC.PORTS[name]["server"])
         elif arm_type == 'remote':
             if ROS_ENABLED:
-                if 'namespace' in kwargs:
-                    return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = kwargs['namespace'])
-                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name))
+                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = namespace)
             else:
                 raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
         else:
