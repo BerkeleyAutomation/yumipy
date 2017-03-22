@@ -100,4 +100,4 @@ After doing this, we can initialize a yumi remote interface ::
     yumi_arm_left = YuMiArmFactory.YuMiArm('remote', 'left')
     yumi_arm_right = YuMiArmFactory.YuMiArm('remote', 'right')
 
-yumi_arm_left and yumi_arm right can be used the same way YuMiArm objects are (functions only, properties cannot be accessed)
+yumi_arm_left and yumi_arm right can be used the same way YuMiArm objects are
