@@ -1125,13 +1125,19 @@ class YuMiArm_ROS:
                 arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
                 if 'wait_for_res' in kwargs:
                     kwargs['wait_for_res'] = True
-                response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
+                try:
+                    response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
+                except rospy.ServiceException, e:
+                    raise RuntimeError("Service call failed: {0}".format(str(e)))
                 return pickle.loads(response.ret)
             return handle_remote_call
         else:
             rospy.wait_for_service(self.arm_service, timeout = self.timeout)
             arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
-            response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), "")
+            try:
+                response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), pickle.dumps(None))
+            except rospy.ServiceException, e:
+                raise RuntimeError("Could not get attribute: {0}".format(str(e)))
             return pickle.loads(response.ret)
 
 class YuMiArmFactory:
