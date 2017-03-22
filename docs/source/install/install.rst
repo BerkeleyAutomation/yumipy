@@ -19,8 +19,8 @@ You can clone or download our source code from `Github`_. ::
 
 .. _Github: https://github.com/jacky-liang/yumipy
 
-Installation
-~~~~~~~~~~~~
+Installation of YuMiPy
+~~~~~~~~~~~~~~~~~~~~~~
 To install `yumipy` in your current Python environment, simply
 change directories into the `yumipy` repository and run ::
 
@@ -35,6 +35,42 @@ Alternatively, you can run ::
     $ pip install /path/to/yumipy
 
 to install `yumipy` from anywhere.
+
+Installation of RAPID Server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To install the RAPID Server on the ABB YuMi:
+1. Connect YuMi (XP23 Service Port) to your machine via an Ethernet cable
+2. Open ABB Robot Studio > Controller Tab
+3. Add Controller > One Click Connect
+4. Switch YuMi to Manual Mode
+4. In the controller tab, Request Write Access
+5. Unzip RAPID/YuMi_Backup_Stable.zip
+6. Backup down arrow > Restore from Backup > Select the unzipped folder
+7. Proceed with restoring backup
+
+Running RAPID Server
+~~~~~~~~~~~~~~~~~~~~
+To run the RAPID server, through the FlexPendant:
+1. Turn Motors On
+2. Change to AUTO Mode
+3. Set Program Pointer to Main
+4. Click "Play"
+
+Note that if you use our provided backup, you can use the custom buttons on the
+FlexPendant to do the following:
+- Three bars - toggle motors on/off
+- Two bars - toggle auto/manual mode
+- One bar - set program pointer to main
+
+You only need to run the RAPID server if you're using the YuMiArm or YuMiRobot
+objects. You can run YuMiSubcriber anytime as long as the YuMi is on and connected
+to your machine.
+
+You can edit the server code in SERVER_LEFT and SERVER_RIGHT.mod in RobotStudio.
+To edit the logger code that provide logging capabilities to the YuMiSubscriber,
+you must change their respective tasks from semi-static to static, restart
+the robot, make your edits, change them back to semi-static, then restart
+the robot again.
 
 Testing
 ~~~~~~~
@@ -65,4 +101,3 @@ For example, ::
 
 will generate a set of web pages. Any documentation files
 generated in this manner can be found in `docs/build`.
-
