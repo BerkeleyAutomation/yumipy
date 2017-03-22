@@ -1099,11 +1099,13 @@ class YuMiArm_ROS:
     namespace : string, optional
         Namespace to prepend to arm_service. If None, current namespace is prepended.
     """
-    def __init__(self, arm_service, namespace = None):
+    def __init__(self, arm_service, namespace = None, timeout = YMC.ROS_TIMEOUT):
         if namespace == None:
             self.arm_service = rospy.get_namespace() + arm_service
         else:
             self.arm_service = namespace + arm_service
+        
+        self.timeout = timeout
     
     def __getattr__(self, name):
         """ Override the __getattr__ method so that function calls become server requests
@@ -1115,23 +1117,22 @@ class YuMiArm_ROS:
         Also, the wait_for_res argument is NOT available remotely and will always be set to True.
         This is to prevent odd desynchronized crashes
         """
-        def handle_remote_call(*args, **kwargs):
-            """ Handle the remote call to some YuMiArm function.
-            """
-            try:
-                rospy.wait_for_service(self.arm_service, timeout = 10)
-            except rospy.ROSException:
-                raise RuntimeError("Service call timed out: Service {0} cannot be reached"
-                                   .format(self.arm_service))
-            try:
+        if name in YuMiArm.__dict__:
+            def handle_remote_call(*args, **kwargs):
+                """ Handle the remote call to some YuMiArm function.
+                """
+                rospy.wait_for_service(self.arm_service, timeout = self.timeout)
                 arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
                 if 'wait_for_res' in kwargs:
                     kwargs['wait_for_res'] = True
                 response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
                 return pickle.loads(response.ret)
-            except rospy.ServiceException, e:
-                raise RuntimeError("Service call failed: {0}".format(str(e)))
-        return handle_remote_call
+            return handle_remote_call
+        else:
+            rospy.wait_for_service(self.arm_service, timeout = self.timeout)
+            arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
+            response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), "")
+            return pickle.loads(response.ret)
 
 class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """

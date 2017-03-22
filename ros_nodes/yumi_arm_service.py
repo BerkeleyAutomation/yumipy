@@ -29,9 +29,15 @@ if __name__ == '__main__':
         func = pickle.loads(req.func)
         args = pickle.loads(req.args)
         kwargs = pickle.loads(req.kwargs)
-        if verbose:
-            rospy.loginfo("Handling request to call method {0} for {1} arm".format(func, name))
-        return ROSYumiArmResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
+        
+        if func == '__getattribute__':
+            if verbose:
+                rospy.loginfo("Handling request to get attribute {0} for {1} arm".format(args, name))
+            return ROSYumiArmResponse(pickle.dumps(getattr(arm, args)))
+        else:
+            if verbose:
+                rospy.loginfo("Handling request to call method {0} for {1} arm".format(func, name))
+            return ROSYumiArmResponse(pickle.dumps(yumi_methods[func](arm, *args, **kwargs)))
     
     s = rospy.Service('{0}_arm'.format(name), ROSYumiArm, handle_request)
     rospy.loginfo("{0} arm is ready".format(name))
