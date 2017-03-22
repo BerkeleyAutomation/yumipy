@@ -5,6 +5,8 @@ Author: Jacky
 import numpy as np
 
 class YuMiState:
+    """ Object that encapsulates a yumi arm joint angle configuration.
+    """
 
     NUM_JOINTS = 7
     NAME = "YuMi"

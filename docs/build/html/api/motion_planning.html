@@ -34,7 +34,7 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/>
-        <link rel="next" title="Robot Control" href="robot.html"/>
+        <link rel="next" title="Controlling the Robot" href="robot.html"/>
         <link rel="prev" title="Streaming the Robot State" href="logging.html"/> 
 
   
@@ -96,7 +96,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#yumimotionplanner">YuMiMotionPlanner</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="robot.html">Robot Control</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robot.html">Controlling the Robot</a></li>
 </ul>
 
             
@@ -152,7 +152,8 @@ This module is experimental.</p>
 <dl class="class">
 <dt id="yumipy.YuMiMotionPlanner">
 <em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiMotionPlanner</code><span class="sig-paren">(</span><em>arm='left'</em>, <em>planner='RRTstar'</em>, <em>goal_pos_tol=0.001</em>, <em>planning_time=0.1</em>, <em>eef_delta=0.01</em>, <em>jump_thresh=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiMotionPlanner" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<dd><p>Client-side motion planner for the ABB YuMi, based on MoveIt!</p>
+<dl class="method">
 <dt id="yumipy.YuMiMotionPlanner.set_planner">
 <code class="descname">set_planner</code><span class="sig-paren">(</span><em>planner</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiMotionPlanner.set_planner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the motion planner for the YuMi</p>
@@ -167,7 +168,7 @@ This module is experimental.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start_state</strong> (<em>YuMiState</em>) &#8211; initial state of the arm</li>
+<li><strong>start_state</strong> (<a class="reference internal" href="logging.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; initial state of the arm</li>
 <li><strong>start_pose</strong> (<em>RigidTransform</em>) &#8211; initial pose of end effector tip</li>
 <li><strong>goal_pose</strong> (<em>RigidTransform</em>) &#8211; goal pose of end effector tip</li>
 <li><strong>traj_len</strong> (<em>int</em>) &#8211; number of waypoints to use in planning</li>
@@ -195,7 +196,7 @@ This module is experimental.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start_state</strong> (<em>YuMiState</em>) &#8211; initial state of the arm</li>
+<li><strong>start_state</strong> (<a class="reference internal" href="logging.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; initial state of the arm</li>
 <li><strong>start_pose</strong> (<em>RigidTransform</em>) &#8211; initial pose of end effector tip</li>
 <li><strong>goal_pose</strong> (<em>RigidTransform</em>) &#8211; goal pose of end effector tip</li>
 <li><strong>timeout</strong> (<em>float</em>) &#8211; planner timeout (shorthand for setting new planning time then planning)</li>
@@ -224,7 +225,7 @@ This module is experimental.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="robot.html" class="btn btn-neutral float-right" title="Robot Control" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="robot.html" class="btn btn-neutral float-right" title="Controlling the Robot" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="logging.html" class="btn btn-neutral" title="Streaming the Robot State" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

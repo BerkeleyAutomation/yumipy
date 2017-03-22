@@ -34,6 +34,7 @@
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
     <link rel="top" title="yumipy 0.0.1 documentation" href="../index.html"/>
+        <link rel="next" title="Exceptions" href="../api/exceptions.html"/>
         <link rel="prev" title="Berkeley AutoLab yumipy Documentation" href="../index.html"/> 
 
   
@@ -88,11 +89,20 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation Instructions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cloning-the-repository">Cloning the Repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-of-yumipy">Installation of YuMiPy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-of-rapid-server">Installation of RAPID Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-rapid-server">Running RAPID Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
 </ul>
 </li>
+</ul>
+<p class="caption"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/exceptions.html">Exceptions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/logging.html">Streaming the Robot State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/motion_planning.html">Client-Side Motion Planning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/robot.html">Controlling the Robot</a></li>
 </ul>
 
             
@@ -141,20 +151,20 @@
 <h1>Installation Instructions<a class="headerlink" href="#installation-instructions" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
-<p>The <cite>yumipy</cite> module depends on the Berkeley AutoLab&#8217;s <a class="reference external" href="https://github.com/mmatl/core">core</a> module,
+<p>The <cite>yumipy</cite> module depends on the Berkeley AutoLab&#8217;s <a class="reference external" href="https://github.com/BerkeleyAutomation/core">core</a> module,
 which can be installed using <cite>pip install</cite> on the source repo.</p>
 <p>Any other dependencies will be installed automatically when <cite>yumipy</cite> is
 installed with <cite>pip</cite>.</p>
 </div>
 <div class="section" id="cloning-the-repository">
 <h2>Cloning the Repository<a class="headerlink" href="#cloning-the-repository" title="Permalink to this headline">¶</a></h2>
-<p>You can clone or download our source code from <a class="reference external" href="https://github.com/jacky-liang/yumipy">Github</a>.</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:jacky-liang/yumipy.git
+<p>You can clone or download our source code from <a class="reference external" href="https://github.com/BerkeleyAutomation/yumipy">Github</a>.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/BerkeleyAutomation/yumipy.git
 </pre></div>
 </div>
 </div>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="installation-of-yumipy">
+<h2>Installation of YuMiPy<a class="headerlink" href="#installation-of-yumipy" title="Permalink to this headline">¶</a></h2>
 <p>To install <cite>yumipy</cite> in your current Python environment, simply
 change directories into the <cite>yumipy</cite> repository and run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -e .
@@ -169,6 +179,45 @@ change directories into the <cite>yumipy</cite> repository and run</p>
 </pre></div>
 </div>
 <p>to install <cite>yumipy</cite> from anywhere.</p>
+</div>
+<div class="section" id="installation-of-rapid-server">
+<h2>Installation of RAPID Server<a class="headerlink" href="#installation-of-rapid-server" title="Permalink to this headline">¶</a></h2>
+<p>To install the RAPID Server on the ABB YuMi:</p>
+<ol class="arabic simple">
+<li>Connect YuMi (XP23 Service Port) to your machine via an Ethernet cable</li>
+<li>Open ABB Robot Studio &gt; Controller Tab</li>
+<li>Add Controller &gt; One Click Connect</li>
+<li>Switch YuMi to Manual Mode</li>
+<li>In the controller tab, Request Write Access</li>
+<li>Unzip RAPID/YuMi_Backup_Stable.zip</li>
+<li>Backup down arrow &gt; Restore from Backup &gt; Select the unzipped folder</li>
+<li>Proceed with restoring backup</li>
+</ol>
+</div>
+<div class="section" id="running-rapid-server">
+<h2>Running RAPID Server<a class="headerlink" href="#running-rapid-server" title="Permalink to this headline">¶</a></h2>
+<p>To run the RAPID server, through the FlexPendant:</p>
+<ol class="arabic simple">
+<li>Turn Motors On</li>
+<li>Change to AUTO Mode</li>
+<li>Set Program Pointer to Main</li>
+<li>Click &#8220;Play&#8221; to run server</li>
+</ol>
+<p>Note that if you use our provided backup, you can use the custom buttons on the
+FlexPendant to do the following:</p>
+<ul class="simple">
+<li>Three bars - toggle motors on/off</li>
+<li>Two bars - toggle auto/manual mode</li>
+<li>One bar - set program pointer to main</li>
+</ul>
+<p>You only need to run the RAPID server if you&#8217;re using the YuMiArm or YuMiRobot
+objects. You can run YuMiSubcriber anytime as long as the YuMi is on and connected
+to your machine.</p>
+<p>You can edit the server code in SERVER_LEFT and SERVER_RIGHT.mod in RobotStudio.
+To edit the logger code that provide logging capabilities to the YuMiSubscriber,
+you must change their respective tasks from semi-static to static, restart
+the robot, make your edits, change them back to semi-static, then restart
+the robot again.</p>
 </div>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
@@ -204,6 +253,8 @@ generated in this manner can be found in <cite>docs/build</cite>.</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../api/exceptions.html" class="btn btn-neutral float-right" title="Exceptions" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral" title="Berkeley AutoLab yumipy Documentation" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
