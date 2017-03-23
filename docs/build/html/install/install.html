@@ -94,13 +94,14 @@
 <li class="toctree-l2"><a class="reference internal" href="#running-rapid-server">Running RAPID Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#testing">Testing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-documentation">Building Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#quick-start">Quick Start</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../api/exceptions.html">Exceptions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../api/logging.html">Streaming the Robot State</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/logging.html">Streaming Information from the Robot</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/motion_planning.html">Client-Side Motion Planning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api/robot.html">Controlling the Robot</a></li>
 </ul>
@@ -244,6 +245,26 @@ $ make html
 </div>
 <p>will generate a set of web pages. Any documentation files
 generated in this manner can be found in <cite>docs/build</cite>.</p>
+</div>
+<div class="section" id="quick-start">
+<h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<p>Here&#8217;s a quick example usage of yumipy after installing both the python package
+and the RAPID server and running the RAPID server in auto mode:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yumipy</span> <span class="kn">import</span> <span class="n">YuMiRobot</span>
+<span class="c1"># starting the robot interface</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">YuMiRobot</span><span class="p">()</span>
+
+<span class="c1"># getting the current pose of the right end effector</span>
+<span class="n">pose</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get_pose</span><span class="p">()</span>
+
+<span class="c1"># move right arm forward by 5cm using goto_pose</span>
+<span class="n">pose</span><span class="o">.</span><span class="n">translation</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">0.05</span>
+<span class="n">y</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">goto_pose</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+
+<span class="c1"># move right arm back by 5cm using move delta</span>
+<span class="n">y</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">goto_pose_delta</span><span class="p">((</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
 </div>
 </div>
 

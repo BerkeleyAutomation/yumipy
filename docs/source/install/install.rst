@@ -104,3 +104,24 @@ For example, ::
 
 will generate a set of web pages. Any documentation files
 generated in this manner can be found in `docs/build`.
+
+Quick Start
+~~~~~~~~~~~
+Here's a quick example usage of yumipy after installing both the python package
+and the RAPID server and running the RAPID server in auto mode:
+
+.. code-block:: python
+
+  from yumipy import YuMiRobot
+  # starting the robot interface
+  y = YuMiRobot()
+
+  # getting the current pose of the right end effector
+  pose = y.right.get_pose()
+
+  # move right arm forward by 5cm using goto_pose
+  pose.translation[0] += 0.05
+  y.right.goto_pose(pose)
+
+  # move right arm back by 5cm using move delta
+  y.right.goto_pose_delta((-0.05,0,0))
