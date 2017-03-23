@@ -10,7 +10,7 @@ Step 1: Install the alan YuMi python interface on the client computer that will 
 ```sh
 $ python setup.py develop
 ```
-Step 2: Restore backup under RAPID/YuMi_Backup_Stable.zip
+Step 2: Restore backup under RAPID/YuMi_Backup_Stable.zip to YuMi in Robot Studio.
 
 ### Usage
 Simple example to import and use the YuMi interface (make sure the YuMi is in Auto mode and has the server running):
