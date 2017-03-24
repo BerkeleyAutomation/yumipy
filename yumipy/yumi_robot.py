@@ -5,6 +5,7 @@ Authors: Jacky Liang
 import logging
 from yumi_arm import YuMiArm, YuMiArmFactory
 from yumi_constants import YuMiConstants as YMC
+from time import sleep
 
 class YuMiRobot:
     """ Interface to both arms of an ABB YuMi robot.
@@ -94,12 +95,19 @@ class YuMiRobot:
         '''
         for arm in self._arms:
             arm.reset()
+            
+    def start(self):
+        '''Calls the stop function for each instantiated arm object.
+        '''
+        for arm in self._arms:
+            arm.start()
 
     def stop(self):
         '''Calls the stop function for each instantiated arm object.
         '''
         for arm in self._arms:
             arm.stop()
+        sleep(1)
 
     def open_grippers(self):
         ''' Calls open_gripper function for each instantiated arm object.
