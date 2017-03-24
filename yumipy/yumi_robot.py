@@ -68,22 +68,22 @@ class YuMiRobot:
         self._arms = []
 
         if include_left:
-            if mode == 'local':
+            if arm_type == 'local':
                 self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
                                     log_state_histories=log_state_histories)
-            elif mode == 'remote':
+            elif arm_type == 'remote':
                 self.left = YuMiArmFactory.YuMiArm('remote', 'left', ros_namespace)
             else:
-                raise RuntimeError("Mode {0} for YuMiArm is not a valid mode".format(mode))
+                raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.left)
         if include_right:
-            if mode =='local':
+            if arm_type =='local':
                 self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
                                      log_state_histories=log_state_histories)
-            elif mode == 'remote':
+            elif arm_type == 'remote':
                 self.left = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
             else:
-                raise RuntimeError("Mode {0} for YuMiArm is not a valid mode".format(mode))
+                raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.right)
 
         self.set_tool(self.tcp)
