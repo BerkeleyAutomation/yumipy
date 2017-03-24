@@ -82,7 +82,7 @@ class _YuMiEthernet(Process):
             sys.exit(0)
 
         self._stop()
-            
+
     def _stop(self):
         logging.info("Shutting down yumi ethernet interface")
         if not self._debug:
@@ -916,7 +916,14 @@ class YuMiArm:
         YuMiControlException
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
-        req = YuMiArm._construct_req('close_gripper', '')
+        if force < 0 or force > YMC.MAX_GRIPPER_FORCE:
+            raise ValueError("Gripper force can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_FORCE, force))
+        if width < 0 or width > YMC>MAX_GRIPPER_WIDTH:
+            raise ValueError("Gripper width can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_WIDTH, width))
+
+        width = METERS_TO_MM * width
+        body = YuMiArm._iter_to_str('{0:.1f}', [force, width] + ([0] if no_wait else []))
+        req = YuMiArm._construct_req('close_gripper', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
     def move_gripper(self, width, no_wait=False, wait_for_res=True):

@@ -1,5 +1,8 @@
 Controlling the Robot
 =====================
+YuMiState
+~~~~~~~~~
+.. autoclass:: yumipy.YuMiState
 
 YuMiArmFactory
 ~~~~~~~~~~~~~~

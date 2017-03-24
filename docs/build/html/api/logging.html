@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Streaming the Robot State &mdash; yumipy 0.0.1 documentation</title>
+  <title>Streaming Information from the Robot &mdash; yumipy 0.0.1 documentation</title>
   
 
   
@@ -91,9 +91,9 @@
 <p class="caption"><span class="caption-text">API Documentation</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="exceptions.html">Exceptions</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Streaming the Robot State</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#yumistate">YuMiState</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Streaming Information from the Robot</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#yumsubscriber">YuMSubscriber</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yumisubcriber-example">YuMiSubcriber Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="motion_planning.html">Client-Side Motion Planning</a></li>
@@ -128,7 +128,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>Streaming the Robot State</li>
+    <li>Streaming Information from the Robot</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -142,26 +142,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="streaming-the-robot-state">
-<h1>Streaming the Robot State<a class="headerlink" href="#streaming-the-robot-state" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="yumistate">
-<h2>YuMiState<a class="headerlink" href="#yumistate" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="yumipy.YuMiState">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiState</code><span class="sig-paren">(</span><em>vals=[0, 0, 0, 0, 0, 0, 0]</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiState" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
+  <div class="section" id="streaming-information-from-the-robot">
+<h1>Streaming Information from the Robot<a class="headerlink" href="#streaming-information-from-the-robot" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="yumsubscriber">
 <h2>YuMSubscriber<a class="headerlink" href="#yumsubscriber" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiSubscriber">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiSubscriber</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiSubscriber</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em>, <em>right_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to stream pose and state information from an ABB YuMI robot
 over ethernet.</p>
 <dl class="method">
 <dt id="yumipy.YuMiSubscriber.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em>, <em>right_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a YuMiSubscriber</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -196,6 +188,22 @@ Defaults to True</li>
 
 </dd></dl>
 
+</div>
+<div class="section" id="yumisubcriber-example">
+<h2>YuMiSubcriber Example<a class="headerlink" href="#yumisubcriber-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">sub</span> <span class="o">=</span> <span class="n">YuMiSubcriber</span><span class="p">()</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="n">left_pose</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">get_pose</span><span class="p">()</span>
+<span class="n">right_pose</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get_pose</span><span class="p">()</span>
+<span class="n">left_state</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+<span class="n">right_state</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+<span class="n">left_torque</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">get_torque</span><span class="p">()</span>
+<span class="n">right_torque</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">get_torque</span><span class="p">()</span>
+
+<span class="n">sub</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 
