@@ -81,7 +81,7 @@ class YuMiRobot:
                 self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
                                      log_state_histories=log_state_histories)
             elif arm_type == 'remote':
-                self.left = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
+                self.right = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
             else:
                 raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.right)
