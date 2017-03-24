@@ -201,7 +201,7 @@ class YuMiArm:
         if log_state_histories:
             self._state_logger = YuMiMotionLogger()
 
-        self._create_yumi_ethernet()
+        self.start()
 
         self._last_sets = {
             'zone': None,
@@ -275,6 +275,11 @@ class YuMiArm:
         self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ip, self._port,
                                             self._bufsize, self._comm_timeout, self._debug)
         self._yumi_ethernet.start()
+    
+    def start(self):
+        '''Starts subprocess for ethernet communication.
+        '''
+        self._create_yumi_ethernet()
 
     def stop(self):
         '''Stops subprocess for ethernet communication. Allows program to exit gracefully.
@@ -1151,7 +1156,7 @@ class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """
 
     @staticmethod
-    def YuMiArm(arm_type, name, namespace = None):
+    def YuMiArm(arm_type, name, ros_namespace = None):
         """Initializes a YuMiArm interface. 
 
         Parameters
@@ -1171,14 +1176,14 @@ class YuMiArmFactory:
             For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'.
             This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
             (or None if yumi_arms.launch was launched in the current namespace)
-        namespace : string
+        ros_namespace : string
             ROS namespace of arm. Used by remote YuMiArm only.
         """
         if arm_type == 'local':
             return YuMiArm(name, port=YMC.PORTS[name]["server"])
         elif arm_type == 'remote':
             if ROS_ENABLED:
-                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = namespace)
+                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = ros_namespace)
             else:
                 raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
         else:

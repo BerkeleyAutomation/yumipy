@@ -3,7 +3,7 @@ Abstraction for the YuMi Robot
 Authors: Jacky Liang
 '''
 import logging
-from yumi_arm import YuMiArm
+from yumi_arm import YuMiArm, YuMiArmFactory
 from yumi_constants import YuMiConstants as YMC
 
 class YuMiRobot:
@@ -13,7 +13,8 @@ class YuMiRobot:
 
     def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
-                    log_pose_histories=False, log_state_histories=False):
+                    log_pose_histories=False, log_state_histories=False,
+                    arm_type='local', ros_namespace = None):
         """Initializes a YuMiRobot
 
         Parameters
@@ -45,6 +46,15 @@ class YuMiRobot:
             log_state_histories : bool, optional
                     If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
                     Defaults to False
+                    
+            ros_namespace : string
+                ROS namespace of arm. Used by remote YuMiArm only. If None, namespace is same as current ROS namespace
+            arm_type : string
+                Type of arm. One of {'local', 'remote'}
+            
+                'local'  creates local YuMiArm objects that communicates over ethernet. This ignores ros_namespace
+            
+                'remote' creates YuMiArm objects that communicates over ROS with a server. This ignores ip, port_l, and port_r
 
         Raises
         ------
@@ -58,12 +68,22 @@ class YuMiRobot:
         self._arms = []
 
         if include_left:
-            self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
-                                log_state_histories=log_state_histories)
+            if mode == 'local':
+                self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
+                                    log_state_histories=log_state_histories)
+            elif mode == 'remote':
+                self.left = YuMiArmFactory.YuMiArm('remote', 'left', ros_namespace)
+            else:
+                raise RuntimeError("Mode {0} for YuMiArm is not a valid mode".format(mode))
             self._arms.append(self.left)
         if include_right:
-            self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
-                                log_state_histories=log_state_histories)
+            if mode =='local':
+                self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
+                                     log_state_histories=log_state_histories)
+            elif mode == 'remote':
+                self.left = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
+            else:
+                raise RuntimeError("Mode {0} for YuMiArm is not a valid mode".format(mode))
             self._arms.append(self.right)
 
         self.set_tool(self.tcp)
