@@ -97,7 +97,7 @@ class YuMiRobot:
             arm.reset()
             
     def start(self):
-        '''Calls the stop function for each instantiated arm object.
+        '''Calls the start function for each instantiated arm object.
         '''
         for arm in self._arms:
             arm.start()
