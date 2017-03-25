@@ -3,7 +3,14 @@ ROS Installation
 To use the yumi-over-ros functionality, yumipy must be installed as a catkin_package.
 The `yumipy` package has been tested for ROS Jade and may not work in other versions.
 
-1. Clone the repository
+1. Install AUTOLAB dependencies
+"""""""""""""""""""""""""""""""
+Install the `AUTOLAB core`_ module by following `the installation instructions`_.
+
+.. _AUTOLAB core: https://github.com/BerkeleyAutomation/core
+.. _the installation instructions: https://berkeleyautomation.github.io/core/install/install.html
+
+2. Clone the repository
 """""""""""""""""""""""
 First `create a catkin workspace`_ if you do not already have one.
 Then clone the repository in your workspace ::
@@ -11,7 +18,7 @@ Then clone the repository in your workspace ::
   $ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}/src  
   $ git clone https://github.com/BerkeleyAutomation/yumipy.git
 
-2. Build the catkin package
+3. Build the catkin package
 """""""""""""""""""""""""""
 Now build the package and re-source the ROS bash environment ::
   $ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}
@@ -27,7 +34,14 @@ Python-Only Installation
 The yumipy package can also be used without ROS.
 Note that the `yumipy` module is known to work for Python 2.7 and has not been tested for Python 3.
 
-1. Clone the repository
+1. Install AUTOLAB dependencies
+"""""""""""""""""""""""""""""""
+Install the `AUTOLAB core`_ module by following `the installation instructions`_.
+
+.. _AUTOLAB core: https://github.com/BerkeleyAutomation/core
+.. _the installation instructions: https://berkeleyautomation.github.io/core/install/install.html
+
+2. Clone the repository
 """""""""""""""""""""""
 You can clone or download our source code from `Github`_. ::
 
@@ -35,7 +49,7 @@ You can clone or download our source code from `Github`_. ::
 
 .. _Github: https://github.com/BerkeleyAutomation/yumipy
 
-2. Run Python installation script
+3. Run Python installation script
 """""""""""""""""""""""""""""""""
 To install `yumipy` in your current Python environment, simply
 change directories into the `yumipy` repository and run ::

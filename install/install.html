@@ -93,13 +93,15 @@
               <p class="caption"><span class="caption-text">Installation Guide</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ROS Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#clone-the-repository">1. Clone the repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#build-the-catkin-package">2. Build the catkin package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-autolab-dependencies">1. Install AUTOLAB dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#clone-the-repository">2. Clone the repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#build-the-catkin-package">3. Build the catkin package</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#python-only-installation">Python-Only Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. Clone the repository</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run-python-installation-script">2. Run Python installation script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1. Install AUTOLAB dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">2. Clone the repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-python-installation-script">3. Run Python installation script</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#rapid-server-installation">RAPID Server Installation</a></li>
@@ -191,8 +193,12 @@
 <h1>ROS Installation<a class="headerlink" href="#ros-installation" title="Permalink to this headline">¶</a></h1>
 <p>To use the yumi-over-ros functionality, yumipy must be installed as a catkin_package.
 The <cite>yumipy</cite> package has been tested for ROS Jade and may not work in other versions.</p>
+<div class="section" id="install-autolab-dependencies">
+<h2>1. Install AUTOLAB dependencies<a class="headerlink" href="#install-autolab-dependencies" title="Permalink to this headline">¶</a></h2>
+<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/core">AUTOLAB core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/core/install/install.html">the installation instructions</a>.</p>
+</div>
 <div class="section" id="clone-the-repository">
-<h2>1. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this headline">¶</a></h2>
+<h2>2. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this headline">¶</a></h2>
 <p>First <a class="reference external" href="http://wiki.ros.org/catkin/Tutorials/create_a_workspace">create a catkin workspace</a> if you do not already have one.
 Then clone the repository in your workspace</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}/src
@@ -201,7 +207,7 @@ $ git clone https://github.com/BerkeleyAutomation/yumipy.git
 </div>
 </div>
 <div class="section" id="build-the-catkin-package">
-<h2>2. Build the catkin package<a class="headerlink" href="#build-the-catkin-package" title="Permalink to this headline">¶</a></h2>
+<h2>3. Build the catkin package<a class="headerlink" href="#build-the-catkin-package" title="Permalink to this headline">¶</a></h2>
 <dl class="docutils">
 <dt>Now build the package and re-source the ROS bash environment ::</dt>
 <dd>$ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}
@@ -216,14 +222,18 @@ $ . devel/setup.bash</dd>
 <p>The yumipy package can also be used without ROS.
 Note that the <cite>yumipy</cite> module is known to work for Python 2.7 and has not been tested for Python 3.</p>
 <div class="section" id="id1">
-<h2>1. Clone the repository<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<h2>1. Install AUTOLAB dependencies<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/core">AUTOLAB core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/core/install/install.html">the installation instructions</a>.</p>
+</div>
+<div class="section" id="id4">
+<h2>2. Clone the repository<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>You can clone or download our source code from <a class="reference external" href="https://github.com/BerkeleyAutomation/yumipy">Github</a>.</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone https://github.com/BerkeleyAutomation/yumipy.git
 </pre></div>
 </div>
 </div>
 <div class="section" id="run-python-installation-script">
-<h2>2. Run Python installation script<a class="headerlink" href="#run-python-installation-script" title="Permalink to this headline">¶</a></h2>
+<h2>3. Run Python installation script<a class="headerlink" href="#run-python-installation-script" title="Permalink to this headline">¶</a></h2>
 <p>To install <cite>yumipy</cite> in your current Python environment, simply
 change directories into the <cite>yumipy</cite> repository and run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ python setup.py install
