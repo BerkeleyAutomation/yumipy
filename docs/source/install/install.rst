@@ -1,36 +1,46 @@
-Installation Instructions
-=========================
+ROS Installation
+~~~~~~~~~~~~~~~~
+To use the yumi-over-ros functionality, yumipy must be installed as a catkin_package.
+The `yumipy` package has been tested for ROS Jade and may not work in other versions.
 
-Dependencies
-~~~~~~~~~~~~
-The `yumipy` module depends on the Berkeley AutoLab's `core`_ module,
-which can be installed using `pip install` on the source repo.
+1. Clone the repository
+"""""""""""""""""""""""
+First `create a catkin workspace`_ if you do not already have one.
+Then clone the repository in your workspace ::
 
-.. _core: https://github.com/BerkeleyAutomation/core
+  $ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}/src  
+  $ git clone https://github.com/BerkeleyAutomation/yumipy.git
 
-Any other dependencies will be installed automatically when `yumipy` is
-installed with `pip`.
+2. Build the catkin package
+"""""""""""""""""""""""""""
+Now build the package and re-source the ROS bash environment ::
+  $ cd {PATH_TO_YOUR_CATKIN_WORKSPACE}
+  $ catkin_make
+  $ . devel/setup.bash
 
-To use the remote yumi functionality, `ROS`_ is needed.
+and yumipy will be active as a catkin package. Note that this DOES NOT persist across terminal sessions.
 
-.. _ROS: http://wiki.ros.org/
+.. _create a catkin workspace: http://wiki.ros.org/catkin/Tutorials/create_a_workspace
 
-This package was tested in ROS Jade. Other versions may or may not work.
+Python-Only Installation
+~~~~~~~~~~~~~~~~~~~~~~~~
+The yumipy package can also be used without ROS.
+Note that the `yumipy` module is known to work for Python 2.7 and has not been tested for Python 3.
 
-Cloning the Repository
-~~~~~~~~~~~~~~~~~~~~~~
+1. Clone the repository
+"""""""""""""""""""""""
 You can clone or download our source code from `Github`_. ::
 
     $ git clone https://github.com/BerkeleyAutomation/yumipy.git
 
 .. _Github: https://github.com/BerkeleyAutomation/yumipy
 
-Installation of YuMiPy
-~~~~~~~~~~~~~~~~~~~~~~
+2. Run Python installation script
+"""""""""""""""""""""""""""""""""
 To install `yumipy` in your current Python environment, simply
 change directories into the `yumipy` repository and run ::
 
-    $ pip install -e .
+    $ python setup.py install
 
 or ::
 
@@ -42,8 +52,8 @@ Alternatively, you can run ::
 
 to install `yumipy` from anywhere.
 
-Installation of RAPID Server
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+RAPID Server Installation
+~~~~~~~~~~~~~~~~~~~~~~~~~
 To install the RAPID Server on the ABB YuMi:
 
 1. Connect YuMi (XP23 Service Port) to your machine via an Ethernet cable
@@ -55,8 +65,13 @@ To install the RAPID Server on the ABB YuMi:
 7. Backup down arrow > Restore from Backup > Select the unzipped folder
 8. Proceed with restoring backup
 
-Running RAPID Server
-~~~~~~~~~~~~~~~~~~~~
+Quick Start
+~~~~~~~~~~~
+First install yumipy is as either as a ROS catkin package or standalone in Python, and install the RAPID server. 
+Turn the robot on and make sure that your computer is connected to the service port of the YuMi via Ethernet.
+
+1. Start the RAPID Server
+"""""""""""""""""""""""""
 To run the RAPID server, through the FlexPendant:
 
 1. Turn Motors On
@@ -81,18 +96,94 @@ you must change their respective tasks from semi-static to static, restart
 the robot, make your edits, change them back to semi-static, then restart
 the robot again.
 
-Testing
-~~~~~~~
-To test your installation, run ::
+2. Calibrate the Grippers
+"""""""""""""""""""""""""
+Make sure the grippers are calibrated before using the arms ::
 
-    $ python setup.py test
+  $ python tools/calibrate_grippers.py
+
+3. Test the Installation
+""""""""""""""""""""""""
+To test your installation, run::
+
+  $ python setup.py test
 
 with the robot on and calibrated.
 
 We highly recommend testing before using the module.
 
-Building Documentation
-~~~~~~~~~~~~~~~~~~~~~~
+4. Start the Arms Service (ROS Installation Only)
+"""""""""""""""""""""""""""""""""""""""""""""""""
+After doing this, in order to run the local server, run ::
+  
+  $ rosrun yumipy yumi_arms.launch
+
+This will start servers for the two arms.
+
+After doing this, we can initialize a yumi remote interface:
+
+.. code-block:: python
+
+  from yumipy import YuMiRobot
+  y = YuMiRobot(arm_type='remote')
+
+5. Run a Python Example
+"""""""""""""""""""""""
+Now let's move the right arm 5cm forward and 5cm backward to the starting point.
+
+First, create a YuMiRobot object that communicates over ROS:
+
+.. code-block:: python
+
+  from yumipy import YuMiRobot
+  # start the robot interface
+  y = YuMiRobot(arm_type='remote')
+
+If you installed the Python-only version then you can spin up an arm as follows:
+
+.. code-block:: python
+
+  from yumipy import YuMiRobot
+  # start the robot interface
+  y = YuMiRobot()
+
+Now move the arms!
+.. code-block:: python
+  
+  # getting the current pose of the right end effector
+  pose = y.right.get_pose()
+
+  # move right arm forward by 5cm using goto_pose
+  pose.translation[0] += 0.05
+  y.right.goto_pose(pose)
+
+  # move right arm back by 5cm using move delta
+  y.right.goto_pose_delta((-0.05,0,0))
+
+5. Run a Python Example
+
+
+Dependencies
+~~~~~~~~~~~~
+The `yumipy` module depends on the Berkeley AutoLab's `core`_ module,
+which can be installed using `pip install` on the source repo.
+
+.. _core: https://github.com/BerkeleyAutomation/core
+
+Any other dependencies will be installed automatically when `yumipy` is
+installed with `pip`.
+
+To use the remote yumi functionality, `ROS`_ is needed.
+
+.. _ROS: http://wiki.ros.org/
+
+This package was tested in ROS Jade. Other versions may or may not work.
+
+Documentation
+~~~~~~~~~~~~~
+
+Building
+""""""""
 Building `yumipy`'s documentation requires a few extra dependencies --
 specifically, `sphinx`_ and a few plugins.
 
@@ -111,50 +202,15 @@ For example, ::
 will generate a set of web pages. Any documentation files
 generated in this manner can be found in `docs/build`.
 
-Quick Start
-~~~~~~~~~~~
-Here's a quick example usage of yumipy after installing both the python package
-and the RAPID server and running the RAPID server in auto mode:
+Deploying
+"""""""""
+To deploy documentation to the Github Pages site for the repository,
+simply push any changes to the documentation source to master
+and then run ::
 
-.. code-block:: python
+    $ . gh_deploy.sh
 
-  from yumipy import YuMiRobot
-  # starting the robot interface
-  y = YuMiRobot()
+from the `docs` folder. This script will automatically checkout the
+``gh-pages`` branch, build the documentation from source, and push it
+to Github.
 
-  # getting the current pose of the right end effector
-  pose = y.right.get_pose()
-
-  # move right arm forward by 5cm using goto_pose
-  pose.translation[0] += 0.05
-  y.right.goto_pose(pose)
-
-  # move right arm back by 5cm using move delta
-  y.right.goto_pose_delta((-0.05,0,0))
-
-Using ROS functionality
-~~~~~~~~~~~~~~~~~~~~~~~
-To use the yumi-over-ros functionality, first install yumipy as a catkin package
-
-To do this, `create a catkin workspace`_, then clone yumipy into the src folder
-
-.. _create a catkin workspace: http://wiki.ros.org/catkin/Tutorials/create_a_workspace
-
-Now, in the catkin workspace directory, run ::
-
-    catkin_make
-    . devel/setup.bash
-
-and yumipy will be active as a catkin package. Note that this DOES NOT persist across terminal sessions.
-
-
-After doing this, in order to run the local server, run ::
-
-    rosrun yumipy yumi_arms.launch
-
-This will start servers for the two arms.
-
-After doing this, we can initialize a yumi remote interface ::
-
-    from yumipy import YuMiRobot
-    y = YuMiRobot(arm_type='remote')

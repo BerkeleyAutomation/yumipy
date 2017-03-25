@@ -6,11 +6,7 @@ This package provides a python interface for control and communication with ABB'
 Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/)
 
 ### Installation
-Step 1: Install the alan YuMi python interface on the client computer that will communicate with the YuMi:
-```sh
-$ python setup.py develop
-```
-Step 2: Restore backup under RAPID/YuMi_Backup_Stable.zip to YuMi in Robot Studio.
+See the instructions [here](https://berkeleyautomation.github.io/yumipy/install/install.html)
 
 ### Usage
 Simple example to import and use the YuMi interface (make sure the YuMi is in Auto mode and has the server running):
