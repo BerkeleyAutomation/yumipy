@@ -3,10 +3,10 @@
 
 This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the master branch before installing and using.
 
-Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/)
+Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/).
 
 ### Installation
-See the instructions [here](https://berkeleyautomation.github.io/yumipy/install/install.html)
+See the instructions [here](https://berkeleyautomation.github.io/yumipy/install/install.html).
 
 ### Usage
 Simple example to import and use the YuMi interface (make sure the YuMi is in Auto mode and has the server running):
