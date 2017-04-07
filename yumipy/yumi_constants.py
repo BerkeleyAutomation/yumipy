@@ -106,6 +106,9 @@ class YuMiConstants:
         'PRMstar': 'PRMstarkConfigDefault'
     }
     MOVEIT_PLANNING_REFERENCE_FRAME = 'yumi_body'
+    
+    ROS_TIMEOUT = 10
+    
     T_GRIPPER_HAND = RigidTransform(translation=[0,0,-0.157], from_frame='gripper', to_frame='gripper')
 
     TCP_ABB_GRIPPER = RigidTransform(translation=[0,0,0.136])

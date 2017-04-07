@@ -6,6 +6,12 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
+GH_PAGES_SOURCES = docs yumipy
+
+# User-friendly check for sphinx-build
+ifeq ($(shell which $(SPHINXBUILD) >/dev/null 2>&1; echo $$?), 1)
+$(error The '$(SPHINXBUILD)' command was not found. Make sure you have Sphinx installed, then set the SPHINXBUILD environment variable to point to the full path of the '$(SPHINXBUILD)' executable. Alternatively you can add the directory with the executable to your PATH. If you don't have Sphinx installed, grab it from http://sphinx-doc.org/)
+endif
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -47,6 +53,25 @@ help:
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
+
+.PHONY: gh-pages
+gh-pages:
+	git checkout gh-pages && \
+	cd .. && \
+	git rm -rf . && git clean -fxd && \
+	git checkout master $(GH_PAGES_SOURCES) && \
+	git reset HEAD && \
+	cd docs && \
+	make html && \
+	cd .. && \
+	mv -fv docs/build/html/* ./ && \
+	touch .nojekyll && \
+	rm -rf $(GH_PAGES_SOURCES) && \
+	git add -A && \
+	git commit -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && \
+	git push origin --delete gh-pages && \
+	git push origin gh-pages ; \
+	git checkout master
 
 .PHONY: html
 html:

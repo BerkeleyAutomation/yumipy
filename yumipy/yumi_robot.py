@@ -3,21 +3,32 @@ Abstraction for the YuMi Robot
 Authors: Jacky Liang
 '''
 import logging
-from yumi_arm import YuMiArm
+from yumi_arm import YuMiArm, YuMiArmFactory
 from yumi_constants import YuMiConstants as YMC
+from time import sleep
 
 class YuMiRobot:
     """ Interface to both arms of an ABB YuMi robot.
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, tcp=YMC.TCP_DEFAULT_GRIPPER,
+    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
-                    log_pose_histories=False, log_state_histories=False):
+                    log_pose_histories=False, log_state_histories=False,
+                    arm_type='local', ros_namespace = None):
         """Initializes a YuMiRobot
 
         Parameters
         ----------
+            ip : string formatted IP Address, optional
+                    IP address of YuMi.
+                    Defaults to YuMiConstants.IP
+            port_l : int, optional
+                    Port of left arm server.
+                    Defaults to YuMiConstants.PORT_L
+            port_r : int, optional
+                    Port of right arm server.
+                    Defaults to YuMiConstants.PORT_R
             tcp : RigidTransform, optional
                     Tool Center Point Offset of the endeffectors.
                     Defaults to YuMiConstants.TCP_DEFAULT_GRIPPER
@@ -36,6 +47,15 @@ class YuMiRobot:
             log_state_histories : bool, optional
                     If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
                     Defaults to False
+                    
+            ros_namespace : string
+                ROS namespace of arm. Used by remote YuMiArm only. If None, namespace is same as current ROS namespace
+            arm_type : string
+                Type of arm. One of {'local', 'remote'}
+            
+                'local'  creates local YuMiArm objects that communicates over ethernet. This ignores ros_namespace
+            
+                'remote' creates YuMiArm objects that communicates over ROS with a server. This ignores ip, port_l, and port_r
 
         Raises
         ------
@@ -49,12 +69,22 @@ class YuMiRobot:
         self._arms = []
 
         if include_left:
-            self.left = YuMiArm('left', debug=debug, log_pose_histories=log_pose_histories,
-                                log_state_histories=log_state_histories)
+            if arm_type == 'local':
+                self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
+                                    log_state_histories=log_state_histories)
+            elif arm_type == 'remote':
+                self.left = YuMiArmFactory.YuMiArm('remote', 'left', ros_namespace)
+            else:
+                raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.left)
         if include_right:
-            self.right = YuMiArm('right', debug=debug, log_pose_histories=log_pose_histories,
-                                log_state_histories=log_state_histories)
+            if arm_type =='local':
+                self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
+                                     log_state_histories=log_state_histories)
+            elif arm_type == 'remote':
+                self.right = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
+            else:
+                raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.right)
 
         self.set_tool(self.tcp)
@@ -65,12 +95,19 @@ class YuMiRobot:
         '''
         for arm in self._arms:
             arm.reset()
+            
+    def start(self):
+        '''Calls the start function for each instantiated arm object.
+        '''
+        for arm in self._arms:
+            arm.start()
 
     def stop(self):
         '''Calls the stop function for each instantiated arm object.
         '''
         for arm in self._arms:
             arm.stop()
+        sleep(1)
 
     def open_grippers(self):
         ''' Calls open_gripper function for each instantiated arm object.
@@ -80,15 +117,6 @@ class YuMiRobot:
             self.right.open_gripper(wait_for_res=True)
         else:
             self._arms[0].open_gripper()
-
-    def close_grippers(self):
-        ''' Calls close_gripper function for each instantiated arm object.
-        '''
-        if len(self._arms) == 2:
-            self.left.close_gripper(wait_for_res=False)
-            self.right.close_gripper(wait_for_res=True)
-        else:
-            self._arms[0].close_gripper()
 
     def goto_state_sync(self, left_state, right_state):
         '''Commands both arms to go to assigned states in sync. Sync means both
