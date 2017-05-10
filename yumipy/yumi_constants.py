@@ -37,7 +37,7 @@ class YuMiConstants:
     COMM_PERIOD = 0.04 
     
     DEBUG = False
-    LOGGING_LEVEL = logging.DEBUG
+    LOGGING_LEVEL = logging.WARNING
     
     # reset mechanism
     RESET_RIGHT_COMM = '/dev/ttyACM0'
@@ -106,10 +106,11 @@ class YuMiConstants:
     MOVEIT_PLANNING_REFERENCE_FRAME = 'yumi_body'
     T_GRIPPER_HAND = RigidTransform(translation=[0,0,-0.157], from_frame='gripper', to_frame='gripper')
     
-    TCP_ABB_GRIPPER = RigidTransform(translation=[0,0,0.136])
+    TCP_ABB_GRIPPER = RigidTransform(translation=[0,0,0.13])
     TCP_ABB_GRASP_GRIPPER = RigidTransform(translation=[0,0,0.136-0.0065])
     TCP_LONG_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
+    TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
     
     L_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, 135])
     L_HOME_POSE = RigidTransform(translation=[0.123, 0.147, 0.124], rotation=[0.06551, 0.84892, -0.11147, 0.51246])
@@ -121,7 +122,7 @@ class YuMiConstants:
     R_FORWARD_POSE = RigidTransform(translation=[0.07058, -0.26519, 0.19775], rotation=[-0.52425, 0.0648, -0.84133, -0.11454])
 
     R_AWAY_POSE = RigidTransform(translation=[0.15, -0.4, 0.22], rotation=[0.38572, 0.39318, 0.60945, 0.57027])
-    L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    L_AWAY_POSE = RigidTransform(translation=[0.30, 0.12, 0.22], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
     L_THINKING_POSES = [
         RigidTransform(translation=[0.32, 0.12, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596]),
@@ -133,7 +134,7 @@ class YuMiConstants:
     R_READY_STATE = YuMiState([51.16, -99.4, 21.57, -107.19, 84.11, 94.61, -36.00])
     L_READY_STATE = YuMiState([-51.16, -99.4, 21.57, 107.19, 84.11, 94.61, 36.00])
 
-    L_PREGRASP_POSE = RigidTransform(translation=[0.30, 0.20, 0.16], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    L_PREGRASP_POSE = RigidTransform(translation=[0.30, 0.20, 0.22], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
     L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.45, -0.05, 0.15], rotation=[0, 0, 1, 0])
         
@@ -145,6 +146,10 @@ class YuMiConstants:
 
     L_PREDROP_POSE = RigidTransform(translation=[0.55, 0.0, 0.20],
                                     rotation=[0.09815, -0.20528, 0.97156, -0.06565])
+    
+    L_BOX_POSE = RigidTransform(translation=[0.06, 0.038, 0.34],
+                                    rotation=[0.5, -0.5, 0.5, -0.5])
+
     L_PACKAGE_DROP_POSES = [
         RigidTransform(translation=[0.33, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
         RigidTransform(translation=[0.33, 0.33, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
@@ -152,10 +157,10 @@ class YuMiConstants:
         RigidTransform(translation=[0.23, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
     ]
     L_REJECT_DROP_POSES = [
-        RigidTransform(translation=[0.60, 0.42, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.60, 0.35, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.54, 0.35, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
-        RigidTransform(translation=[0.54, 0.42, 0.23], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
+        RigidTransform(translation=[0.60, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.60, 0.35, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.54, 0.35, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
+        RigidTransform(translation=[0.54, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790])
     ]
 
     BOX_CLOSE_SEQUENCE = [
