@@ -1,7 +1,9 @@
 # YuMi Python Interface
 ## AutoLab, UC Berkeley
 
-This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the control_stable branch before installing and using.
+This package provides a python interface for control and communication with ABB's Yumi. Currently the interface is still undergoing development, so changes will occur to this repo. For best results please be on the newest commit of the master branch before installing and using.
+
+Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/)
 
 ### Installation
 Step 1: Install the alan YuMi python interface on the client computer that will communicate with the YuMi:
@@ -25,3 +27,7 @@ y.right.goto_pose_delta((-0.05,0,0))
 ```
 
 The control and RAPID server code is inspired by the [open-abb-driver](https://github.com/robotics/open_abb).
+
+### Issues
+Please report issues via email to Jeff Mahler at jmahler@berkeley.edu and Jacky Liang at jackyliang@berkeley.edu.
+Feel free to also raise issues on the repository Issues tab, but it may take us longer to respond.

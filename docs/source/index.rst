@@ -12,6 +12,9 @@ The `yumipy` module depends directly on AutoLab's `core`_ module.
 .. _ABB YuMi robot: http://new.abb.com/products/robotics/industrial-robots/yumi
 .. _core: https://github.com/mmatl/core
 
+This project is still under development.
+Please contact Jeff Mahler (jmahler@berkeley.edu) and Jacky Liang (jackyliang@berkeley.edu) with issues.
+
 .. toctree::
    :maxdepth: 2
    :caption: Installation Guide
