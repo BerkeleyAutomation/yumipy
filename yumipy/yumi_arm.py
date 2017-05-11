@@ -896,7 +896,10 @@ class YuMiArm:
         req = YuMiArm._construct_req('open_gripper', '')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def close_gripper(self, wait_for_res=True):
+    def close_gripper(self, width=0.0,
+                      force=YMC.MAX_GRIPPER_FORCE,
+                      no_wait=False,
+                      wait_for_res=True):
         '''Closes the gripper as close to 0 as possible with maximum force.
         Parameters
         ----------

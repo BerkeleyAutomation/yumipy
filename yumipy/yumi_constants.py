@@ -30,6 +30,10 @@ class YuMiConstants:
     COMM_TIMEOUT = 5
     PROCESS_TIMEOUT = 10
     PROCESS_SLEEP_TIME = 0.01
+    MOTION_BUFFER_SIZE = 512
+
+    MAX_GRIPPER_WIDTH = 0.02
+    MAX_GRIPPER_FORCE = 20
 
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
