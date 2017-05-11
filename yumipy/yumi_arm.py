@@ -275,7 +275,7 @@ class YuMiArm:
         self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ip, self._port,
                                             self._bufsize, self._comm_timeout, self._debug)
         self._yumi_ethernet.start()
-    
+
     def start(self):
         '''Starts subprocess for ethernet communication.
         '''
@@ -346,11 +346,12 @@ class YuMiArm:
 
     def ping(self, wait_for_res=True):
         '''Pings the remote server.
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -366,6 +367,7 @@ class YuMiArm:
 
     def get_state(self, raw_res=False):
         '''Get the current state (joint configuration) of this arm.
+
         Parameters
         ----------
         raw_res : bool, optional
@@ -399,11 +401,12 @@ class YuMiArm:
 
     def get_pose(self, raw_res=False):
         '''Get the current pose of this arm to base frame of the arm.
+
         Parameters
         ----------
         raw_res : bool, optional
-                If True, will return raw_res namedtuple instead of YuMiState
-                Defaults to False
+            If True, will return raw_res namedtuple instead of YuMiState
+            Defaults to False
 
         Returns
         -------
@@ -432,6 +435,7 @@ class YuMiArm:
 
     def is_pose_reachable(self, pose):
         '''Check if a given pose is reachable (incurs no kinematic/joint-space limitations and self collisions)
+
         Parameters
         ----------
         pose : RigidTransform
@@ -452,12 +456,13 @@ class YuMiArm:
 
     def goto_state(self, state, wait_for_res=True):
         '''Commands the YuMi to goto the given state (joint angles)
+
         Parameters
         ----------
         state : YuMiState
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -505,18 +510,19 @@ class YuMiArm:
 
     def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
         '''Commands the YuMi to goto the given pose
+
         Parameters
         ----------
         pose : RigidTransform
         linear : bool, optional
-                If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
-                Defaults to True
+            If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
+            Defaults to True
         relative : bool, optional
-                If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
-                Defaults to False
+            If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
+            Defaults to False
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -606,16 +612,17 @@ class YuMiArm:
 
     def goto_pose_delta(self, translation, rotation=None, wait_for_res=True):
         '''Goto a target pose by transforming the current pose using the given translation and rotation
+
         Parameters
         ----------
         translatioin : list-like with length 3
-                The translation vector (x, y, z) in meters.
+            The translation vector (x, y, z) in meters.
         rotation : list-like with length 3, optional
-                The euler angles of given rotation in degrees.
-                Defaults to 0 degrees - no rotation.
+            The euler angles of given rotation in degrees.
+            Defaults to 0 degrees - no rotation.
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -641,12 +648,13 @@ class YuMiArm:
 
     def set_tool(self, pose, wait_for_res=True):
         '''Sets the Tool Center Point (TCP) of the arm using the given pose.
+
         Parameters
         ----------
         pose : RigidTransform
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -666,14 +674,15 @@ class YuMiArm:
 
     def set_speed(self, speed_data, wait_for_res=True):
         '''Sets the target speed of the arm's movements.
+
         Parameters
         ----------
         speed_data : list-like with length 4
-                Specifies the speed data that will be used by RAPID when executing motions.
-                Should be generated using YuMiRobot.get_v
+            Specifies the speed data that will be used by RAPID when executing motions.
+            Should be generated using YuMiRobot.get_v
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -692,14 +701,15 @@ class YuMiArm:
 
     def set_zone(self, zone_data, wait_for_res=True):
         '''Goto a target pose by transforming the current pose using the given translation and rotation
+
         Parameters
         ----------
         speed_data : list-like with length 4
-                Specifies the speed data that will be used by RAPID when executing motions.
-                Should be generated using YuMiRobot.get_v
+            Specifies the speed data that will be used by RAPID when executing motions.
+            Should be generated using YuMiRobot.get_v
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -720,15 +730,16 @@ class YuMiArm:
 
     def move_circular(self, center_pose, target_pose, wait_for_res=True):
         '''Goto a target pose by following a circular path around the center_pose
+
         Parameters
         ----------
         center_pose : RigidTransform
-                Pose for the center of the circle for circula movement.
+            Pose for the center of the circle for circula movement.
         target_pose : RigidTransform
-                Target pose
+            Target pose
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -757,12 +768,13 @@ class YuMiArm:
 
     def buffer_add_single(self, pose, wait_for_res=True):
         '''Add single pose to the linear movement buffer in RAPID
+
         Parameters
         ----------
         pose : RigidTransform
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -780,12 +792,13 @@ class YuMiArm:
 
     def buffer_add_all(self, pose_list, wait_for_res=True):
         '''Add a list of poses to the linear movement buffer in RAPID
+
         Parameters
         ----------
         pose_list : list of RigidTransforms
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -802,11 +815,12 @@ class YuMiArm:
 
     def buffer_clear(self, wait_for_res=True):
         '''Clears the linear movement buffer in RAPID
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -823,11 +837,12 @@ class YuMiArm:
 
     def buffer_size(self, raw_res=False):
         '''Gets the current linear movement buffer size.
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -854,11 +869,12 @@ class YuMiArm:
 
     def buffer_move(self, wait_for_res=True):
         '''Executes the linear movement buffer
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -875,11 +891,12 @@ class YuMiArm:
 
     def open_gripper(self, no_wait=False, wait_for_res=True):
         '''Opens the gripper to the target_width
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -896,16 +913,24 @@ class YuMiArm:
         req = YuMiArm._construct_req('open_gripper', '')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def close_gripper(self, width=0.0,
-                      force=YMC.MAX_GRIPPER_FORCE,
-                      no_wait=False,
+    def close_gripper(self, force=YMC.MAX_GRIPPER_FORCE, width=0., no_wait=False,
                       wait_for_res=True):
         '''Closes the gripper as close to 0 as possible with maximum force.
+
         Parameters
         ----------
+        force : float, optional
+            Sets the corresponding gripping force in Newtons.
+            Defaults to 20, which is the maximum grip force.
+        width : float, optional
+            Sets the target width of gripper close motion in m. Cannot be greater than max gripper width.
+            Defaults to 0.
+        no_wait : bool, optional
+            If True, the RAPID server will continue without waiting for the gripper to reach its target width
+            Defaults to True
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -931,16 +956,17 @@ class YuMiArm:
 
     def move_gripper(self, width, no_wait=False, wait_for_res=True):
         '''Moves the gripper to the given width in meters.
+
         Parameters
         ----------
         width : float
-                Target width in meters
+            Target width in meters
         no_wait : bool, optional
-                If True, the RAPID server will continue without waiting for the gripper to reach its target width
-                Defaults to False
+            If True, the RAPID server will continue without waiting for the gripper to reach its target width
+            Defaults to False
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -963,20 +989,21 @@ class YuMiArm:
 
     def calibrate_gripper(self, max_speed=None, hold_force=None, phys_limit=None, wait_for_res=True):
         '''Calibrates the gripper.
+
         Parameters
         ----------
         max_speed : float, optional
-                Max speed of the gripper in mm/s.
-                Defaults to None. If None, will use maximum speed in RAPID.
+            Max speed of the gripper in mm/s.
+            Defaults to None. If None, will use maximum speed in RAPID.
         hold_force : float, optional
-                Hold force used by the gripper in N.
-                Defaults to None. If None, will use maximum force the gripper can provide (20N).
+            Hold force used by the gripper in N.
+            Defaults to None. If None, will use maximum force the gripper can provide (20N).
         phys_limit : float, optional
-                The maximum opening of the gripper.
-                Defaults to None. If None, will use maximum opening the gripper can provide (25mm).
+            The maximum opening of the gripper.
+            Defaults to None. If None, will use maximum opening the gripper can provide (25mm).
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -1001,13 +1028,14 @@ class YuMiArm:
 
     def set_gripper_force(self, force, wait_for_res=True):
         '''Sets the gripper hold force
+
         Parameters
         ----------
         force : float
-                Hold force by the gripper in N.
+            Hold force by the gripper in N.
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -1026,13 +1054,14 @@ class YuMiArm:
 
     def set_gripper_max_speed(self, max_speed, wait_for_res=True):
         '''Sets the gripper max speed
+
         Parameters
         ----------
         max_speed : float
-                In mm/s.
+            In mm/s.
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -1051,6 +1080,7 @@ class YuMiArm:
 
     def get_gripper_width(self, raw_res=False):
         '''Get width of current gripper in meters.
+
         Parameters
         ----------
         raw_res : bool, optional
@@ -1081,11 +1111,12 @@ class YuMiArm:
 
     def reset_home(self, wait_for_res=True):
         '''Resets the arm to home using joints
+
         Parameters
         ----------
         wait_for_res : bool, optional
-                If True, will block main process until response received from RAPID server.
-                Defaults to True
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
 
         Returns
         -------
@@ -1119,23 +1150,23 @@ class YuMiArm_ROS:
             self.arm_service = rospy.get_namespace() + arm_service
         else:
             self.arm_service = namespace + arm_service
-        
+
         self.timeout = timeout
-    
+
     def __getattr__(self, name):
         """ Override the __getattr__ method so that function calls become server requests
-        
+
         If the name is a method of the YuMiArm class, this returns a function that calls that
         function on the YuMiArm instance in the server. The wait_for_res argument is not available
         remotely and will always be set to True. This is to prevent odd desynchronized crashes
-        
+
         Otherwise, the name is considered to be an attribute, and getattr is called on the
         YuMiArm instance in the server. Note that if it isn't an attribute either a RuntimeError
         will be raised.
-        
+
         The difference here is that functions access the server *on call* and non-functions do
         *on getting the name*
-        
+
         Also note that this is __getattr__, so things like __init__ and __dict__ WILL NOT trigger
         this function as the YuMiArm_ROS object already has these as attributes.
         """
@@ -1167,22 +1198,22 @@ class YuMiArmFactory:
 
     @staticmethod
     def YuMiArm(arm_type, name, ros_namespace = None):
-        """Initializes a YuMiArm interface. 
+        """Initializes a YuMiArm interface.
 
         Parameters
         ----------
         arm_type : string
             Type of arm. One of {'local', 'remote'}
-            
+
             'local'  creates a local YuMiArm object that communicates over ethernet
-            
+
             'remote' creates a YuMiArm object that communicates over ROS with a server
         name : string
             Name of arm. One of {'left', 'right'}.
-            
+
             For local YuMiArm, the port kwarg is set to PORTS[{name}]["server"],
             where PORTS is defined in yumi_constants.py
-            
+
             For remote YuMiArm, arm_service is set to 'yumi_robot/{name}_arm'.
             This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
             (or None if yumi_arms.launch was launched in the current namespace)
@@ -1202,4 +1233,3 @@ class YuMiArmFactory:
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
-
