@@ -615,7 +615,7 @@ class YuMiArm:
 
         Parameters
         ----------
-        translatioin : list-like with length 3
+        translation : list-like with length 3
             The translation vector (x, y, z) in meters.
         rotation : list-like with length 3, optional
             The euler angles of given rotation in degrees.
