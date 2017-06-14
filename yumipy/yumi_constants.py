@@ -160,7 +160,8 @@ class YuMiConstants:
 
     L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.4, -0.05, 0.15], rotation=[0, 0, 1, 0])
     L_KINEMATIC_AVOIDANCE_STATE = YuMiState([-100.42, -29.16, 40.86, 100.77, 77.9, -97.1, 85.26])
-        
+    L_EXPERIMENT_DROP_POSE = RigidTransform(translation=[0.30, 0.45, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+
     L_RAISED_STATE = YuMiState([5.5, -99.46, 20.52, -21.03, 67, -22.31, 110.11])
     L_RAISED_POSE = RigidTransform(translation=[-0.0073, 0.39902, 0.31828], rotation=[0.54882, 0.07398, 0.82585, -0.10630])
     
@@ -173,6 +174,19 @@ class YuMiConstants:
     L_BOX_POSE = RigidTransform(translation=[0.06, 0.038, 0.34],
                                     rotation=[0.5, -0.5, 0.5, -0.5])
 
+    L_BIN_LOWER_RIGHT = RigidTransform(translation=[0.23, -0.22, 0.04],
+                                       rotation=[0,0,-1,0])
+    L_BIN_LOWER_LEFT = RigidTransform(translation=[0.23, 0.2, 0.04],
+                                      rotation=[0,0,-1,0])
+    L_BIN_UPPER_RIGHT = RigidTransform(translation=[0.55, -0.15, 0.04],
+                                       rotation=[0,0,-1,0])
+    L_BIN_UPPER_LEFT = RigidTransform(translation=[0.55, 0.2, 0.04],
+                                      rotation=[0,0,-1,0])
+    L_BIN_PREDROP_POSE = RigidTransform(translation=[0.4, 0.47, 0.32],
+                                        rotation=[0,0,-1,0])
+    L_BIN_DROP_POSE = RigidTransform(translation=[0.4, 0.47, 0.2],
+                                     rotation=[0,0,-1,0])
+    
     L_PACKAGE_DROP_POSES = [
         RigidTransform(translation=[0.33, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
         RigidTransform(translation=[0.33, 0.33, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
