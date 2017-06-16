@@ -28,6 +28,6 @@ y.right.goto_pose_delta((-0.05,0,0))
 
 The control and RAPID server code is inspired by the [open-abb-driver](https://github.com/robotics/open_abb).
 
-### Issues
-Please report issues via email to Jeff Mahler at jmahler@berkeley.edu and Jacky Liang at jackyliang@berkeley.edu.
-Feel free to also raise issues on the repository Issues tab, but it may take us longer to respond.
+### Support
+Please request for support and report issues with errors and bugs on the repository Issues tab - that is the best way for us to respond. 
+For other inquiries please contact Jeff Mahler at jmahler@berkeley.edu and Jacky Liang at jackyliang@berkeley.edu
