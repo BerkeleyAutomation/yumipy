@@ -169,11 +169,21 @@
             
   <div class="section" id="berkeley-autolab-yumipy-documentation">
 <h1>Berkeley AutoLab yumipy Documentation<a class="headerlink" href="#berkeley-autolab-yumipy-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Welcome to the documentation for the Berkeley AutoLab’s <cite>yumipy</cite> module!
+<p>Welcome to the documentation for the Berkeley AutoLab&#8217;s <cite>yumipy</cite> module!
 This module is a Python interface to commanding the <a class="reference external" href="http://new.abb.com/products/robotics/industrial-robots/yumi">ABB YuMi robot</a>.
-The <cite>yumipy</cite> module depends directly on AutoLab’s <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">autolab_core</a> module.</p>
+The <cite>yumipy</cite> module depends directly on AutoLab&#8217;s <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">autolab_core</a> module.</p>
 <p>This project is still under development.
-Please contact Jeff Mahler (<a class="reference external" href="mailto:jmahler&#37;&#52;&#48;berkeley&#46;edu">jmahler<span>&#64;</span>berkeley<span>&#46;</span>edu</a>) and Jacky Liang (<a class="reference external" href="mailto:jackyliang&#37;&#52;&#48;berkeley&#46;edu">jackyliang<span>&#64;</span>berkeley<span>&#46;</span>edu</a>) with issues.</p>
+For technical support please submit an issue under <a class="reference external" href="https://github.com/BerkeleyAutomation/yumipy/issues">Github Issues</a>.
+For other inquiries please contact Jeff Mahler (<a class="reference external" href="mailto:jmahler&#37;&#52;&#48;berkeley&#46;edu">jmahler<span>&#64;</span>berkeley<span>&#46;</span>edu</a>) and Jacky Liang (<a class="reference external" href="mailto:jackyliang&#37;&#52;&#48;berkeley&#46;edu">jackyliang<span>&#64;</span>berkeley<span>&#46;</span>edu</a>).</p>
+<div class="section" id="core-rename-update">
+<h2>Core Rename Update<a class="headerlink" href="#core-rename-update" title="Permalink to this headline">¶</a></h2>
+<p>As of commit <a class="reference external" href="https://github.com/BerkeleyAutomation/yumipy/commit/f4be489f911a6f189a1f5784daefc0b0a07d5571">f4be489</a> on June 18, 2017, yumipy depends on <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">autolab_core</a>, a renamed version of core.
+If this affects you (you have installed yumipy prior to June 18th, 2017), please do the following:</p>
+<ol class="arabic simple">
+<li>Pull the latest commit from core</li>
+<li>Re-install using pip or setup.py following the instructions here</li>
+<li>Pull the lastest commit from yumipy</li>
+</ol>
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Installation Guide</span></p>
 <ul>
@@ -232,6 +242,7 @@ Please contact Jeff Mahler (<a class="reference external" href="mailto:jmahler&#
 </ul>
 </li>
 </ul>
+</div>
 </div>
 </div>
 <div class="section" id="indices-and-tables">

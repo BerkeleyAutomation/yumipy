@@ -181,7 +181,7 @@ This module is experimental.</p>
 <h2>YuMiMotionPlanner<a class="headerlink" href="#yumimotionplanner" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiMotionPlanner">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiMotionPlanner</code><span class="sig-paren">(</span><em>arm=’left’</em>, <em>planner=’RRTstar’</em>, <em>goal_pos_tol=0.001</em>, <em>planning_time=0.1</em>, <em>eef_delta=0.01</em>, <em>jump_thresh=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiMotionPlanner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiMotionPlanner</code><span class="sig-paren">(</span><em>arm='left'</em>, <em>planner='RRTstar'</em>, <em>goal_pos_tol=0.001</em>, <em>planning_time=0.1</em>, <em>eef_delta=0.01</em>, <em>jump_thresh=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiMotionPlanner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Client-side motion planner for the ABB YuMi, based on MoveIt!</p>
 <dl class="method">
 <dt id="yumipy.YuMiMotionPlanner.set_planner">
@@ -198,16 +198,16 @@ This module is experimental.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start_state</strong> (<a class="reference internal" href="robot.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) – initial state of the arm</li>
-<li><strong>start_pose</strong> (<em>RigidTransform</em>) – initial pose of end effector tip</li>
-<li><strong>goal_pose</strong> (<em>RigidTransform</em>) – goal pose of end effector tip</li>
-<li><strong>traj_len</strong> (<em>int</em>) – number of waypoints to use in planning</li>
-<li><strong>eef_delta</strong> (<em>float</em>) – distance for interpolation of the final planner path in cartesian space</li>
-<li><strong>jump_thresh</strong> (<em>float</em>) – the threshold for jumping between poses</li>
+<li><strong>start_state</strong> (<a class="reference internal" href="robot.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; initial state of the arm</li>
+<li><strong>start_pose</strong> (<em>RigidTransform</em>) &#8211; initial pose of end effector tip</li>
+<li><strong>goal_pose</strong> (<em>RigidTransform</em>) &#8211; goal pose of end effector tip</li>
+<li><strong>traj_len</strong> (<em>int</em>) &#8211; number of waypoints to use in planning</li>
+<li><strong>eef_delta</strong> (<em>float</em>) &#8211; distance for interpolation of the final planner path in cartesian space</li>
+<li><strong>jump_thresh</strong> (<em>float</em>) &#8211; the threshold for jumping between poses</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>traj</strong> – the planned trajectory to execute</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>traj</strong> &#8211; the planned trajectory to execute</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">YuMiTrajectory</p>
@@ -226,14 +226,14 @@ This module is experimental.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>start_state</strong> (<a class="reference internal" href="robot.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) – initial state of the arm</li>
-<li><strong>start_pose</strong> (<em>RigidTransform</em>) – initial pose of end effector tip</li>
-<li><strong>goal_pose</strong> (<em>RigidTransform</em>) – goal pose of end effector tip</li>
-<li><strong>timeout</strong> (<em>float</em>) – planner timeout (shorthand for setting new planning time then planning)</li>
+<li><strong>start_state</strong> (<a class="reference internal" href="robot.html#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; initial state of the arm</li>
+<li><strong>start_pose</strong> (<em>RigidTransform</em>) &#8211; initial pose of end effector tip</li>
+<li><strong>goal_pose</strong> (<em>RigidTransform</em>) &#8211; goal pose of end effector tip</li>
+<li><strong>timeout</strong> (<em>float</em>) &#8211; planner timeout (shorthand for setting new planning time then planning)</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>traj</strong> – the planned trajectory to execute</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>traj</strong> &#8211; the planned trajectory to execute</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">YuMiTrajectory</p>
