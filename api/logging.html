@@ -178,26 +178,26 @@
 <h2>YuMSubscriber<a class="headerlink" href="#yumsubscriber" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiSubscriber">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiSubscriber</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em>, <em>right_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiSubscriber</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=(‘torques’</em>, <em>’states’</em>, <em>’poses’)</em>, <em>right_includes=(‘torques’</em>, <em>’states’</em>, <em>’poses’)</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to stream pose and state information from an ABB YuMI robot
 over ethernet.</p>
 <dl class="method">
 <dt id="yumipy.YuMiSubscriber.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em>, <em>right_includes=('torques'</em>, <em>'states'</em>, <em>'poses')</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>include_left=True</em>, <em>include_right=True</em>, <em>left_includes=(‘torques’</em>, <em>’states’</em>, <em>’poses’)</em>, <em>right_includes=(‘torques’</em>, <em>’states’</em>, <em>’poses’)</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiSubscriber.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a YuMiSubscriber</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>include_left</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the left arm subscriber is included and instantiated.
+<li><strong>include_left</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the left arm subscriber is included and instantiated.
 Defaults to True</li>
-<li><strong>include_right</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the right arm subscriber is included and instantiated.
+<li><strong>include_right</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the right arm subscriber is included and instantiated.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>

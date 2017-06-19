@@ -195,7 +195,7 @@
 The <cite>yumipy</cite> package has been tested for ROS Jade and may not work in other versions.</p>
 <div class="section" id="install-autolab-dependencies">
 <h2>1. Install AUTOLAB dependencies<a class="headerlink" href="#install-autolab-dependencies" title="Permalink to this headline">¶</a></h2>
-<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/core">AUTOLAB core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/core/install/install.html">the installation instructions</a>.</p>
+<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">AUTOLAB autolab_core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/autolab_core/install/install.html">the installation instructions</a>.</p>
 </div>
 <div class="section" id="clone-the-repository">
 <h2>2. Clone the repository<a class="headerlink" href="#clone-the-repository" title="Permalink to this headline">¶</a></h2>
@@ -223,7 +223,7 @@ $ . devel/setup.bash</dd>
 Note that the <cite>yumipy</cite> module is known to work for Python 2.7 and has not been tested for Python 3.</p>
 <div class="section" id="id1">
 <h2>1. Install AUTOLAB dependencies<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/core">AUTOLAB core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/core/install/install.html">the installation instructions</a>.</p>
+<p>Install the <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">AUTOLAB autolab_core</a> module by following <a class="reference external" href="https://berkeleyautomation.github.io/autolab_core/install/install.html">the installation instructions</a>.</p>
 </div>
 <div class="section" id="id4">
 <h2>2. Clone the repository<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
@@ -275,7 +275,7 @@ Turn the robot on and make sure that your computer is connected to the service p
 <li>Turn Motors On</li>
 <li>Change to AUTO Mode</li>
 <li>Set Program Pointer to Main</li>
-<li>Click &#8220;Play&#8221; to run server</li>
+<li>Click “Play” to run server</li>
 </ol>
 <p>Note that if you use our provided backup, you can use the custom buttons on the
 FlexPendant to do the following:</p>
@@ -284,7 +284,7 @@ FlexPendant to do the following:</p>
 <li>Two bars - toggle auto/manual mode</li>
 <li>One bar - set program pointer to main</li>
 </ul>
-<p>You only need to run the RAPID server if you&#8217;re using the YuMiArm or YuMiRobot
+<p>You only need to run the RAPID server if you’re using the YuMiArm or YuMiRobot
 objects. You can run YuMiSubcriber anytime as long as the YuMi is on and connected
 to your machine.</p>
 <p>You can edit the server code in SERVER_LEFT and SERVER_RIGHT.mod in RobotStudio.
@@ -324,7 +324,7 @@ the robot again.</p>
 </div>
 <div class="section" id="run-a-python-example">
 <h2>5. Run a Python Example<a class="headerlink" href="#run-a-python-example" title="Permalink to this headline">¶</a></h2>
-<p>Now let&#8217;s move the right arm 5cm forward and 5cm backward to the starting point.</p>
+<p>Now let’s move the right arm 5cm forward and 5cm backward to the starting point.</p>
 <p>First, create a YuMiRobot object that communicates over ROS:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">yumipy</span> <span class="kn">import</span> <span class="n">YuMiRobot</span>
 <span class="c1"># start the robot interface</span>
@@ -355,7 +355,7 @@ y.right.goto_pose_delta((-0.05,0,0))</p>
 </div>
 <div class="section" id="dependencies">
 <h1>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h1>
-<p>The <cite>yumipy</cite> module depends on the Berkeley AutoLab&#8217;s <a class="reference external" href="https://github.com/BerkeleyAutomation/core">core</a> module,
+<p>The <cite>yumipy</cite> module depends on the Berkeley AutoLab’s <a class="reference external" href="https://github.com/BerkeleyAutomation/autolab_core">autolab_core</a> module,
 which can be installed using <cite>pip install</cite> on the source repo.</p>
 <p>Any other dependencies will be installed automatically when <cite>yumipy</cite> is
 installed with <cite>pip</cite>.</p>
@@ -366,7 +366,7 @@ installed with <cite>pip</cite>.</p>
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="building">
 <h2>Building<a class="headerlink" href="#building" title="Permalink to this headline">¶</a></h2>
-<p>Building <cite>yumipy</cite>&#8216;s documentation requires a few extra dependencies &#8211;
+<p>Building <cite>yumipy</cite>’s documentation requires a few extra dependencies –
 specifically, <a class="reference external" href="http://www.sphinx-doc.org/en/1.4.8/">sphinx</a> and a few plugins.</p>
 <p>To install the dependencies required, simply run</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span>$ pip install -r docs_requirements.txt

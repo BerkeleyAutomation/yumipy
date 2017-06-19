@@ -200,18 +200,18 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>arm_type</strong> (<em>string</em>) &#8211; <p>Type of arm. One of {&#8216;local&#8217;, &#8216;remote&#8217;}</p>
-<p>&#8216;local&#8217;  creates a local YuMiArm object that communicates over ethernet</p>
-<p>&#8216;remote&#8217; creates a YuMiArm object that communicates over ROS with a server</p>
+<li><strong>arm_type</strong> (<em>string</em>) – <p>Type of arm. One of {‘local’, ‘remote’}</p>
+<p>’local’  creates a local YuMiArm object that communicates over ethernet</p>
+<p>’remote’ creates a YuMiArm object that communicates over ROS with a server</p>
 </li>
-<li><strong>name</strong> (<em>string</em>) &#8211; <p>Name of arm. One of {&#8216;left&#8217;, &#8216;right&#8217;}.</p>
-<p>For local YuMiArm, the port kwarg is set to PORTS[{name}][&#8220;server&#8221;],
+<li><strong>name</strong> (<em>string</em>) – <p>Name of arm. One of {‘left’, ‘right’}.</p>
+<p>For local YuMiArm, the port kwarg is set to PORTS[{name}][“server”],
 where PORTS is defined in yumi_constants.py</p>
-<p>For remote YuMiArm, arm_service is set to &#8216;yumi_robot/{name}_arm&#8217;.
+<p>For remote YuMiArm, arm_service is set to ‘yumi_robot/{name}_arm’.
 This means that the namespace kwarg should be set to the namespace yumi_arms.launch was run in
 (or None if yumi_arms.launch was launched in the current namespace)</p>
 </li>
-<li><strong>ros_namespace</strong> (<em>string</em>) &#8211; ROS namespace of arm. Used by remote YuMiArm only.</li>
+<li><strong>ros_namespace</strong> (<em>string</em>) – ROS namespace of arm. Used by remote YuMiArm only.</li>
 </ul>
 </td>
 </tr>
@@ -226,12 +226,12 @@ This means that the namespace kwarg should be set to the namespace yumi_arms.lau
 <h2>YuMiArm<a class="headerlink" href="#yumiarm" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiArm">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiArm</code><span class="sig-paren">(</span><em>name</em>, <em>ip='192.168.125.1'</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame='tool'</em>, <em>to_frame='base'</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiArm</code><span class="sig-paren">(</span><em>name</em>, <em>ip=‘192.168.125.1’</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame=’tool’</em>, <em>to_frame=’base’</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to a single arm of an ABB YuMi robot.
 Communicates with the robot over Ethernet.</p>
 <dl class="method">
 <dt id="yumipy.YuMiArm.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>ip='192.168.125.1'</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame='tool'</em>, <em>to_frame='base'</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>name</em>, <em>ip=‘192.168.125.1’</em>, <em>port=5000</em>, <em>bufsize=4096</em>, <em>motion_timeout=8</em>, <em>comm_timeout=5</em>, <em>process_timeout=10</em>, <em>from_frame=’tool’</em>, <em>to_frame=’base’</em>, <em>debug=False</em>, <em>log_pose_histories=False</em>, <em>log_state_histories=False</em>, <em>motion_planner=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
 This uses a subprocess to handle non-blocking socket communication with the RAPID server.</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -239,29 +239,29 @@ This uses a subprocess to handle non-blocking socket communication with the RAPI
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>name</strong> (<em>string</em>) &#8211; Name of the arm {&#8216;left&#8217;, &#8216;right&#8217;}</li>
-<li><strong>ip</strong> (<em>string formated ip address</em><em>, </em><em>optional</em>) &#8211; IP of YuMi Robot.
+<li><strong>name</strong> (<em>string</em>) – Name of the arm {‘left’, ‘right’}</li>
+<li><strong>ip</strong> (<em>string formated ip address</em><em>, </em><em>optional</em>) – IP of YuMi Robot.
 Default uses the one in YuMiConstants</li>
-<li><strong>port</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; Port of target arm&#8217;s server.
+<li><strong>port</strong> (<em>int</em><em>, </em><em>optional</em>) – Port of target arm’s server.
 Default uses the port for the left arm from YuMiConstants.</li>
-<li><strong>bufsize</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; Buffer size for ethernet responses</li>
-<li><strong>motion_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Timeout for motion commands.
+<li><strong>bufsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Buffer size for ethernet responses</li>
+<li><strong>motion_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – Timeout for motion commands.
 Default from YuMiConstants.MOTION_TIMEOUT</li>
-<li><strong>comm_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Timeout for non-motion ethernet communication.
+<li><strong>comm_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – Timeout for non-motion ethernet communication.
 Default from YuMiConstants.COMM_TIMEOUT</li>
-<li><strong>process_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Timeout for ethernet process communication.
+<li><strong>process_timeout</strong> (<em>float</em><em>, </em><em>optional</em>) – Timeout for ethernet process communication.
 Default from YuMiConstants.PROCESS_TIMEOUT</li>
-<li><strong>from_frame</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; String name of robot arm frame.
-Default to &#8220;tool&#8221;</li>
-<li><strong>to_frame</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; String name of reference for robot frame
-Default to &#8220;base&#8221;</li>
-<li><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; Boolean to indicate whether or not in debug mode. If in debug mode no ethernet communication is attempted. Mock responses will be returned.
+<li><strong>from_frame</strong> (<em>string</em><em>, </em><em>optional</em>) – String name of robot arm frame.
+Default to “tool”</li>
+<li><strong>to_frame</strong> (<em>string</em><em>, </em><em>optional</em>) – String name of reference for robot frame
+Default to “base”</li>
+<li><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – Boolean to indicate whether or not in debug mode. If in debug mode no ethernet communication is attempted. Mock responses will be returned.
 Default to YuMiConstants.DEBUG</li>
-<li><strong>log_pose_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
+<li><strong>log_pose_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
 Defaults to False</li>
-<li><strong>log_state_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
+<li><strong>log_state_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
 Defaults to False</li>
-<li><strong>motion_planner</strong> (<a class="reference internal" href="motion_planning.html#yumipy.YuMiMotionPlanner" title="yumipy.YuMiMotionPlanner"><em>YuMiMotionPlanner</em></a><em>, </em><em>optional</em>) &#8211; If given, will use for planning trajectories in joint space.
+<li><strong>motion_planner</strong> (<a class="reference internal" href="motion_planning.html#yumipy.YuMiMotionPlanner" title="yumipy.YuMiMotionPlanner"><em>YuMiMotionPlanner</em></a><em>, </em><em>optional</em>) – If given, will use for planning trajectories in joint space.
 Defaults to None</li>
 </ul>
 </td>
@@ -289,7 +289,7 @@ Defaults to None</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motion_planner</strong> (<a class="reference internal" href="motion_planning.html#yumipy.YuMiMotionPlanner" title="yumipy.YuMiMotionPlanner"><em>YuMiMotionPlanner</em></a>) &#8211; Sets the current motion planner to the given motion planner.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>motion_planner</strong> (<a class="reference internal" href="motion_planning.html#yumipy.YuMiMotionPlanner" title="yumipy.YuMiMotionPlanner"><em>YuMiMotionPlanner</em></a>) – Sets the current motion planner to the given motion planner.</td>
 </tr>
 </tbody>
 </table>
@@ -302,7 +302,7 @@ Defaults to None</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>string</em>) &#8211; Saves the pose history logger data to filename. Empties logger.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>string</em>) – Saves the pose history logger data to filename. Empties logger.</td>
 </tr>
 </tbody>
 </table>
@@ -315,7 +315,7 @@ Defaults to None</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>string</em>) &#8211; Saves the state history logger data to filename. Empties logger</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>string</em>) – Saves the state history logger data to filename. Empties logger</td>
 </tr>
 </tbody>
 </table>
@@ -341,14 +341,14 @@ Defaults to None</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>out</strong></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">Namedtuple (raw_res, data) from ping command.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -362,7 +362,7 @@ Defaults to True</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will return raw_res namedtuple instead of YuMiState
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will return raw_res namedtuple instead of YuMiState
 Defaults to False</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">YuMiState if raw_res is False<p>_RES(raw_res, state) namedtuple if raw_res is True</p>
@@ -370,7 +370,7 @@ Defaults to False</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">out</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -384,7 +384,7 @@ Defaults to False</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will return raw_res namedtuple instead of YuMiState
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will return raw_res namedtuple instead of YuMiState
 Defaults to False</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">RigidTransform if raw_res is False<p>_RES(raw_res, pose) namedtuple if raw_res is True</p>
@@ -392,7 +392,7 @@ Defaults to False</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">out</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -406,13 +406,13 @@ Defaults to False</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pose</strong> (<em>RigidTransform</em>) &#8211; </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pose</strong> (<em>RigidTransform</em>) – </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>bool</strong></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">True if pose is reachable, False otherwise.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -427,26 +427,26 @@ Defaults to False</td>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; </li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) – </li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) if state logging is not enabled and wait_for_res is False</em></li>
-<li><em>{</em> &#8211; &#8216;time&#8217;: &lt;flaot&gt;,
-&#8216;state&#8217;: &lt;YuMistate&gt;,
-&#8216;res&#8217;: &lt;namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;)&gt;</li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) if state logging is not enabled and wait_for_res is False</em></li>
+<li><em>{</em> – ‘time’: &lt;flaot&gt;,
+‘state’: &lt;YuMistate&gt;,
+‘res’: &lt;namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’)&gt;</li>
 <li><em>} otherwise. The time field indicates the duration it took for the arm to complete the motion.</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -463,30 +463,30 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pose</strong> (<em>RigidTransform</em>) &#8211; </li>
-<li><strong>linear</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
+<li><strong>pose</strong> (<em>RigidTransform</em>) – </li>
+<li><strong>linear</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
 Defaults to True</li>
-<li><strong>relative</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
+<li><strong>relative</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
 Defaults to False</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) if pose logging is not enabled and wait_for_res is False</em></li>
-<li><em>{</em> &#8211; &#8216;time&#8217;: &lt;flaot&gt;,
-&#8216;pose&#8217;: &lt;RigidTransform&gt;,
-&#8216;res&#8217;: &lt;namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;)&gt;</li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) if pose logging is not enabled and wait_for_res is False</em></li>
+<li><em>{</em> – ‘time’: &lt;flaot&gt;,
+‘pose’: &lt;RigidTransform&gt;,
+‘res’: &lt;namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’)&gt;</li>
 <li><em>} otherwise. The time field indicates the duration it took for the arm to complete the motion.</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -515,24 +515,24 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>translatioin</strong> (<em>list-like with length 3</em>) &#8211; The translation vector (x, y, z) in meters.</li>
-<li><strong>rotation</strong> (<em>list-like with length 3</em><em>, </em><em>optional</em>) &#8211; The euler angles of given rotation in degrees.
+<li><strong>translation</strong> (<em>list-like with length 3</em>) – The translation vector (x, y, z) in meters.</li>
+<li><strong>rotation</strong> (<em>list-like with length 3</em><em>, </em><em>optional</em>) – The euler angles of given rotation in degrees.
 Defaults to 0 degrees - no rotation.</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -549,20 +549,20 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pose</strong> (<em>RigidTransform</em>) &#8211; </li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>pose</strong> (<em>RigidTransform</em>) – </li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -572,27 +572,27 @@ Defaults to True</li>
 <dl class="method">
 <dt id="yumipy.YuMiArm.set_speed">
 <code class="descname">set_speed</code><span class="sig-paren">(</span><em>speed_data</em>, <em>wait_for_res=True</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiArm.set_speed" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the target speed of the arm&#8217;s movements.</p>
+<dd><p>Sets the target speed of the arm’s movements.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>speed_data</strong> (<em>list-like with length 4</em>) &#8211; Specifies the speed data that will be used by RAPID when executing motions.
+<li><strong>speed_data</strong> (<em>list-like with length 4</em>) – Specifies the speed data that will be used by RAPID when executing motions.
 Should be generated using YuMiRobot.get_v</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -608,21 +608,21 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>speed_data</strong> (<em>list-like with length 4</em>) &#8211; Specifies the speed data that will be used by RAPID when executing motions.
+<li><strong>speed_data</strong> (<em>list-like with length 4</em>) – Specifies the speed data that will be used by RAPID when executing motions.
 Should be generated using YuMiRobot.get_v</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -638,23 +638,23 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>center_pose</strong> (<em>RigidTransform</em>) &#8211; Pose for the center of the circle for circula movement.</li>
-<li><strong>target_pose</strong> (<em>RigidTransform</em>) &#8211; Target pose</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>center_pose</strong> (<em>RigidTransform</em>) – Pose for the center of the circle for circula movement.</li>
+<li><strong>target_pose</strong> (<em>RigidTransform</em>) – Target pose</li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -671,20 +671,20 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pose</strong> (<em>RigidTransform</em>) &#8211; </li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>pose</strong> (<em>RigidTransform</em>) – </li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -700,20 +700,20 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pose_list</strong> (<em>list of RigidTransforms</em>) &#8211; </li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>pose_list</strong> (<em>list of RigidTransforms</em>) – </li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -728,16 +728,16 @@ Defaults to True</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -751,16 +751,16 @@ Defaults to True</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -774,16 +774,16 @@ Defaults to True</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -797,20 +797,20 @@ Defaults to True</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -827,27 +827,27 @@ Defaults to True</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>force</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Sets the corresponding gripping force in Newtons.
+<li><strong>force</strong> (<em>float</em><em>, </em><em>optional</em>) – Sets the corresponding gripping force in Newtons.
 Defaults to 20, which is the maximum grip force.</li>
-<li><strong>width</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Sets the target width of gripper close motion in m. Cannot be greater than max gripper width.
+<li><strong>width</strong> (<em>float</em><em>, </em><em>optional</em>) – Sets the target width of gripper close motion in m. Cannot be greater than max gripper width.
 Defaults to 0.</li>
-<li><strong>no_wait</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the RAPID server will continue without waiting for the gripper to reach its target width
+<li><strong>no_wait</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the RAPID server will continue without waiting for the gripper to reach its target width
 Defaults to True</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -864,24 +864,24 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>width</strong> (<em>float</em>) &#8211; Target width in meters</li>
-<li><strong>no_wait</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the RAPID server will continue without waiting for the gripper to reach its target width
+<li><strong>width</strong> (<em>float</em>) – Target width in meters</li>
+<li><strong>no_wait</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the RAPID server will continue without waiting for the gripper to reach its target width
 Defaults to False</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -898,31 +898,31 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>max_speed</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Max speed of the gripper in mm/s.
+<li><strong>max_speed</strong> (<em>float</em><em>, </em><em>optional</em>) – Max speed of the gripper in mm/s.
 Defaults to None. If None, will use maximum speed in RAPID.</li>
-<li><strong>hold_force</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; Hold force used by the gripper in N.
+<li><strong>hold_force</strong> (<em>float</em><em>, </em><em>optional</em>) – Hold force used by the gripper in N.
 Defaults to None. If None, will use maximum force the gripper can provide (20N).</li>
-<li><strong>phys_limit</strong> (<em>float</em><em>, </em><em>optional</em>) &#8211; The maximum opening of the gripper.
+<li><strong>phys_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum opening of the gripper.
 Defaults to None. If None, will use maximum opening the gripper can provide (25mm).</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
 </table>
 <p class="rubric">Notes</p>
-<p>All 3 values must be provided, or they&#8217;ll all default to None.</p>
+<p>All 3 values must be provided, or they’ll all default to None.</p>
 </dd></dl>
 
 <dl class="method">
@@ -934,20 +934,20 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>force</strong> (<em>float</em>) &#8211; Hold force by the gripper in N.</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>force</strong> (<em>float</em>) – Hold force by the gripper in N.</li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -963,20 +963,20 @@ Defaults to True</li>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>max_speed</strong> (<em>float</em>) &#8211; In mm/s.</li>
-<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<li><strong>max_speed</strong> (<em>float</em>) – In mm/s.</li>
+<li><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -991,19 +991,19 @@ Defaults to True</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; </p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>raw_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – </p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>Width in meters if raw_res is False</em></li>
-<li><em>namedtuple(&#8216;_RES&#8217;, &#8216;res width&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RES’, ‘res width’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1019,20 +1019,20 @@ Defaults to True</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, will block main process until response received from RAPID server.
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>wait_for_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, will block main process until response received from RAPID server.
 Defaults to True</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><ul class="simple">
 <li><em>None if wait_for_res is False</em></li>
-<li><em>namedtuple(&#8216;_RAW_RES&#8217;, &#8216;mirror_code res_code message&#8217;) otherwise</em></li>
+<li><em>namedtuple(‘_RAW_RES’, ‘mirror_code res_code message’) otherwise</em></li>
 </ul>
 </p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1055,9 +1055,9 @@ Communicates over ROS to a yumi arm server (initialize server through roslaunch)
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>arm_service</strong> (<em>string</em>) &#8211; ROSYumiArm service to interface with. If the ROSYumiArm services are started through
+<li><strong>arm_service</strong> (<em>string</em>) – ROSYumiArm service to interface with. If the ROSYumiArm services are started through
 yumi_arms.launch they will be called left_arm and right_arm</li>
-<li><strong>namespace</strong> (<em>string</em><em>, </em><em>optional</em>) &#8211; Namespace to prepend to arm_service. If None, current namespace is prepended.</li>
+<li><strong>namespace</strong> (<em>string</em><em>, </em><em>optional</em>) – Namespace to prepend to arm_service. If None, current namespace is prepended.</li>
 </ul>
 </td>
 </tr>
@@ -1071,7 +1071,7 @@ yumi_arms.launch they will be called left_arm and right_arm</li>
 function on the YuMiArm instance in the server. The wait_for_res argument is not available
 remotely and will always be set to True. This is to prevent odd desynchronized crashes</p>
 <p>Otherwise, the name is considered to be an attribute, and getattr is called on the
-YuMiArm instance in the server. Note that if it isn&#8217;t an attribute either a RuntimeError
+YuMiArm instance in the server. Note that if it isn’t an attribute either a RuntimeError
 will be raised.</p>
 <p>The difference here is that functions access the server <em>on call</em> and non-functions do
 <em>on getting the name</em></p>
@@ -1086,45 +1086,45 @@ this function as the YuMiArm_ROS object already has these as attributes.</p>
 <h2>YuMiRobot<a class="headerlink" href="#yumirobot" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="yumipy.YuMiRobot">
-<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiRobot</code><span class="sig-paren">(</span><em>ip='192.168.125.1', port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False, arm_type='local', ros_namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">yumipy.</code><code class="descname">YuMiRobot</code><span class="sig-paren">(</span><em>ip=‘192.168.125.1’, port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False, arm_type=’local’, ros_namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Interface to both arms of an ABB YuMi robot.
 Communicates with the robot over Ethernet.</p>
 <dl class="method">
 <dt id="yumipy.YuMiRobot.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>ip='192.168.125.1', port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False, arm_type='local', ros_namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>ip=‘192.168.125.1’, port_l=5000, port_r=5001, tcp=RigidTransform(rotation=[[ 1.  0.  0.]  [ 0.  1.  0.]  [ 0.  0.  1.]], translation=[ 0.     0.     0.156], from_frame=unassigned, to_frame=world), include_left=True, include_right=True, debug=False, log_pose_histories=False, log_state_histories=False, arm_type=’local’, ros_namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initializes a YuMiRobot</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>ip</strong> (<em>string formatted IP Address</em><em>, </em><em>optional</em>) &#8211; IP address of YuMi.
+<li><strong>ip</strong> (<em>string formatted IP Address</em><em>, </em><em>optional</em>) – IP address of YuMi.
 Defaults to YuMiConstants.IP</li>
-<li><strong>port_l</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; Port of left arm server.
+<li><strong>port_l</strong> (<em>int</em><em>, </em><em>optional</em>) – Port of left arm server.
 Defaults to YuMiConstants.PORT_L</li>
-<li><strong>port_r</strong> (<em>int</em><em>, </em><em>optional</em>) &#8211; Port of right arm server.
+<li><strong>port_r</strong> (<em>int</em><em>, </em><em>optional</em>) – Port of right arm server.
 Defaults to YuMiConstants.PORT_R</li>
-<li><strong>tcp</strong> (<em>RigidTransform</em><em>, </em><em>optional</em>) &#8211; Tool Center Point Offset of the endeffectors.
+<li><strong>tcp</strong> (<em>RigidTransform</em><em>, </em><em>optional</em>) – Tool Center Point Offset of the endeffectors.
 Defaults to YuMiConstants.TCP_DEFAULT_GRIPPER</li>
-<li><strong>include_left</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the left arm is included and instantiated.
+<li><strong>include_left</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the left arm is included and instantiated.
 Defaults to True</li>
-<li><strong>include_right</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, the right arm is included and instantiated.
+<li><strong>include_right</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the right arm is included and instantiated.
 Defaults to True</li>
-<li><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, enables debug mode, so no ethernet socket will be created, and all response messages are faked.
+<li><strong>debug</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, enables debug mode, so no ethernet socket will be created, and all response messages are faked.
 Defaults to YuMiConstants.DEBUG</li>
-<li><strong>log_pose_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
+<li><strong>log_pose_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
 Defaults to False</li>
-<li><strong>log_state_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) &#8211; If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
+<li><strong>log_state_histories</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
 Defaults to False</li>
-<li><strong>ros_namespace</strong> (<em>string</em>) &#8211; ROS namespace of arm. Used by remote YuMiArm only. If None, namespace is same as current ROS namespace</li>
-<li><strong>arm_type</strong> (<em>string</em>) &#8211; <p>Type of arm. One of {&#8216;local&#8217;, &#8216;remote&#8217;}</p>
-<p>&#8216;local&#8217;  creates local YuMiArm objects that communicates over ethernet. This ignores ros_namespace</p>
-<p>&#8216;remote&#8217; creates YuMiArm objects that communicates over ROS with a server. This ignores ip, port_l, and port_r</p>
+<li><strong>ros_namespace</strong> (<em>string</em>) – ROS namespace of arm. Used by remote YuMiArm only. If None, namespace is same as current ROS namespace</li>
+<li><strong>arm_type</strong> (<em>string</em>) – <p>Type of arm. One of {‘local’, ‘remote’}</p>
+<p>’local’  creates local YuMiArm objects that communicates over ethernet. This ignores ros_namespace</p>
+<p>’remote’ creates YuMiArm objects that communicates over ROS with a server. This ignores ip, port_l, and port_r</p>
 </li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</p>
 </td>
 </tr>
 </tbody>
@@ -1165,14 +1165,14 @@ motions will end at the same time.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>left_state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; Target state for left arm</li>
-<li><strong>right_state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) &#8211; Target state for right arm</li>
+<li><strong>left_state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) – Target state for left arm</li>
+<li><strong>right_state</strong> (<a class="reference internal" href="#yumipy.YuMiState" title="yumipy.YuMiState"><em>YuMiState</em></a>) – Target state for right arm</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1190,14 +1190,14 @@ motions will end at the same time.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>left_pose</strong> (<em>RigidTransform</em>) &#8211; Target pose for left arm</li>
-<li><strong>right_pose</strong> (<em>RigidTransform</em>) &#8211; Target pose for right arm</li>
+<li><strong>left_pose</strong> (<em>RigidTransform</em>) – Target pose for left arm</li>
+<li><strong>right_pose</strong> (<em>RigidTransform</em>) – Target pose for right arm</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1213,10 +1213,10 @@ motions will end at the same time.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; speed number. If n = 100, then speed will be set to the corresponding v100
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) – speed number. If n = 100, then speed will be set to the corresponding v100
 specified in RAPID. Loosely, n is translational speed in milimeters per second</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1230,9 +1230,9 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of zone setting. ie: &#8220;z10&#8221;, &#8220;z200&#8221;, &#8220;fine&#8221;</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of zone setting. ie: “z10”, “z200”, “fine”</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1246,9 +1246,9 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pose</strong> (<em>RigidTransform</em>) &#8211; Pose of new TCP as offset from the default TCP</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pose</strong> (<em>RigidTransform</em>) – Pose of new TCP as offset from the default TCP</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1263,8 +1263,8 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> &#8211; If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">YuMiControlException</span></code> – If commanded pose triggers any motion errors that are catchable by RAPID sever.</li>
 </ul>
 </td>
 </tr>
@@ -1280,7 +1280,7 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> &#8211; If communication times out or socket error.</td>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">YuMiCommException</span></code> – If communication times out or socket error.</td>
 </tr>
 </tbody>
 </table>
@@ -1289,14 +1289,14 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <dl class="staticmethod">
 <dt id="yumipy.YuMiRobot.construct_speed_data">
 <em class="property">static </em><code class="descname">construct_speed_data</code><span class="sig-paren">(</span><em>tra</em>, <em>rot</em><span class="sig-paren">)</span><a class="headerlink" href="#yumipy.YuMiRobot.construct_speed_data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a speed data tuple that&#8217;s in the same format as ones used in RAPID.</p>
+<dd><p>Constructs a speed data tuple that’s in the same format as ones used in RAPID.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tra</strong> (<em>float</em>) &#8211; translational speed (milimeters per second)</li>
-<li><strong>rot</strong> (<em>float</em>) &#8211; rotational speed (degrees per second)</li>
+<li><strong>tra</strong> (<em>float</em>) – translational speed (milimeters per second)</li>
+<li><strong>rot</strong> (<em>float</em>) – rotational speed (degrees per second)</li>
 </ul>
 </td>
 </tr>
@@ -1318,7 +1318,7 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; speed number. If n = 100, will return the same speed data as v100 in RAPID</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) – speed number. If n = 100, will return the same speed data as v100 in RAPID</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -1336,7 +1336,7 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of zone setting. ie: &#8220;z10&#8221;, &#8220;z200&#8221;, &#8220;fine&#8221;</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – Name of zone setting. ie: “z10”, “z200”, “fine”</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
 </tr>
@@ -1355,9 +1355,9 @@ specified in RAPID. Loosely, n is translational speed in milimeters per second</
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>pzone_tcp</strong> (<em>float</em>) &#8211; path zone size for TCP</li>
-<li><strong>pzone_ori</strong> (<em>float</em>) &#8211; path zone size for orientation</li>
-<li><strong>zone_ori</strong> (<em>float</em>) &#8211; zone size for orientation</li>
+<li><strong>pzone_tcp</strong> (<em>float</em>) – path zone size for TCP</li>
+<li><strong>pzone_ori</strong> (<em>float</em>) – path zone size for orientation</li>
+<li><strong>zone_ori</strong> (<em>float</em>) – zone size for orientation</li>
 </ul>
 </td>
 </tr>
