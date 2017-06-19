@@ -5,6 +5,12 @@ This package provides a python interface for control and communication with ABB'
 
 Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/)
 
+UPDATE: As of commit f4be489 on June 18, 2017, `yumipy` depends on `autolab_core`, a renamed version of `core`.
+If this affects you please do the following:
+* Pull the latest commit from `core`
+* Re-install using pip or setup.py following the instructions [here](https://berkeleyautomation.github.io/autolab_core/install/install.html)
+* Pull the lastest commit from `yumipy`
+
 ### Installation
 Step 1: Install the alan YuMi python interface on the client computer that will communicate with the YuMi:
 ```sh
