@@ -12,7 +12,7 @@ import os
 from time import sleep, time
 from collections import namedtuple
 import numpy as np
-from core import RigidTransform
+from autolab_core import RigidTransform
 from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_motion_logger import YuMiMotionLogger

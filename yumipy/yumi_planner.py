@@ -13,7 +13,7 @@ try:
 except ImportError:
     logging.error("Unable to load ROS! Will not be able to use client-side motion planner!")
 
-from core import RigidTransform
+from autolab_core import RigidTransform
 from yumi_state import YuMiState
 from yumi_trajectory import YuMiTrajectory
 from yumi_constants import YuMiConstants as ymc

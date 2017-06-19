@@ -4,7 +4,7 @@ Author: Jacky Liang
 '''
 import logging
 from yumi_state import YuMiState
-from core import RigidTransform
+from autolab_core import RigidTransform
 
 class YuMiConstants:
 
