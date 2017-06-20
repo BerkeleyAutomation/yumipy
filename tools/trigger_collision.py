@@ -2,7 +2,7 @@ import numpy as np
 import time
 
 from yumipy import YuMiRobot, YuMiState
-from core import RigidTransform
+from autolab_core import RigidTransform
 
 if __name__ == '__main__':
 	num_attempts = 3

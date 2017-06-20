@@ -11,9 +11,9 @@ import numpy as np
 import copy
 import sys
 
+from autolab_core import RigidTransform
 from yumipy import YuMiConstants as YMC
 from yumipy import YuMiRobot, YuMiState
-from core import RigidTransform
 
 import IPython
 

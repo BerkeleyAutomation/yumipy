@@ -8,7 +8,7 @@ METERS_TO_MM = 1000.0
 MM_TO_METERS = 1.0 / METERS_TO_MM
 
 from yumi_state import YuMiState
-from core import RigidTransform
+from autolab_core import RigidTransform
 
 def message_to_pose(message, from_frame='yumi'):
     tokens = message.split()

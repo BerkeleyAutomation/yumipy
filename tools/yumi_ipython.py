@@ -1,5 +1,5 @@
 from yumipy import *
-from core import *
+from autolab_core import *
 
 from time import sleep
 

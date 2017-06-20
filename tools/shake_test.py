@@ -2,7 +2,7 @@
 Helper script to move YuMi back to home pose
 Author: Jeff Mahler
 """
-from core import RigidTransform
+from autolab_core import RigidTransform
 import numpy as np
 
 from yumipy import YuMiRobot, YuMiState

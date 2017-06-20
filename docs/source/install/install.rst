@@ -5,10 +5,10 @@ The `yumipy` package has been tested for ROS Jade and may not work in other vers
 
 1. Install AUTOLAB dependencies
 """""""""""""""""""""""""""""""
-Install the `AUTOLAB core`_ module by following `the installation instructions`_.
+Install the `AUTOLAB autolab_core`_ module by following `the installation instructions`_.
 
-.. _AUTOLAB core: https://github.com/BerkeleyAutomation/core
-.. _the installation instructions: https://berkeleyautomation.github.io/core/install/install.html
+.. _AUTOLAB autolab_core: https://github.com/BerkeleyAutomation/autolab_core
+.. _the installation instructions: https://berkeleyautomation.github.io/autolab_core/install/install.html
 
 2. Clone the repository
 """""""""""""""""""""""
@@ -36,10 +36,10 @@ Note that the `yumipy` module is known to work for Python 2.7 and has not been t
 
 1. Install AUTOLAB dependencies
 """""""""""""""""""""""""""""""
-Install the `AUTOLAB core`_ module by following `the installation instructions`_.
+Install the `AUTOLAB autolab_core`_ module by following `the installation instructions`_.
 
-.. _AUTOLAB core: https://github.com/BerkeleyAutomation/core
-.. _the installation instructions: https://berkeleyautomation.github.io/core/install/install.html
+.. _AUTOLAB autolab_core: https://github.com/BerkeleyAutomation/autolab_core
+.. _the installation instructions: https://berkeleyautomation.github.io/autolab_core/install/install.html
 
 2. Clone the repository
 """""""""""""""""""""""
@@ -179,10 +179,10 @@ Now move the arms!
 
 Dependencies
 ~~~~~~~~~~~~
-The `yumipy` module depends on the Berkeley AutoLab's `core`_ module,
+The `yumipy` module depends on the Berkeley AutoLab's `autolab_core`_ module,
 which can be installed using `pip install` on the source repo.
 
-.. _core: https://github.com/BerkeleyAutomation/core
+.. _autolab_core: https://github.com/BerkeleyAutomation/autolab_core
 
 Any other dependencies will be installed automatically when `yumipy` is
 installed with `pip`.

@@ -5,6 +5,12 @@ This package provides a python interface for control and communication with ABB'
 
 Full documentation can be found at [https://berkeleyautomation.github.io/yumipy/](https://berkeleyautomation.github.io/yumipy/)
 
+UPDATE: As of commit f4be489 on June 18, 2017, `yumipy` depends on [`autolab_core`](https://berkeleyautomation.github.io/autolab_core/), a renamed version of `core`.
+If this affects you (you have installed yumipy before June 18th, 2017), please do the following:
+* Pull the latest commit from `core`
+* Re-install using pip or setup.py following the instructions [here](https://berkeleyautomation.github.io/autolab_core/install/install.html)
+* Pull the lastest commit from `yumipy`
+
 ### Installation
 Step 1: Install the alan YuMi python interface on the client computer that will communicate with the YuMi:
 ```sh
@@ -28,6 +34,6 @@ y.right.goto_pose_delta((-0.05,0,0))
 
 The control and RAPID server code is inspired by the [open-abb-driver](https://github.com/robotics/open_abb).
 
-### Issues
-Please report issues via email to Jeff Mahler at jmahler@berkeley.edu and Jacky Liang at jackyliang@berkeley.edu.
-Feel free to also raise issues on the repository Issues tab, but it may take us longer to respond.
+### Support
+Please request for support and report issues with errors and bugs on the repository Issues tab - that is the best way for us to respond.
+For other inquiries please contact Jeff Mahler at jmahler@berkeley.edu and Jacky Liang at jackyliang@berkeley.edu
