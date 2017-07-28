@@ -4,6 +4,7 @@ Author: Jeff Mahler
 """
 import IPython
 import numpy as np
+import time
 
 from yumipy import YuMiRobot
 from autolab_core import RigidTransform
@@ -21,4 +22,7 @@ if __name__ == '__main__':
                                      from_frame='tool',
                                      to_frame='world')
     r.right.goto_pose(T_suction_world)
+    r.right.suction_on()
+    time.sleep(1)
+    r.right.suction_off()
     r.stop()
