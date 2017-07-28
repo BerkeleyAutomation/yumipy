@@ -19,7 +19,6 @@ from yumi_state import YuMiState
 from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
-from yumi_planner import YuMiMotionPlanner
 import pickle
 
 # Check if ROS and the service file can be imported
@@ -585,14 +584,6 @@ class YuMiArm:
         self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
         self._vacuum_servo.move(-angle_deg)
 
-        # visualize, for debugging
-        from visualization import Visualizer3D as vis
-        vis.figure()
-        vis.pose(RigidTransform())
-        vis.pose(T_tool_world, show_frame=True)
-        vis.pose(T_pivot_world, show_frame=True)
-        vis.show()
-        
     def _goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
         '''Commands the YuMi to goto the given pose
 
