@@ -37,6 +37,8 @@ class YuMiConstants:
 
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
+    SUCTION_TIP_LENGTH = 0.09
+
     # used to rate limit real-time YuMi controls (in seconds)
     COMM_PERIOD = 0.04 
     

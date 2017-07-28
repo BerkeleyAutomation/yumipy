@@ -19,5 +19,5 @@ if __name__ == '__main__':
 
     y.set_z('fine')
     y.reset_home()
-    y.open_grippers()
+    #y.open_grippers()
     y.stop()

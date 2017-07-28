@@ -15,7 +15,7 @@ class YuMiRobot:
     def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False,
-                    arm_type='local', ros_namespace = None):
+                    arm_type='local', ros_namespace = None, use_suction=False):
         """Initializes a YuMiRobot
 
         Parameters
@@ -56,6 +56,8 @@ class YuMiRobot:
                 'local'  creates local YuMiArm objects that communicates over ethernet. This ignores ros_namespace
             
                 'remote' creates YuMiArm objects that communicates over ROS with a server. This ignores ip, port_l, and port_r
+            use_suction: bool
+                whether or not to use the suction hand for control
 
         Raises
         ------
@@ -80,7 +82,8 @@ class YuMiRobot:
         if include_right:
             if arm_type =='local':
                 self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
-                                     log_state_histories=log_state_histories)
+                                     log_state_histories=log_state_histories,
+                                     use_suction=use_suction)
             elif arm_type == 'remote':
                 self.right = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
             else:

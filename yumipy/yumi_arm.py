@@ -13,6 +13,7 @@ from time import sleep, time
 from collections import namedtuple
 import numpy as np
 from autolab_core import RigidTransform
+from autolab_suction import Vacuum, VacuumServo
 from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_motion_logger import YuMiMotionLogger
@@ -140,7 +141,7 @@ class YuMiArm:
                  from_frame='tool', to_frame='base',
                  debug=YMC.DEBUG,
                  log_pose_histories=False, log_state_histories=False,
-                 motion_planner=None):
+                 motion_planner=None, use_suction=False):
         '''Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
 
@@ -183,6 +184,9 @@ class YuMiArm:
             motion_planner : YuMiMotionPlanner, optional
                     If given, will use for planning trajectories in joint space.
                     Defaults to None
+            use_suction : bool, optional
+                    If True, initializes the AUTOLAB suction control interface.
+                    Defaults to False
         '''
         self._motion_timeout = motion_timeout
         self._comm_timeout = comm_timeout
@@ -212,6 +216,13 @@ class YuMiArm:
         }
 
         self._motion_planner = motion_planner
+
+        self._vacuum_servo = None
+        self._vacuum = None
+        if use_suction:
+            self._vacuum = Vacuum()
+            self._vacuum_servo = VacuumServo()
+            self._vacuum_servo.move(0)
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -287,6 +298,8 @@ class YuMiArm:
         self._req_q.put("stop")
         try:
             self._yumi_ethernet.terminate()
+            if self._vacuum is not None:
+                self._vacuum.stop()
         except Exception:
             pass
 
@@ -509,6 +522,78 @@ class YuMiArm:
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
     def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
+        '''Commands the YuMi to goto the given pose
+
+        Parameters
+        ----------
+        pose : RigidTransform
+        linear : bool, optional
+            If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
+            Defaults to True
+        relative : bool, optional
+            If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
+            Defaults to False
+        wait_for_res : bool, optional
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
+
+        Returns
+        -------
+        None if wait_for_res is False
+        namedtuple('_RAW_RES', 'mirror_code res_code message') if pose logging is not enabled and wait_for_res is False
+
+        {
+            'time': <flaot>,
+            'pose': <RigidTransform>,
+            'res': <namedtuple('_RAW_RES', 'mirror_code res_code message')>
+        } otherwise. The time field indicates the duration it took for the arm to complete the motion.
+
+        Raises
+        ------
+        YuMiCommException
+            If communication times out or socket error.
+        YuMiControlException
+            If commanded pose triggers any motion errors that are catchable by RAPID sever.
+        '''
+        # default to standard goto_pose
+        if self._vacuum is None:
+            return self._goto_pose(pose, linear=linear, relative=relative, wait_for_res=wait_for_res)
+
+        # otherwise assume the pose is for the suction tip and use IK to command the robot
+
+        # cannot go to poses with an approach in the upward direction
+        if pose.z_axis[2] > 0:
+            raise ValueError('Cannot go to a suction pose with an upward-facing approach')
+
+        # determine the rotation that aligns the pose with the z axis
+        angle_rad = np.arccos(pose.z_axis.dot(np.array([0,0,-1])))
+        angle_deg = np.rad2deg(angle_rad)        
+        Rx = RigidTransform.x_axis_rotation(angle_rad)
+        T_tool_world = pose
+        T_pivot_tool = RigidTransform(rotation=Rx,
+                                      translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
+                                      from_frame='pivot', to_frame='tool')            
+        T_pivot_world = T_tool_world * T_pivot_tool
+        if T_pivot_world.z_axis[2] > 0:
+            T_pivot_tool = RigidTransform(rotation=Rx.T,
+                                          translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
+                                          from_frame='pivot', to_frame='tool')            
+            T_pivot_world = T_tool_world * T_pivot_tool
+            angle_deg = -angle_deg
+
+        # send the end-effector to the given pose
+        self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
+        self._vacuum_servo.move(-angle_deg)
+
+        # visualize, for debugging
+        from visualization import Visualizer3D as vis
+        vis.figure()
+        vis.pose(RigidTransform())
+        vis.pose(T_tool_world, show_frame=True)
+        vis.pose(T_pivot_world, show_frame=True)
+        vis.show()
+        
+    def _goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
         '''Commands the YuMi to goto the given pose
 
         Parameters
@@ -953,6 +1038,22 @@ class YuMiArm:
         body = YuMiArm._iter_to_str('{0:.1f}', [force, width] + ([0] if no_wait else []))
         req = YuMiArm._construct_req('close_gripper', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
+
+    def suction_on(self):
+        '''Turns on the suction.
+        '''
+        # check for a vacuum
+        if self._vacuum is None:
+            raise ValueError('Suction not initialized. Cannot turn on.')
+        self._vacuum.on()
+
+    def suction_off(self):
+        '''Turns off the suction.
+        '''
+        # check for a vacuum
+        if self._vacuum is None:
+            raise ValueError('Suction not initialized. Cannot turn off.')
+        self._vacuum.off()
 
     def move_gripper(self, width, no_wait=False, wait_for_res=True):
         '''Moves the gripper to the given width in meters.
