@@ -23,7 +23,7 @@ if __name__ == '__main__':
     T_cur = y.left.get_pose()
     delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_cur.translation
     #delta_t = [0, 0, 0.1]
-    y.left.goto_pose_delta(delta_t)
+    #y.left.goto_pose_delta(delta_t)
 
     #y.left.open_gripper()
     y.stop()

@@ -569,16 +569,30 @@ class YuMiArm:
         angle_deg = np.rad2deg(angle_rad)        
         Rx = RigidTransform.x_axis_rotation(angle_rad)
         T_tool_world = pose
-        T_pivot_tool = RigidTransform(rotation=Rx,
+
+        # choose the rotation that minimizes the inner product with the world z (aka most orthogonal to the table)
+        T_pivot1_tool = RigidTransform(rotation=Rx,
+                                       translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
+                                       from_frame='pivot', to_frame='tool')            
+        T_pivot1_world = T_tool_world * T_pivot1_tool
+
+        T_pivot2_tool = RigidTransform(rotation=Rx.T,
                                       translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
                                       from_frame='pivot', to_frame='tool')            
-        T_pivot_world = T_tool_world * T_pivot_tool
-        if T_pivot_world.z_axis[2] > 0:
-            T_pivot_tool = RigidTransform(rotation=Rx.T,
-                                          translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
-                                          from_frame='pivot', to_frame='tool')            
-            T_pivot_world = T_tool_world * T_pivot_tool
+        T_pivot2_world = T_tool_world * T_pivot2_tool
+
+        T_pivot_world = T_pivot1_world
+        if T_pivot2_world.z_axis[2] < T_pivot1_world.z_axis[2]:
+            T_pivot_world = T_pivot2_world            
             angle_deg = -angle_deg
+
+        # visualize, for debugging
+        from visualization import Visualizer3D as vis
+        vis.figure()
+        vis.pose(RigidTransform())
+        vis.pose(T_tool_world, show_frame=True)
+        vis.pose(T_pivot_world, show_frame=True)
+        vis.show()
 
         # send the end-effector to the given pose
         self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
