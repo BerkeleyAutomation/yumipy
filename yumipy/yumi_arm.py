@@ -221,7 +221,7 @@ class YuMiArm:
         if use_suction:
             self._vacuum = Vacuum()
             self._vacuum_servo = VacuumServo()
-            self._vacuum_servo.move(0)
+            self._vacuum_servo.move(0.0)
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -520,7 +520,21 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_joints_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
+    def set_vacuum_servo_angle(self, angle):
+        """ Sets the angle of the vacuum servo.
+
+        Parameters
+        ----------
+        angle : float
+            angle to servo the vacuum tip to, in degrees
+        """
+        if self._vacuum_servo is None:
+            raise ValueError('Vacuum servo not initialized. Cannot set angle!')
+
+        # move the servo
+        self._vacuum_servo.move(angle)
+
+    def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True, use_suction=False, debug=False):
         '''Commands the YuMi to goto the given pose
 
         Parameters
@@ -555,7 +569,7 @@ class YuMiArm:
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
         # default to standard goto_pose
-        if self._vacuum is None:
+        if self._vacuum is None or not use_suction:
             return self._goto_pose(pose, linear=linear, relative=relative, wait_for_res=wait_for_res)
 
         # otherwise assume the pose is for the suction tip and use IK to command the robot
@@ -573,12 +587,14 @@ class YuMiArm:
         # choose the rotation that minimizes the inner product with the world z (aka most orthogonal to the table)
         T_pivot1_tool = RigidTransform(rotation=Rx,
                                        translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
-                                       from_frame='pivot', to_frame='tool')            
+                                       from_frame='pivot',
+                                       to_frame=T_tool_world.from_frame)
         T_pivot1_world = T_tool_world * T_pivot1_tool
 
         T_pivot2_tool = RigidTransform(rotation=Rx.T,
-                                      translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
-                                      from_frame='pivot', to_frame='tool')            
+                                       translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
+                                       from_frame='pivot',
+                                       to_frame=T_tool_world.from_frame)
         T_pivot2_world = T_tool_world * T_pivot2_tool
 
         T_pivot_world = T_pivot1_world
@@ -587,16 +603,17 @@ class YuMiArm:
             angle_deg = -angle_deg
 
         # visualize, for debugging
-        from visualization import Visualizer3D as vis
-        vis.figure()
-        vis.pose(RigidTransform())
-        vis.pose(T_tool_world, show_frame=True)
-        vis.pose(T_pivot_world, show_frame=True)
-        vis.show()
+        if debug:
+            from visualization import Visualizer3D as vis
+            vis.figure()
+            vis.pose(RigidTransform())
+            vis.pose(T_tool_world, show_frame=True)
+            vis.pose(T_pivot_world, show_frame=True)
+            vis.show()
 
         # send the end-effector to the given pose
-        self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
         self._vacuum_servo.move(-angle_deg)
+        self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
 
     def _goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
         '''Commands the YuMi to goto the given pose

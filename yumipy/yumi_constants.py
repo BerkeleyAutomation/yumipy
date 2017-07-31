@@ -37,7 +37,7 @@ class YuMiConstants:
 
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
-    SUCTION_TIP_LENGTH = 0.09
+    SUCTION_TIP_LENGTH = 0.12
 
     # used to rate limit real-time YuMi controls (in seconds)
     COMM_PERIOD = 0.04 
@@ -120,6 +120,7 @@ class YuMiConstants:
     TCP_LONG_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
+    TCP_SUCTION = RigidTransform(translation=[0,-17.5/1000.,(136-56+88-12-80)/1000.])
     
     L_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, 135])
     L_HOME_POSE = RigidTransform(translation=[0.123, 0.147, 0.124], rotation=[0.06551, 0.84892, -0.11147, 0.51246])
@@ -176,9 +177,9 @@ class YuMiConstants:
     L_BOX_POSE = RigidTransform(translation=[0.06, 0.038, 0.34],
                                     rotation=[0.5, -0.5, 0.5, -0.5])
 
-    R_PREGRASP_POSE = RigidTransform(translation=[0.30, -0.35, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    R_PREGRASP_POSE = RigidTransform(translation=[0.30, -0.35, 0.3], rotation=[0.21353, 0.37697, 0.78321, 0.44596])
 
-    R_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.4, -0.05, 0.15], rotation=[0, 0, 1, 0])
+    R_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.5, -0.0, 0.25], rotation=[0, 0, 1, 0])
     R_KINEMATIC_AVOIDANCE_STATE = YuMiState([57.49, -29.43, 45.85, -80.99, 76.0, 82.11, -33.57])
     R_EXPERIMENT_DROP_POSE = RigidTransform(translation=[0.30, -0.45, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
