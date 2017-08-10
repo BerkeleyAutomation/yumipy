@@ -41,7 +41,7 @@ if __name__ == '__main__':
     robot.left.goto_pose_delta(delta_t)    
 
     T_gripper_world = robot.left.get_pose()
-    delta_t = YMC.L_BIN_PREDROP_POSE.translation - T_gripper_world.translation
+    delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_gripper_world.translation
     robot.left.goto_pose_delta(delta_t)    
 
     T_gripper_world = robot.left.get_pose()
@@ -49,7 +49,7 @@ if __name__ == '__main__':
     robot.left.goto_pose_delta(delta_t)    
 
     T_gripper_world = robot.left.get_pose()
-    delta_t = YMC.L_BIN_PREDROP_POSE.translation - T_gripper_world.translation
+    delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_gripper_world.translation
     robot.left.goto_pose_delta(delta_t)    
 
     T_gripper_world = robot.left.get_pose()
