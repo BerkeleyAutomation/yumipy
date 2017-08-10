@@ -220,8 +220,8 @@ class YuMiArm:
         self._vacuum = None
         if use_suction:
             self._vacuum = Vacuum()
-            self._vacuum_servo = VacuumServo()
-            self._vacuum_servo.move(0.0)
+            #self._vacuum_servo = VacuumServo()
+            #self._vacuum_servo.move(0.0)
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -532,7 +532,8 @@ class YuMiArm:
             raise ValueError('Vacuum servo not initialized. Cannot set angle!')
 
         # move the servo
-        self._vacuum_servo.move(angle)
+        if not self._debug:
+            self._vacuum_servo.move(angle)
 
     def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True, use_suction=False, debug=False):
         '''Commands the YuMi to goto the given pose
@@ -579,7 +580,8 @@ class YuMiArm:
             raise ValueError('Cannot go to a suction pose with an upward-facing approach')
 
         # determine the rotation that aligns the pose with the z axis
-        angle_rad = np.arccos(pose.z_axis.dot(np.array([0,0,-1])))
+        dot_prod = min(max(pose.z_axis.dot(np.array([0,0,-1])), -1.0), 1.0)
+        angle_rad = np.arccos(dot_prod)
         angle_deg = np.rad2deg(angle_rad)        
         Rx = RigidTransform.x_axis_rotation(angle_rad)
         T_tool_world = pose
@@ -1067,7 +1069,8 @@ class YuMiArm:
         # check for a vacuum
         if self._vacuum is None:
             raise ValueError('Suction not initialized. Cannot turn on.')
-        self._vacuum.on()
+        if not self._debug:
+            self._vacuum.on()
 
     def suction_off(self):
         '''Turns off the suction.
@@ -1075,7 +1078,8 @@ class YuMiArm:
         # check for a vacuum
         if self._vacuum is None:
             raise ValueError('Suction not initialized. Cannot turn off.')
-        self._vacuum.off()
+        if not self._debug:
+            self._vacuum.off()
 
     def move_gripper(self, width, no_wait=False, wait_for_res=True):
         '''Moves the gripper to the given width in meters.

@@ -37,7 +37,7 @@ class YuMiConstants:
 
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
-    SUCTION_TIP_LENGTH = 0.12
+    SUCTION_TIP_LENGTH = 0.105
 
     # used to rate limit real-time YuMi controls (in seconds)
     COMM_PERIOD = 0.04 
@@ -120,7 +120,8 @@ class YuMiConstants:
     TCP_LONG_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
-    TCP_SUCTION = RigidTransform(translation=[0,-17.5/1000.,(136-56+88-12-80)/1000.])
+    TCP_SUCTION = RigidTransform(translation=[0.5/1000,-8.0/1000.,(136.-56.+88.-12.-75.)/1000.])
+    TCP_SUCTION_STIFF = RigidTransform(translation=[3./1000,0.0/1000.,(136.-56.+88.-12.-75.)/1000.])
     
     L_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, 135])
     L_HOME_POSE = RigidTransform(translation=[0.123, 0.147, 0.124], rotation=[0.06551, 0.84892, -0.11147, 0.51246])
