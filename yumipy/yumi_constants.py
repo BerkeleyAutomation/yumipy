@@ -194,14 +194,14 @@ class YuMiConstants:
                                        rotation=[0,0,-1,0])
     L_BIN_UPPER_LEFT = RigidTransform(translation=[0.55, 0.2, 0.04],
                                       rotation=[0,0,-1,0])
-    L_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, 0.47, 0.32],
+    L_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, 0.42, 0.32],
                                          rotation=[0,0,-1,0])
-    L_BIN_DROP_POSE = RigidTransform(translation=[0.4, 0.47, 0.2],
+    L_BIN_DROP_POSE = RigidTransform(translation=[0.4, 0.42, 0.2],
                                      rotation=[0,0,-1,0])
 
-    R_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, -0.47, 0.32],
+    R_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, -0.42, 0.32],
                                          rotation=[0,0,-1,0])
-    R_BIN_DROP_POSE = RigidTransform(translation=[0.4, -0.47, 0.2],
+    R_BIN_DROP_POSE = RigidTransform(translation=[0.4, -0.42, 0.2],
                                      rotation=[0,0,-1,0])
     
     L_PACKAGE_DROP_POSES = [
