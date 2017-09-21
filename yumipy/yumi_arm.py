@@ -19,7 +19,9 @@ from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
+from yumi_kinematics import YumiKinematics
 import pickle
+import geometry_msgs.msg
 
 # Check if ROS and the service file can be imported
 ROS_ENABLED = False
@@ -433,7 +435,7 @@ class YuMiArm:
             else:
                 return pose
 
-    def is_pose_reachable(self, pose):
+    def is_pose_reachable(self, pose, use_move_group=True):
         '''Check if a given pose is reachable (incurs no kinematic/joint-space limitations and self collisions)
 
         Parameters
@@ -449,10 +451,17 @@ class YuMiArm:
         YuMiCommException
             If communication times out or socket error.
         '''
-        body = YuMiArm._get_pose_body(pose)
-        req = YuMiArm._construct_req('is_pose_reachable', body)
-        res = self._request(req, True)
-        return bool(int(res.message))
+        if use_move_group:
+            group = "right_arm"
+            ik_srv = YumiKinematics(group)
+            pose = ik_srv.pose_stamped_from_pose(pose.pose_msg)
+            res = ik_srv.get_ik(pose, avoid_collisions=True)
+            return res.error_code.val == 1
+        else:
+            body = YuMiArm._get_pose_body(pose)
+            req = YuMiArm._construct_req('is_pose_reachable', body)
+            res = self._request(req, True)
+            return bool(int(res.message))
 
     def goto_state(self, state, wait_for_res=True):
         '''Commands the YuMi to goto the given state (joint angles)
@@ -1232,4 +1241,8 @@ class YuMiArmFactory:
 
 
 if __name__ == '__main__':
+    # pose = RigidTransform(rotation=[0,0,0,1], translation=[.5,0,.5])
+    # arm = YuMiArm('right')
+    # print arm.is_pose_reachable(pose)
+    # print "\n\n\na"
     logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
