@@ -142,7 +142,8 @@ class YuMiArm:
                  from_frame='tool', to_frame='base',
                  debug=YMC.DEBUG,
                  log_pose_histories=False, log_state_histories=False,
-                 motion_planner=None):
+                 motion_planner=None,
+                 use_move_group=True):
         '''Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
 
@@ -185,6 +186,9 @@ class YuMiArm:
             motion_planner : YuMiMotionPlanner, optional
                     If given, will use for planning trajectories in joint space.
                     Defaults to None
+            use_move_group : bool, optional
+                    if True, will load the YumiKinematics service, which is used to compute if a pose is reachable
+
         '''
         self._motion_timeout = motion_timeout
         self._comm_timeout = comm_timeout
@@ -214,6 +218,11 @@ class YuMiArm:
         }
 
         self._motion_planner = motion_planner
+
+        self.use_move_group = use_move_group
+        if self.use_move_group:
+            group = "right_arm"
+            self.ik_srv = YumiKinematics(group, ik_timeout=.025)
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -435,7 +444,7 @@ class YuMiArm:
             else:
                 return pose
 
-    def is_pose_reachable(self, pose, use_move_group=True):
+    def is_pose_reachable(self, pose):
         '''Check if a given pose is reachable (incurs no kinematic/joint-space limitations and self collisions)
 
         Parameters
@@ -451,11 +460,9 @@ class YuMiArm:
         YuMiCommException
             If communication times out or socket error.
         '''
-        if use_move_group:
-            group = "right_arm"
-            ik_srv = YumiKinematics(group)
-            pose = ik_srv.pose_stamped_from_pose(pose.pose_msg)
-            res = ik_srv.get_ik(pose, avoid_collisions=True)
+        if self.use_move_group:
+            pose = self.ik_srv.pose_stamped_from_pose(pose.pose_msg)
+            res = self.ik_srv.get_ik(pose, avoid_collisions=True)
             return res.error_code.val == 1
         else:
             body = YuMiArm._get_pose_body(pose)
