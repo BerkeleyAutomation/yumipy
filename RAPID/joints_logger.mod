@@ -51,10 +51,10 @@ PROC main()
 		data := data + NumToStr(joints.robax.rax_3,2) + " ";
 		data := data + NumToStr(joints.robax.rax_4,2) + " ";
 		data := data + NumToStr(joints.robax.rax_5,2) + " ";
-		data := data + NumToStr(joints.robax.rax_6,2) + " "; 
-        data := data+NumToStr(joints.extax.eax_a,2);
-        data := data + "!";
-        !End of string
+		data := data + NumToStr(joints.robax.rax_6,2) + " ";
+    data := data+NumToStr(joints.extax.eax_a,2);
+    data := data + "!";
+    !End of string
 		IF connected = TRUE THEN
 			SocketSend clientSocket \Str:=data;
 		ENDIF

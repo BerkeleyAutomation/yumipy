@@ -310,7 +310,7 @@ MODULE SERVER_R
                     addString:=addString+NumToStr(jointsPose.robax.rax_5,2)+" ";
                     addString:=addString+NumToStr(jointsPose.robax.rax_6,2)+" ";
                     !addString:=addString+StrPart(NumToStr(jointsTarget.extax.eax_a,2),1,8); ! ASG: Get external axis a == joint 7
-                    addString:=addString+NumToStr(jointsTarget.extax.eax_a,2);
+                    addString:=addString+NumToStr(jointsPose.extax.eax_a,2);
                     ! ASG: Get external axis a == joint 7
                     !End of string
                     ok:=SERVER_OK;
