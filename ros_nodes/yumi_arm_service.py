@@ -2,8 +2,11 @@
 """
 ROS node with service that allows for controlling the YuMi remotely
 """
+from sensor_msgs.msg import JointState
+
 import argparse
 import rospy
+import numpy as np
 
 try:
     from yumipy.yumi_arm import *
@@ -49,5 +52,23 @@ if __name__ == '__main__':
     s = rospy.Service('{0}_arm'.format(name), ROSYumiArm, handle_request)
     rospy.loginfo("{0} arm is ready".format(name))
 
+    joint_state_pub = rospy.Publisher(
+        '/joint_states', JointState, queue_size=10)
+
+    rate = rospy.Rate(20)
+
     # Keep process alive
-    rospy.spin()
+    while not rospy.is_shutdown():
+        joints = arm.get_state()
+        if joints:
+            joint_names = [
+                'yumi_joint_{}_{}'.format(i, name[0]) for i in range(1, 8)
+            ]
+
+            ros_now = rospy.Time.now()
+            joint_state_message = JointState()
+            joint_state_message.header.stamp = ros_now
+            joint_state_message.name = joint_names
+            joint_state_message.position = np.radians(joints.joints)
+            joint_state_pub.publish(joint_state_message)
+        rate.sleep()
