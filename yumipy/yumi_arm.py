@@ -17,7 +17,7 @@ from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
-from yumi_exceptions import YuMiCommException,YuMiControlException
+from yumi_exceptions import YuMiCommException, YuMiControlException
 from yumi_planner import YuMiMotionPlanner
 import pickle
 
@@ -29,9 +29,12 @@ try:
         from yumipy.srv import *
         ROS_ENABLED = True
     except ImportError:
-        logging.warning("yumipy not installed as catkin package, yumi over ros will be unavailable")
+        logging.warning(
+            "yumipy not installed as catkin package, yumi over ros will be unavailable"
+        )
 except ImportError:
-    logging.warning("rospy could not be imported, yumi over ros will be unavailable")
+    logging.warning(
+        "rospy could not be imported, yumi over ros will be unavailable")
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
@@ -40,8 +43,8 @@ _REQ_PACKET = namedtuple('_REQ_PACKET', 'req timeout return_res')
 METERS_TO_MM = 1000.0
 MM_TO_METERS = 1.0 / METERS_TO_MM
 
-class _YuMiEthernet(Process):
 
+class _YuMiEthernet(Process):
     def __init__(self, req_q, res_q, ip, port, bufsize, timeout, debug):
         Process.__init__(self)
 
@@ -62,7 +65,8 @@ class _YuMiEthernet(Process):
         logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
 
         if self._debug:
-            logging.info("In DEBUG mode. Messages will NOT be sent over socket.")
+            logging.info(
+                "In DEBUG mode. Messages will NOT be sent over socket.")
         else:
             self._reset_socket()
 
@@ -90,8 +94,10 @@ class _YuMiEthernet(Process):
 
     def _reset_socket(self):
         logging.debug('Opening socket on {0}:{1}'.format(self._ip, self._port))
+        print('Opening socket on {0}:{1}'.format(self._ip, self._port))
         if self._socket != None:
             self._socket.close()
+            print("closing socket")
 
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._socket.settimeout(self._timeout)
@@ -118,28 +124,39 @@ class _YuMiEthernet(Process):
             try:
                 raw_res = self._socket.recv(self._bufsize)
             except socket.error, e:
-                if e.errno == 114: # request time out
-                    raise YuMiCommException('Request timed out: {0}'.format(req_packet))
+                if e.errno == 114:  # request time out
+                    raise YuMiCommException(
+                        'Request timed out: {0}'.format(req_packet))
 
         logging.debug("Received: {0}".format(raw_res))
 
         if raw_res is None or len(raw_res) == 0:
-            raise YuMiCommException('Empty response! For req: {0}'.format(req_packet))
+            raise YuMiCommException(
+                'Empty response! For req: {0}'.format(req_packet))
 
         tokens = raw_res.split()
         res = _RAW_RES(int(tokens[0]), int(tokens[1]), ' '.join(tokens[2:]))
         return res
+
 
 class YuMiArm:
     """ Interface to a single arm of an ABB YuMi robot.
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, name, ip=YMC.IP, port=YMC.PORTS["left"]["server"], bufsize=YMC.BUFSIZE,
-                 motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
-                 from_frame='tool', to_frame='base',
+    def __init__(self,
+                 name,
+                 ip=YMC.IP,
+                 port=YMC.PORTS["left"]["server"],
+                 bufsize=YMC.BUFSIZE,
+                 motion_timeout=YMC.MOTION_TIMEOUT,
+                 comm_timeout=YMC.COMM_TIMEOUT,
+                 process_timeout=YMC.PROCESS_TIMEOUT,
+                 from_frame='tool',
+                 to_frame='base',
                  debug=YMC.DEBUG,
-                 log_pose_histories=False, log_state_histories=False,
+                 log_pose_histories=False,
+                 log_state_histories=False,
                  motion_planner=None):
         '''Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
@@ -272,8 +289,9 @@ class YuMiArm:
         self._req_q = Queue()
         self._res_q = Queue()
 
-        self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ip, self._port,
-                                            self._bufsize, self._comm_timeout, self._debug)
+        self._yumi_ethernet = _YuMiEthernet(self._req_q, self._res_q, self._ip,
+                                            self._port, self._bufsize,
+                                            self._comm_timeout, self._debug)
         self._yumi_ethernet.start()
 
     def start(self):
@@ -303,9 +321,11 @@ class YuMiArm:
         self._req_q.put(req_packet)
         if wait_for_res:
             try:
-                res = self._res_q.get(block=True, timeout=self._process_timeout)
+                res = self._res_q.get(
+                    block=True, timeout=self._process_timeout)
             except (IOError, Empty):
-                raise YuMiCommException("Request timed out: {0}".format(req_packet))
+                raise YuMiCommException(
+                    "Request timed out: {0}".format(req_packet))
 
             logging.debug('res: {0}'.format(res))
 
@@ -332,8 +352,9 @@ class YuMiArm:
             raise ValueError('Can only parse RigidTransform objects')
         pose = pose.copy()
         pose.position = pose.position * METERS_TO_MM
-        body = '{0}{1}'.format(YuMiArm._iter_to_str('{:.1f}', pose.position.tolist()),
-                                            YuMiArm._iter_to_str('{:.5f}', pose.quaternion.tolist()))
+        body = '{0}{1}'.format(
+            YuMiArm._iter_to_str('{:.1f}', pose.position.tolist()),
+            YuMiArm._iter_to_str('{:.5f}', pose.quaternion.tolist()))
         return body
 
     @staticmethod
@@ -421,7 +442,8 @@ class YuMiArm:
             If communication times out or socket error.
         '''
         if self._debug:
-            return RigidTransform(from_frame=self._from_frame, to_frame=self._to_frame)
+            return RigidTransform(
+                from_frame=self._from_frame, to_frame=self._to_frame)
 
         req = YuMiArm._construct_req('get_pose')
         res = self._request(req, True)
@@ -495,11 +517,7 @@ class YuMiArm:
             self._state_logger.append_time(time)
             self._state_logger.append_expected(state)
             self._state_logger.append_actual(actual_state)
-            return {
-                'time': time,
-                'state': actual_state,
-                'res': res
-            }
+            return {'time': time, 'state': actual_state, 'res': res}
 
         return res
 
@@ -555,7 +573,8 @@ class YuMiArm:
             else:
                 cmd = 'goto_pose'
             req = YuMiArm._construct_req(cmd, body)
-            res = self._request(req, wait_for_res, timeout=self._motion_timeout)
+            res = self._request(
+                req, wait_for_res, timeout=self._motion_timeout)
 
         if hasattr(self, '_pose_logger') and wait_for_res and res is not None:
             if self._debug:
@@ -566,11 +585,7 @@ class YuMiArm:
             self._pose_logger.append_time(time)
             self._pose_logger.append_expected(pose)
             self._pose_logger.append_actual(actual_pose)
-            return {
-                'time': time,
-                'pose': actual_pose,
-                'res': res
-            }
+            return {'time': time, 'pose': actual_pose, 'res': res}
 
         return res
 
@@ -579,32 +594,42 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_pose_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def goto_pose_linear_path(self, pose, wait_for_res=True,
-                              traj_len=10, eef_delta=0.01, jump_thresh=0.0):
+    def goto_pose_linear_path(self,
+                              pose,
+                              wait_for_res=True,
+                              traj_len=10,
+                              eef_delta=0.01,
+                              jump_thresh=0.0):
         """ Go to a pose via the shortest path in joint space """
         if self._motion_planner is None:
             raise ValueError('Motion planning not enabled')
 
         current_state = self.get_state()
         current_pose = self.get_pose().as_frames('gripper', 'world')
-        traj = self._motion_planner.plan_linear_path(current_state, current_pose,
-                                                     pose, traj_len=traj_len,
-                                                     eef_delta=eef_delta,
-                                                     jump_thresh=jump_thresh)
+        traj = self._motion_planner.plan_linear_path(
+            current_state,
+            current_pose,
+            pose,
+            traj_len=traj_len,
+            eef_delta=eef_delta,
+            jump_thresh=jump_thresh)
         if traj is None:
             return
         for state in traj:
             self.goto_state(state, wait_for_res=wait_for_res)
 
-    def goto_pose_shortest_path(self, pose, wait_for_res=True, plan_timeout=0.1):
+    def goto_pose_shortest_path(self,
+                                pose,
+                                wait_for_res=True,
+                                plan_timeout=0.1):
         """ Go to a pose via the shortest path in joint space """
         if self._motion_planner is None:
             raise ValueError('Motion planning not enabled')
 
         current_state = self.get_state()
         current_pose = self.get_pose().as_frames('gripper', 'world')
-        traj = self._motion_planner.plan_shortest_path(current_state, current_pose,
-                                                       pose, timeout=plan_timeout)
+        traj = self._motion_planner.plan_shortest_path(
+            current_state, current_pose, pose, timeout=plan_timeout)
         if traj is None:
             return
         for state in traj:
@@ -722,7 +747,7 @@ class YuMiArm:
             If communication times out or socket error.
         '''
         pm = zone_data['point_motion']
-        data = (pm,) + zone_data['values']
+        data = (pm, ) + zone_data['values']
         body = YuMiArm._iter_to_str('{:2f}', data)
         req = YuMiArm._construct_req('set_zone', body)
         self._last_sets['zone'] = zone_data
@@ -756,15 +781,20 @@ class YuMiArm:
         body_set_circ_point = YuMiArm._get_pose_body(center_pose)
         body_move_by_circ_point = YuMiArm._get_pose_body(target_pose)
 
-        req_set_circ_point = YuMiArm._construct_req('set_circ_point', body_set_circ_point)
-        req_move_by_circ_point = YuMiArm._construct_req('move_by_circ_point', body_move_by_circ_point)
+        req_set_circ_point = YuMiArm._construct_req('set_circ_point',
+                                                    body_set_circ_point)
+        req_move_by_circ_point = YuMiArm._construct_req(
+            'move_by_circ_point', body_move_by_circ_point)
 
         res_set_circ_point = self._request(req_set_circ_point, True)
         if res_set_circ_point is None:
             logging.error("Set circular point failed. Skipping move circular!")
             return None
         else:
-            return self._request(req_move_by_circ_point, wait_for_res, timeout=self._motion_timeout)
+            return self._request(
+                req_move_by_circ_point,
+                wait_for_res,
+                timeout=self._motion_timeout)
 
     def buffer_add_single(self, pose, wait_for_res=True):
         '''Add single pose to the linear movement buffer in RAPID
@@ -810,7 +840,9 @@ class YuMiArm:
         YuMiCommException
             If communication times out or socket error.
         '''
-        ress = [self.buffer_add_single(pose, wait_for_res) for pose in pose_list]
+        ress = [
+            self.buffer_add_single(pose, wait_for_res) for pose in pose_list
+        ]
         return ress
 
     def buffer_clear(self, wait_for_res=True):
@@ -913,7 +945,10 @@ class YuMiArm:
         req = YuMiArm._construct_req('open_gripper', '')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def close_gripper(self, force=YMC.MAX_GRIPPER_FORCE, width=0., no_wait=False,
+    def close_gripper(self,
+                      force=YMC.MAX_GRIPPER_FORCE,
+                      width=0.,
+                      no_wait=False,
                       wait_for_res=True):
         '''Closes the gripper as close to 0 as possible with maximum force.
 
@@ -945,12 +980,17 @@ class YuMiArm:
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
         if force < 0 or force > YMC.MAX_GRIPPER_FORCE:
-            raise ValueError("Gripper force can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_FORCE, force))
-        if width < 0 or width > YMC>MAX_GRIPPER_WIDTH:
-            raise ValueError("Gripper width can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_WIDTH, width))
+            raise ValueError(
+                "Gripper force can only be between {} and {}. Got {}.".format(
+                    0, YMC.MAX_GRIPPER_FORCE, force))
+        if width < 0 or width > YMC > MAX_GRIPPER_WIDTH:
+            raise ValueError(
+                "Gripper width can only be between {} and {}. Got {}.".format(
+                    0, YMC.MAX_GRIPPER_WIDTH, width))
 
         width = METERS_TO_MM * width
-        body = YuMiArm._iter_to_str('{0:.1f}', [force, width] + ([0] if no_wait else []))
+        body = YuMiArm._iter_to_str('{0:.1f}',
+                                    [force, width] + ([0] if no_wait else []))
         req = YuMiArm._construct_req('close_gripper', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
@@ -987,7 +1027,11 @@ class YuMiArm:
         req = YuMiArm._construct_req('move_gripper', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def calibrate_gripper(self, max_speed=None, hold_force=None, phys_limit=None, wait_for_res=True):
+    def calibrate_gripper(self,
+                          max_speed=None,
+                          hold_force=None,
+                          phys_limit=None,
+                          wait_for_res=True):
         '''Calibrates the gripper.
 
         Parameters
@@ -1022,7 +1066,9 @@ class YuMiArm:
         if None in (max_speed, hold_force, phys_limit):
             body = ''
         else:
-            body = self._iter_to_str('{:.1f}', [data['max_speed'], data['hold_force'], data['phys_limit']])
+            body = self._iter_to_str('{:.1f}', [
+                data['max_speed'], data['hold_force'], data['phys_limit']
+            ])
         req = YuMiArm._construct_req('calibrate_gripper', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
@@ -1133,6 +1179,7 @@ class YuMiArm:
         req = YuMiArm._construct_req('reset_home')
         return self._request(req, wait_for_res)
 
+
 class YuMiArm_ROS:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
     Communicates over ROS to a yumi arm server (initialize server through roslaunch)
@@ -1145,7 +1192,8 @@ class YuMiArm_ROS:
     namespace : string, optional
         Namespace to prepend to arm_service. If None, current namespace is prepended.
     """
-    def __init__(self, arm_service, namespace = None, timeout = YMC.ROS_TIMEOUT):
+
+    def __init__(self, arm_service, namespace=None, timeout=YMC.ROS_TIMEOUT):
         if namespace == None:
             self.arm_service = rospy.get_namespace() + arm_service
         else:
@@ -1171,33 +1219,42 @@ class YuMiArm_ROS:
         this function as the YuMiArm_ROS object already has these as attributes.
         """
         if name in YuMiArm.__dict__:
+
             def handle_remote_call(*args, **kwargs):
                 """ Handle the remote call to some YuMiArm function.
                 """
-                rospy.wait_for_service(self.arm_service, timeout = self.timeout)
+                rospy.wait_for_service(self.arm_service, timeout=self.timeout)
                 arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
                 if 'wait_for_res' in kwargs:
                     kwargs['wait_for_res'] = True
                 try:
-                    response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
+                    response = arm(
+                        pickle.dumps(name),
+                        pickle.dumps(args), pickle.dumps(kwargs))
                 except rospy.ServiceException, e:
-                    raise RuntimeError("Service call failed: {0}".format(str(e)))
+                    raise RuntimeError(
+                        "Service call failed: {0}".format(str(e)))
                 return pickle.loads(response.ret)
+
             return handle_remote_call
         else:
-            rospy.wait_for_service(self.arm_service, timeout = self.timeout)
+            rospy.wait_for_service(self.arm_service, timeout=self.timeout)
             arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
             try:
-                response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), pickle.dumps(None))
+                response = arm(
+                    pickle.dumps('__getattribute__'),
+                    pickle.dumps(name), pickle.dumps(None))
             except rospy.ServiceException, e:
-                raise RuntimeError("Could not get attribute: {0}".format(str(e)))
+                raise RuntimeError(
+                    "Could not get attribute: {0}".format(str(e)))
             return pickle.loads(response.ret)
+
 
 class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """
 
     @staticmethod
-    def YuMiArm(arm_type, name, ros_namespace = None):
+    def YuMiArm(arm_type, name, ros_namespace=None):
         """Initializes a YuMiArm interface.
 
         Parameters
@@ -1224,9 +1281,12 @@ class YuMiArmFactory:
             return YuMiArm(name, port=YMC.PORTS[name]["server"])
         elif arm_type == 'remote':
             if ROS_ENABLED:
-                return YuMiArm_ROS('yumi_robot/{0}_arm'.format(name), namespace = ros_namespace)
+                return YuMiArm_ROS(
+                    'yumi_robot/{0}_arm'.format(name), namespace=ros_namespace)
             else:
-                raise RuntimeError("Remote YuMiArm is not enabled because yumipy is not installed as a catkin package")
+                raise RuntimeError(
+                    "Remote YuMiArm is not enabled because yumipy is not installed as a catkin package"
+                )
         else:
             raise ValueError('YuMiArm type {0} not supported'.format(arm_type))
 
