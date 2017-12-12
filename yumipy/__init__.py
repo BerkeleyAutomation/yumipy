@@ -6,6 +6,7 @@ from yumi_constants import YuMiConstants
 from yumi_state import YuMiState
 from yumi_trajectory import YuMiTrajectory
 from yumi_planner import YuMiMotionPlanner
+from yumi_kinematics import YuMiKinematics
 from yumi_arm import YuMiArm, YuMiArm_ROS, YuMiArmFactory
 from yumi_robot import YuMiRobot
 from yumi_motion_logger import YuMiMotionLogger

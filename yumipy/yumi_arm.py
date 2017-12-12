@@ -19,7 +19,7 @@ from yumi_motion_logger import YuMiMotionLogger
 from yumi_util import message_to_state, message_to_pose
 from yumi_exceptions import YuMiCommException,YuMiControlException
 from yumi_planner import YuMiMotionPlanner
-from yumi_kinematics import YumiKinematics
+from yumi_kinematics import YuMiKinematics
 import pickle
 import geometry_msgs.msg
 
@@ -187,7 +187,7 @@ class YuMiArm:
                     If given, will use for planning trajectories in joint space.
                     Defaults to None
             use_move_group : bool, optional
-                    if True, will load the YumiKinematics service, which is used to compute if a pose is reachable
+                    if True, will load the YuMiKinematics service, which is used to compute if a pose is reachable
 
         '''
         self._motion_timeout = motion_timeout
@@ -222,7 +222,7 @@ class YuMiArm:
         self.use_move_group = use_move_group
         if self.use_move_group:
             group = "right_arm"
-            self.ik_srv = YumiKinematics(group, ik_timeout=.025)
+            self.ik_srv = YuMiKinematics(group, ik_timeout=.025)
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.

@@ -13,7 +13,7 @@ import geometry_msgs.msg
     roscore
     roslaunch yumi_moveit_config real_demo.launch
 """
-class YumiKinematics(object):
+class YuMiKinematics(object):
     def __init__(self, group, ik_timeout=1.0, ik_attempts=0,
                  avoid_collisions=False):
         """
