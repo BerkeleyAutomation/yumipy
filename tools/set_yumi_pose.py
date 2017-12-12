@@ -3,7 +3,8 @@ Helper script to move YuMi back to home pose
 Author: Jeff Mahler, Jacky Liang
 """
 import argparse
-from yumipy import YuMiRobot
+import IPython
+from yumipy import YuMiRobot, YuMiState
 from yumipy import YuMiConstants as YMC
 
 if __name__ == '__main__':
@@ -18,7 +19,11 @@ if __name__ == '__main__':
     y = YuMiRobot(include_right=_is_true(args.right), include_left=_is_true(args.left))
 
     y.set_z('fine')
-    y.reset_home()
-    y.left.goto_pose(YMC.L_PREGRASP_POSE)
+    y.right.goto_state(YuMiState([62.62,-20.31,44.91,-78.61,74.79,-90.07,-36.71]))
+    #y.left.goto_pose(YMC.L_PREGRASP_POSE)
+    #y.left.goto_pose(YMC.L_BIN_PREGRASP_POSE)
+    print y.right.get_state()
+    
+    IPython.embed()
     #y.open_grippers()
     y.stop()

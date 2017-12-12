@@ -218,7 +218,7 @@ class YuMiArm:
 
         self._vacuum_servo = None
         self._vacuum = None
-        if use_suction:
+        if use_suction and not self._debug:
             self._vacuum = Vacuum()
             #self._vacuum_servo = VacuumServo()
             #self._vacuum_servo.move(0.0)
@@ -1067,8 +1067,6 @@ class YuMiArm:
         '''Turns on the suction.
         '''
         # check for a vacuum
-        if self._vacuum is None:
-            raise ValueError('Suction not initialized. Cannot turn on.')
         if not self._debug:
             self._vacuum.on()
 
@@ -1076,8 +1074,6 @@ class YuMiArm:
         '''Turns off the suction.
         '''
         # check for a vacuum
-        if self._vacuum is None:
-            raise ValueError('Suction not initialized. Cannot turn off.')
         if not self._debug:
             self._vacuum.off()
 

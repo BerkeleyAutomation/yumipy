@@ -161,6 +161,7 @@ class YuMiConstants:
     L_READY_STATE = YuMiState([-51.16, -99.4, 21.57, 107.19, 84.11, 94.61, 36.00])
 
     L_PREGRASP_POSE = RigidTransform(translation=[0.30, 0.35, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
+    L_PREGRASP_STATE = YuMiState([-21.11, -126.8, 35.13, 41.67, 63.94, -5.81, 45.33])
 
     L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.4, -0.05, 0.15], rotation=[0, 0, 1, 0])
     L_KINEMATIC_AVOIDANCE_STATE = YuMiState([-62.62, -20.31, 44.91, 78.61, 74.79, -90.07, 36.71])
