@@ -5,7 +5,10 @@ Author: Jacky Liang
 from yumi_constants import YuMiConstants
 from yumi_state import YuMiState
 from yumi_trajectory import YuMiTrajectory
-from yumi_kinematics import YuMiKinematics
+try:
+    from yumi_kinematics import YuMiKinematics
+except:
+    print 'Failed to import YuMiKinematics. Is MoveIt! installed?'
 from yumi_arm import YuMiArm, YuMiArm_ROS, YuMiArmFactory
 from yumi_robot import YuMiRobot
 from yumi_motion_logger import YuMiMotionLogger
