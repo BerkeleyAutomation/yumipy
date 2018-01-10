@@ -27,6 +27,7 @@ try:
     import rospy
     try:
         from yumipy.srv import *
+        from autolab_suction.srv import Suction
         ROS_ENABLED = True
     except ImportError:
         logging.warning("yumipy not installed as catkin package, yumi over ros will be unavailable")
@@ -219,9 +220,11 @@ class YuMiArm:
         self._vacuum_servo = None
         self._vacuum = None
         if use_suction and not self._debug:
-            self._vacuum = Vacuum()
-            #self._vacuum_servo = VacuumServo()
-            #self._vacuum_servo.move(0.0)
+            if ROS_ENABLED:
+                rospy.wait_for_service('toggle_suction')
+                self._vacuum = rospy.ServiceProxy('toggle_suction', Suction)
+            else:
+                self._vacuum = Vacuum()
 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -297,7 +300,7 @@ class YuMiArm:
         self._req_q.put("stop")
         try:
             self._yumi_ethernet.terminate()
-            if self._vacuum is not None:
+            if self._vacuum is not None and not ROS_ENABLED:
                 self._vacuum.stop()
         except Exception:
             pass
@@ -1068,14 +1071,20 @@ class YuMiArm:
         '''
         # check for a vacuum
         if not self._debug:
-            self._vacuum.on()
+            if ROS_ENABLED:
+                self._vacuum(True)
+            else:
+                self._vacuum.on()
 
     def suction_off(self):
         '''Turns off the suction.
         '''
         # check for a vacuum
         if not self._debug:
-            self._vacuum.off()
+            if ROS_ENABLED:
+                self._vacuum(False)
+            else:
+                self._vacuum.off()
 
     def move_gripper(self, width, no_wait=False, wait_for_res=True):
         '''Moves the gripper to the given width in meters.
