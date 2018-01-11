@@ -4,6 +4,16 @@ Author: Jacky Liang
 """
 from setuptools import setup
 
+requirements = [
+    'autolab_core',
+    'numpy',
+    'matplotlib',
+    'multiprocess',
+    'setproctitle',
+    'ipython==5.5.0',
+]
+
+
 setup(name='yumipy',
       version='0.1.0',
       description='YuMi Python Interface by Berkeley AutoLab',
@@ -11,6 +21,18 @@ setup(name='yumipy',
       author_email='jackyliang@berkeley.edu',
       package_dir = {'': '.'},
       packages=['yumipy'],
-      #test_suite='test'
+      install_requires = requirements,
+      extras_require = { 'docs' : [
+                            'sphinx',
+                            'sphinxcontrib-napoleon',
+                            'sphinx_rtd_theme'
+                          ],
+                         'ros' : [
+                            'rospkg',
+                            'catkin_pkg',
+                            'empy',
+                            'pyassimp'
+                          ],
+      }
      )
 
