@@ -11,6 +11,10 @@ requirements = [
     'multiprocess',
     'setproctitle',
     'ipython==5.5.0',
+    'rospkg',
+    'catkin_pkg',
+    'empy',
+    'pyassimp'
 ]
 
 
@@ -26,12 +30,6 @@ setup(name='yumipy',
                             'sphinx',
                             'sphinxcontrib-napoleon',
                             'sphinx_rtd_theme'
-                          ],
-                         'ros' : [
-                            'rospkg',
-                            'catkin_pkg',
-                            'empy',
-                            'pyassimp'
                           ],
       }
      )
