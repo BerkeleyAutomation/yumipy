@@ -220,12 +220,16 @@ class YuMiArm:
         self._vacuum_servo = None
         self._vacuum = None
         if use_suction and not self._debug:
-            if ROS_ENABLED:
-                rospy.wait_for_service('toggle_suction')
-                self._vacuum = rospy.ServiceProxy('toggle_suction', Suction)
-            else:
-                self._vacuum = Vacuum()
+            self.init_suction()
 
+    def init_suction(self):
+        """ Initialize suction. """
+        if ROS_ENABLED:
+            rospy.wait_for_service('toggle_suction')
+            self._vacuum = rospy.ServiceProxy('toggle_suction', Suction)
+        else:
+            self._vacuum = Vacuum()
+                
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
         '''
@@ -1265,6 +1269,40 @@ class YuMiArm:
         req = YuMiArm._construct_req('reset_home')
         return self._request(req, wait_for_res)
 
+    def shake(self, radius, angle, num_shakes,
+              wait_for_res=False):
+        """ Shakes the gripper along an arc relative to the current pose.
+
+        Parameters
+        ----------
+        radius : float
+            radius of the shake
+        angle : float
+            angle to shape, in radians
+        num_shakes : int
+            how many times to move back and forth along the arc
+        wait_for_res : bool, optional
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
+        """
+        # get current pose
+        T_cur = self.get_pose()
+
+        # compute shake poses
+        delta_T = RigidTransform(translation=[0,0,radius], from_frame='gripper', to_frame='gripper')
+        R_shake = RigidTransform.x_axis_rotation(angle)
+        delta_T_up = RigidTransform(rotation=R_shake, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
+        delta_T_down = RigidTransform(rotation=R_shake.T, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
+        T_shake_up = T_cur.as_frames('gripper', 'world') * delta_T_up * delta_T
+        T_shake_down = T_cur.as_frames('gripper', 'world') * delta_T_down * delta_T
+
+        # move for the number of shakes
+        for i in range(num_shakes):
+            self.goto_pose(T_shake_up, wait_for_res=wait_for_res)
+            self.goto_pose(T_cur, wait_for_res=wait_for_res)
+            self.goto_pose(T_shake_down, wait_for_res=wait_for_res)
+            self.goto_pose(T_cur, wait_for_res=wait_for_res)
+        
 class YuMiArm_ROS:
     """ Interface to remotely control a single arm of an ABB YuMi robot.
     Communicates over ROS to a yumi arm server (initialize server through roslaunch)

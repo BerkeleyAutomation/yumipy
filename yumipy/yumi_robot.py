@@ -235,6 +235,29 @@ class YuMiRobot:
         if hasattr(self, 'right'):
             self.right.goto_state(YMC.R_HOME_STATE, wait_for_res=True)
 
+    def reset_bin(self):
+        '''Moves both arms to home position on the sides of the bin
+
+        Raises
+        ------
+        YuMiCommException
+            If communication times out or socket error.
+        YuMiControlException
+            If commanded pose triggers any motion errors that are catchable by RAPID sever.
+        '''
+        if hasattr(self, 'left'):
+            self.left.goto_state(YMC.L_KINEMATIC_AVOIDANCE_STATE,
+                                 wait_for_res=True)
+            T_cur = self.left.get_pose()
+            delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_cur.translation
+            self.left.goto_pose_delta(delta_t)
+        if hasattr(self, 'right'):
+            self.right.goto_state(YMC.R_KINEMATIC_AVOIDANCE_STATE,
+                                  wait_for_res=True)
+            T_cur = self.right.get_pose()
+            delta_t = YMC.R_BIN_PREGRASP_POSE.translation - T_cur.translation
+            self.right.goto_pose_delta(delta_t)
+            
     def calibrate_grippers(self):
         '''Calibrates grippers for instantiated arms.
 
