@@ -14,10 +14,14 @@ class YuMiControlException(Exception):
         """ Failure of control, typically due to a kinematically unreachable pose.
         """
 
-	def __init__(self, req_packet, res, *args, **kwargs):
+	def __init__(self, req_packet, res,
+                     start_state=None, goal_pose=None,
+                     *args, **kwargs):
 		Exception.__init__(self, *args, **kwargs)
 		self.req_packet = req_packet
 		self.res = res
+                self.start_state = start_state
+                self.goal_pose = goal_pose
 
 	def __str__(self):
 		return "Failed Request!\nReq: {0}\nRes: {1}".format(self.req_packet, self.res)
