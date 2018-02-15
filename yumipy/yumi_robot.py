@@ -3,6 +3,7 @@ Abstraction for the YuMi Robot
 Authors: Jacky Liang
 '''
 import logging
+import numpy as np
 from yumi_arm import YuMiArm, YuMiArmFactory
 from yumi_constants import YuMiConstants as YMC
 from time import sleep
@@ -235,8 +236,13 @@ class YuMiRobot:
         if hasattr(self, 'right'):
             self.right.goto_state(YMC.R_HOME_STATE, wait_for_res=True)
 
-    def reset_bin(self):
+    def reset_bin(self, arm_name=None):
         '''Moves both arms to home position on the sides of the bin
+
+        Parameters
+        ----------
+        arm_name : str
+            string name of the arm to reset
 
         Raises
         ------
@@ -245,18 +251,29 @@ class YuMiRobot:
         YuMiControlException
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
-        if hasattr(self, 'left'):
+        if arm_name == 'left' and hasattr(self, 'left'):
             self.left.goto_state(YMC.L_KINEMATIC_AVOIDANCE_STATE,
                                  wait_for_res=True)
             T_cur = self.left.get_pose()
             delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_cur.translation
             self.left.goto_pose_delta(delta_t)
-        if hasattr(self, 'right'):
+        elif arm_name == 'right' and hasattr(self, 'right'):
             self.right.goto_state(YMC.R_KINEMATIC_AVOIDANCE_STATE,
                                   wait_for_res=True)
             T_cur = self.right.get_pose()
             delta_t = YMC.R_BIN_PREGRASP_POSE.translation - T_cur.translation
             self.right.goto_pose_delta(delta_t)
+        elif hasattr(self, 'right') and hasattr(self, 'left'):
+            T_left = self.left.get_pose()
+            T_right = self.right.get_pose()
+            left_dist = np.linalg.norm(T_left.translation - YMC.L_KINEMATIC_AVOIDANCE_POSE.translation)
+            right_dist = np.linalg.norm(T_right.translation - YMC.R_KINEMATIC_AVOIDANCE_POSE.translation)
+            if left_dist < right_dist:
+                self.reset_bin(arm_name='left')
+                self.reset_bin(arm_name='right')
+            else:
+                self.reset_bin(arm_name='right')
+                self.reset_bin(arm_name='left')            
             
     def calibrate_grippers(self):
         '''Calibrates grippers for instantiated arms.

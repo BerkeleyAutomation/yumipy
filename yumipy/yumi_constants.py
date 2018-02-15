@@ -121,7 +121,7 @@ class YuMiConstants:
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
     TCP_SUCTION = RigidTransform(translation=[0.5/1000,-8.0/1000.,(136.-56.+88.-12.-75.)/1000.])
-    TCP_SUCTION_STIFF = RigidTransform(translation=[-1.0/1000,0.0/1000.,(136.-56.+88.-12.-48.)/1000.])
+    TCP_SUCTION_STIFF = RigidTransform(translation=[-1.0/1000,0.0/1000.,(136.-56.+88.-12.-53.)/1000.])
     
     L_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, 135])
     L_HOME_POSE = RigidTransform(translation=[0.123, 0.147, 0.124], rotation=[0.06551, 0.84892, -0.11147, 0.51246])
@@ -197,11 +197,13 @@ class YuMiConstants:
                                       rotation=[0,0,-1,0])
     L_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, 0.42, 0.32],
                                          rotation=[0,0,-1,0])
+    L_BIN_HOME_STATE = YuMiState([-22.81, -76.42, 17.78, 72.24, 82.99, 1.44, 27.33])
     L_BIN_DROP_POSE = RigidTransform(translation=[0.4, 0.42, 0.2],
                                      rotation=[0,0,-1,0])
 
     R_BIN_PREGRASP_POSE = RigidTransform(translation=[0.4, -0.42, 0.32],
                                          rotation=[0,0,-1,0])
+    R_BIN_HOME_STATE = YuMiState([22.81, -76.42, 17.78, -72.24, 82.99, -1.44, -27.33])
     R_BIN_DROP_POSE = RigidTransform(translation=[0.4, -0.42, 0.2],
                                      rotation=[0,0,-1,0])
     

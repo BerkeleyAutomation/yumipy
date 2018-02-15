@@ -479,6 +479,7 @@ class YuMiArm:
         Parameters
         ----------
         state : YuMiState
+            Joint angles to got to
         wait_for_res : bool, optional
             If True, will block main process until response received from RAPID server.
             Defaults to True

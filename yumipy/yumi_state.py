@@ -95,6 +95,17 @@ class YuMiState:
         joints = [getattr(self, 'joint{0}'.format(i+1)) for i in range(YuMiState.NUM_JOINTS)]
         return joints
 
+    @property
+    def moveit(self):
+        joint_arr = np.array([self.joint1,
+                              self.joint2,
+                              self.joint7,
+                              self.joint3,
+                              self.joint4,
+                              self.joint5,
+                              self.joint6])
+        return np.deg2rad(joint_arr).tolist()
+    
     def copy(self):
         return YuMiState(self.joints)
 
