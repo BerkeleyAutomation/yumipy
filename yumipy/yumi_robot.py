@@ -256,13 +256,13 @@ class YuMiRobot:
                                  wait_for_res=True)
             T_cur = self.left.get_pose()
             delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_cur.translation
-            self.left.goto_pose_delta(delta_t)
+            self.left.goto_pose_delta(delta_t, wait_for_res=True)
         elif arm_name == 'right' and hasattr(self, 'right'):
             self.right.goto_state(YMC.R_KINEMATIC_AVOIDANCE_STATE,
                                   wait_for_res=True)
             T_cur = self.right.get_pose()
             delta_t = YMC.R_BIN_PREGRASP_POSE.translation - T_cur.translation
-            self.right.goto_pose_delta(delta_t)
+            self.right.goto_pose_delta(delta_t, wait_for_res=True)
         elif hasattr(self, 'right') and hasattr(self, 'left'):
             T_left = self.left.get_pose()
             T_right = self.right.get_pose()
