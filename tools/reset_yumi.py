@@ -19,6 +19,6 @@ if __name__ == '__main__':
 
     y.set_z('fine')
     y.reset_home()
-    y.left.goto_pose(YMC.L_PREGRASP_POSE)
+    #y.left.goto_pose(YMC.L_PREGRASP_POSE)
     #y.open_grippers()
     y.stop()
