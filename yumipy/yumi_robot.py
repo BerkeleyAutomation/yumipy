@@ -236,7 +236,7 @@ class YuMiRobot:
         if hasattr(self, 'right'):
             self.right.goto_state(YMC.R_HOME_STATE, wait_for_res=True)
 
-    def reset_bin(self, arm_name=None):
+    def reset_bin(self, arm_name=None, dist_thresh=0.001):
         '''Moves both arms to home position on the sides of the bin
 
         Parameters
@@ -255,25 +255,29 @@ class YuMiRobot:
             self.left.goto_state(YMC.L_KINEMATIC_AVOIDANCE_STATE,
                                  wait_for_res=True)
             T_cur = self.left.get_pose()
-            delta_t = YMC.L_BIN_PREGRASP_POSE.translation - T_cur.translation
+            delta_t = YMC.L_BIN_HOME_POSE.translation - T_cur.translation
             self.left.goto_pose_delta(delta_t, wait_for_res=True)
         elif arm_name == 'right' and hasattr(self, 'right'):
             self.right.goto_state(YMC.R_KINEMATIC_AVOIDANCE_STATE,
                                   wait_for_res=True)
             T_cur = self.right.get_pose()
-            delta_t = YMC.R_BIN_PREGRASP_POSE.translation - T_cur.translation
+            delta_t = YMC.R_BIN_HOME_POSE.translation - T_cur.translation
             self.right.goto_pose_delta(delta_t, wait_for_res=True)
         elif hasattr(self, 'right') and hasattr(self, 'left'):
             T_left = self.left.get_pose()
             T_right = self.right.get_pose()
-            left_dist = np.linalg.norm(T_left.translation - YMC.L_KINEMATIC_AVOIDANCE_POSE.translation)
-            right_dist = np.linalg.norm(T_right.translation - YMC.R_KINEMATIC_AVOIDANCE_POSE.translation)
+            left_dist = np.linalg.norm(T_left.translation - YMC.L_BIN_HOME_POSE.translation)
+            right_dist = np.linalg.norm(T_right.translation - YMC.R_BIN_HOME_POSE.translation)
             if left_dist < right_dist:
-                self.reset_bin(arm_name='left')
-                self.reset_bin(arm_name='right')
+                if left_dist > dist_thresh:
+                    self.reset_bin(arm_name='left')
+                if right_dist > dist_thresh:
+                    self.reset_bin(arm_name='right')
             else:
-                self.reset_bin(arm_name='right')
-                self.reset_bin(arm_name='left')            
+                if right_dist > dist_thresh:
+                    self.reset_bin(arm_name='right')
+                if left_dist > dist_thresh:
+                    self.reset_bin(arm_name='left')            
             
     def calibrate_grippers(self):
         '''Calibrates grippers for instantiated arms.
