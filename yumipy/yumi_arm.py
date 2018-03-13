@@ -224,6 +224,9 @@ class YuMiArm:
 
     def init_suction(self):
         """ Initialize suction. """
+        if self._debug:
+            self._vacuum = None
+            return
         if ROS_ENABLED:
             rospy.wait_for_service('toggle_suction')
             self._vacuum = rospy.ServiceProxy('toggle_suction', Suction)
