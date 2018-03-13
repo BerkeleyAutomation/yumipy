@@ -266,17 +266,19 @@ class YuMiRobot:
         elif hasattr(self, 'right') and hasattr(self, 'left'):
             T_left = self.left.get_pose()
             T_right = self.right.get_pose()
-            left_dist = np.linalg.norm(T_left.translation - YMC.L_BIN_HOME_POSE.translation)
-            right_dist = np.linalg.norm(T_right.translation - YMC.R_BIN_HOME_POSE.translation)
-            if left_dist < right_dist:
-                if left_dist > dist_thresh:
+            left_avoidance_dist = np.linalg.norm(T_left.translation[:2] - YMC.L_KINEMATIC_AVOIDANCE_POSE.translation[:2])
+            right_avoidance_dist = np.linalg.norm(T_right.translation[:2] - YMC.R_KINEMATIC_AVOIDANCE_POSE.translation[:2])
+            left_home_dist = np.linalg.norm(T_left.translation - YMC.L_BIN_HOME_POSE.translation)
+            right_home_dist = np.linalg.norm(T_right.translation - YMC.R_BIN_HOME_POSE.translation)
+            if left_avoidance_dist < right_avoidance_dist:
+                if left_home_dist > dist_thresh:
                     self.reset_bin(arm_name='left')
-                if right_dist > dist_thresh:
+                if right_home_dist > dist_thresh:
                     self.reset_bin(arm_name='right')
             else:
-                if right_dist > dist_thresh:
+                if right_home_dist > dist_thresh:
                     self.reset_bin(arm_name='right')
-                if left_dist > dist_thresh:
+                if left_home_dist > dist_thresh:
                     self.reset_bin(arm_name='left')            
             
     def calibrate_grippers(self):

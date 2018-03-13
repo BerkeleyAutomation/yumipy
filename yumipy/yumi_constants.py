@@ -26,8 +26,8 @@ class YuMiConstants:
     }
     
     BUFSIZE = 4096
-    MOTION_TIMEOUT = 4
-    COMM_TIMEOUT = 3
+    MOTION_TIMEOUT = 3
+    COMM_TIMEOUT = 1
     PROCESS_TIMEOUT = 10
     PROCESS_SLEEP_TIME = 0.01
     MOTION_BUFFER_SIZE = 512
@@ -163,7 +163,7 @@ class YuMiConstants:
     L_PREGRASP_POSE = RigidTransform(translation=[0.30, 0.35, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
     L_PREGRASP_STATE = YuMiState([-21.11, -126.8, 35.13, 41.67, 63.94, -5.81, 45.33])
 
-    L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.4, -0.05, 0.15], rotation=[0, 0, 1, 0])
+    L_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.48, 0.0, 0.48], rotation=[0, 0, 1, 0])
     L_KINEMATIC_AVOIDANCE_STATE = YuMiState([-62.62, -20.31, 44.91, 78.61, 74.79, -90.07, 36.71])
     L_EXPERIMENT_DROP_POSE = RigidTransform(translation=[0.30, 0.45, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
@@ -181,7 +181,7 @@ class YuMiConstants:
 
     R_PREGRASP_POSE = RigidTransform(translation=[0.30, -0.35, 0.3], rotation=[0.21353, 0.37697, 0.78321, 0.44596])
 
-    R_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.5, -0.0, 0.25], rotation=[0, 0, 1, 0])
+    R_KINEMATIC_AVOIDANCE_POSE = RigidTransform(translation=[0.48, -0.0, 0.48], rotation=[0, 0, 1, 0])
     R_KINEMATIC_AVOIDANCE_STATE = YuMiState([57.49, -29.43, 45.85, -80.99, 76.0, 82.11, -33.57])
     R_EXPERIMENT_DROP_POSE = RigidTransform(translation=[0.30, -0.45, 0.3], rotation=[0.21353, -0.37697, 0.78321, -0.44596])
 
