@@ -13,7 +13,7 @@ from time import sleep, time
 from collections import namedtuple
 import numpy as np
 from autolab_core import RigidTransform
-from autolab_suction import Vacuum, VacuumServo
+from autolab_suction import Vacuum
 from yumi_constants import YuMiConstants as YMC
 from yumi_state import YuMiState
 from yumi_motion_logger import YuMiMotionLogger
@@ -1078,7 +1078,7 @@ class YuMiArm:
         '''Turns on the suction.
         '''
         # check for a vacuum
-        if not self._debug:
+        if not self._debug and self._vacuum is not None:
             if ROS_ENABLED:
                 self._vacuum(True)
             else:
@@ -1088,7 +1088,7 @@ class YuMiArm:
         '''Turns off the suction.
         '''
         # check for a vacuum
-        if not self._debug:
+        if not self._debug and self._vacuum is not None:
             if ROS_ENABLED:
                 self._vacuum(False)
             else:
