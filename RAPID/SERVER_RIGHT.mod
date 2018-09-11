@@ -515,6 +515,10 @@ MODULE SERVER_R
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
+                ELSEIF nParams=1 THEN
+                    Hand_GripInward\targetPos:=params{1};
+                    ok:=SERVER_OK;
+
                 ELSEIF nParams=2 THEN
                     Hand_GripInward\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
@@ -535,7 +539,7 @@ MODULE SERVER_R
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=1 THEN
-                    Hand_GripOutward\targetPos:=params{2};
+                    Hand_GripOutward\targetPos:=params{1};
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
@@ -638,12 +642,11 @@ MODULE SERVER_R
                             bufferTargets{BUFFER_POS}:=cartesianTarget;
                             bufferSpeeds{BUFFER_POS}:=currentSpeed;
                         ENDIF
+                        ok:=SERVER_OK;
                     ELSE
                         ok := SERVER_BAD_MSG;
                         addString := "Unreachable Pose";
                     ENDIF
-                            
-                    ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
@@ -658,7 +661,7 @@ MODULE SERVER_R
                 ENDIF
                 !---------------------------------------------------------------------------------------------------------------
             CASE 32:
-                !Get Buffer Size)
+                !Get Buffer Size
                 IF nParams=0 THEN
                     addString:=NumToStr(BUFFER_POS,2);
                     ok:=SERVER_OK;
@@ -726,6 +729,7 @@ MODULE SERVER_R
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         addString := "1";
                     ELSE
+                        TPWrite "not reachable";
                         addString := "0";
                     ENDIF
                 ELSE
