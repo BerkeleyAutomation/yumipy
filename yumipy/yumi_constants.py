@@ -49,40 +49,40 @@ class YuMiConstants:
     
     CMD_CODES = {
         'ping': 0,
-        'goto_pose_linear':1,
-        'goto_joints': 2,
-        'get_pose': 3,
-        'get_joints':4,
-        'goto_pose':5,
+        'goto_pose_linear':1,  # MoveL
+        'goto_joints': 2,  # MoveAbsJ
+        'get_pose': 3,  # CRobT
+        'get_joints':4,  # CJointT
+        'goto_pose':5,  # MoveJ
         'set_tool':6,
         'set_speed':8,
         'set_zone':9,
-        
-        'goto_pose_sync':11,
-        'goto_joints_sync':12,
-        'goto_pose_delta':13,
-        
-        'close_gripper': 20,
-        'open_gripper': 21,
-        'calibrate_gripper': 22,
-        'set_gripper_max_speed': 23,
-        'set_gripper_force': 24,
-        'move_gripper': 25,
-        'get_gripper_width': 26,
-        
-        'set_circ_point':35,
-        'move_by_circ_point':36,
+
+        'goto_pose_sync':11,  # MoveL with sync
+        'goto_joints_sync':12,  # MoveAbsJ with sync
+        'goto_pose_delta':13,  # MoveL to "current pose + delta"
+
+        'close_gripper': 20,  # g_GripIn
+        'open_gripper': 21,  # g_GripOut
+        'calibrate_gripper': 22,  # g_Init
+        'set_gripper_max_speed': 23, # g_SetMaxSpd
+        'set_gripper_force': 24,  # g_SetForce
+        'move_gripper': 25,  # g_MoveTo
+        'get_gripper_width': 26,  # g_GetPos
+
         'buffer_add': 30,
         'buffer_clear': 31,
         'buffer_size': 32,
-        'buffer_move': 33,
-        
-        'is_pose_reachable': 40,
-        'is_joints_reachable': 41,
+        'buffer_move': 33,  # A series of MoveL
+        'set_circ_point':35,
+        'move_by_circ_point':36,  # MoveC
+
+        'is_pose_reachable': 40, # isPoseReachable
+        'is_joints_reachable': 41,  # isJointsReachable
 
         'close_connection': 99,
-        
-        'reset_home': 100,
+
+        'reset_home': 100,  # MoveAbsJ to Home
     }
     
     RES_CODES = {

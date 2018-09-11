@@ -4,8 +4,6 @@ MODULE SERVER_L
     !GLOBAL VARIABLES
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    VAR num x;
-    
     !//Robot configuration
     PERS tooldata currentTool:=[TRUE,[[0,0,156],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
     PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
@@ -511,6 +509,10 @@ MODULE SERVER_L
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
+                ELSEIF nParams=1 THEN
+                    Hand_GripInward\targetPos:=params{1};
+                    ok:=SERVER_OK;
+
                 ELSEIF nParams=2 THEN
                     Hand_GripInward\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
@@ -531,7 +533,7 @@ MODULE SERVER_L
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=1 THEN
-                    Hand_GripOutward\targetPos:=params{2};
+                    Hand_GripOutward_GripOut\targetPos:=params{1};
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
@@ -653,7 +655,7 @@ MODULE SERVER_L
                 ENDIF
                 !---------------------------------------------------------------------------------------------------------------
             CASE 32:
-                !Get Buffer Size)
+                !Get Buffer Size
                 IF nParams=0 THEN
                     addString:=NumToStr(BUFFER_POS,2);
                     ok:=SERVER_OK;
@@ -691,7 +693,7 @@ MODULE SERVER_L
                 IF nParams=7 THEN
                     circPoint:=[[params{1},params{2},params{3}],
                                 [params{4},params{5},params{6},params{7}],
-                                [0,0,0,0],
+                                L_CONF,
                                 externalAxis];
                     ok:=SERVER_OK;
                 ELSE
@@ -703,7 +705,7 @@ MODULE SERVER_L
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                         [params{4},params{5},params{6},params{7}],
-                                        [0,0,0,0],
+                                        L_CONF,
                                         externalAxis];
                     MoveC circPoint,cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
                     ok:=SERVER_OK;
@@ -716,7 +718,7 @@ MODULE SERVER_L
                 IF nParams=7 THEN
                     cartesianTarget := [[params{1},params{2},params{3}],
                                        [params{4},params{5},params{6},params{7}],
-                                       [-1,-1,0,11],
+                                       L_CONF,
                                        externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         addString := "1";
