@@ -6,6 +6,8 @@ from moveit_msgs.srv import GetPositionIKRequest
 from moveit_msgs.srv import GetPositionIKResponse
 import geometry_msgs.msg
 
+from autolab_core import Logger
+
 """
     Important info: To use this module, you need to have ROS installed, and
     the yumi_moveit_config downloaded.  Before using this module, you must 
@@ -24,21 +26,24 @@ class YuMiKinematics(object):
         :param bool avoid_collisions: if to ask for IKs that take
         into account collisions
         """
-        rospy.loginfo("Initalizing GetIK...")
+        # set up logger
+        self.logger = Logger.get_logger(self.__class__.__name__)
+
+        self.logger.info("Initalizing GetIK...")
         self.group_name = group
         self.ik_timeout = ik_timeout
         self.ik_attempts = ik_attempts
         self.avoid_collisions = avoid_collisions
-        rospy.loginfo("Computing IKs for group: " + self.group_name)
-        rospy.loginfo("With IK timeout: " + str(self.ik_timeout))
-        rospy.loginfo("And IK attempts: " + str(self.ik_attempts))
-        rospy.loginfo("Setting avoid collisions to: " +
+        self.logger.info("Computing IKs for group: " + self.group_name)
+        self.logger.info("With IK timeout: " + str(self.ik_timeout))
+        self.logger.info("And IK attempts: " + str(self.ik_attempts))
+        self.logger.info("Setting avoid collisions to: " +
                       str(self.avoid_collisions))
         self.ik_srv = rospy.ServiceProxy('/compute_ik',
                                          GetPositionIK)
-        rospy.loginfo("Waiting for /compute_ik service...")
+        self.logger.info("Waiting for /compute_ik service...")
         self.ik_srv.wait_for_service()
-        rospy.loginfo("Connected!")
+        self.logger.info("Connected!")
 
     def get_ik(self, pose_stamped,
                group=None,
