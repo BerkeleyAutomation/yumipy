@@ -312,7 +312,7 @@ MODULE SERVER_L
                     addString:=addString+NumToStr(jointsPose.robax.rax_4,2)+" ";
                     addString:=addString+NumToStr(jointsPose.robax.rax_5,2)+" ";
                     addString:=addString+NumToStr(jointsPose.robax.rax_6,2)+" ";
-                    addString:=addString+NumToStr(jointsTarget.extax.eax_a,2);
+                    addString:=addString+NumToStr(jointsPose.extax.eax_a,2);
                     !End of string
                     ok:=SERVER_OK;
                 ELSE
@@ -323,9 +323,9 @@ MODULE SERVER_L
                 !Cartesian Move, nonlinear movement
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
-                                       [params{4},params{5},params{6},params{7}],
-                                       L_CONF,
-                                       externalAxis];
+                                      [params{4},params{5},params{6},params{7}],
+                                      L_CONF,
+                                      externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         ok:=SERVER_OK;
                         moveCompleted:=FALSE;
