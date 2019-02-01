@@ -511,21 +511,21 @@ MODULE SERVER_R
             CASE 20:
                 !Gripper Close
                 IF nParams=0 THEN
-                    Hand_GripInward;
+                    g_GripIn;
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
                 ELSEIF nParams=1 THEN
-                    Hand_GripInward\targetPos:=params{1};
+                    g_GripIn\targetPos:=params{1};
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=2 THEN
-                    Hand_GripInward\holdForce:=params{1}\targetPos:=params{2};
+                    g_GripIn\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
 
                     ! Program won't wait until gripper completion or failure to move on.
                 ELSEIF nParams=3 THEN
-                    Hand_GripInward\holdForce:=params{1}\targetPos:=params{2}\NoWait;
+                    g_GripIn\holdForce:=params{1}\targetPos:=params{2}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -535,21 +535,21 @@ MODULE SERVER_R
             CASE 21:
                 !Gripper Open
                 IF nParams=0 THEN
-                    Hand_GripOutward;
+                    g_GripOut;
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=1 THEN
-                    Hand_GripOutward\targetPos:=params{1};
+                    g_GripOut\targetPos:=params{1};
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
                 ELSEIF nParams=2 THEN
-                    Hand_GripOutward\holdForce:=params{1}\targetPos:=params{2};
+                    g_GripOut\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
 
                     ! Program won't wait until gripper completion or failure to move on.
                 ELSEIF nParams=3 THEN
-                    Hand_GripOutward\holdForce:=params{1}\targetPos:=params{2}\NoWait;
+                    g_GripOut\holdForce:=params{1}\targetPos:=params{2}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -561,12 +561,12 @@ MODULE SERVER_R
 
                 ! calibrate only
                 IF nParams=0 THEN
-                    Hand_Initialize\Calibrate;
+                    g_Init\Calibrate;
                     ok:=SERVER_OK;
 
                     ! set maxSpeed, holdForce, physicalLimit (0-25 mm), and calibrate                    
                 ELSEIF nParams=3 THEN
-                    Hand_Initialize\maxSpd:=params{1}\holdForce:=params{2}\phyLimit:=params{3}\Calibrate;
+                    g_Init\maxSpd:=params{1}\holdForce:=params{2}\phyLimit:=params{3}\Calibrate;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -576,7 +576,7 @@ MODULE SERVER_R
             CASE 23:
                 ! Set Max Speed
                 IF nParams=1 THEN
-                    Hand_SetMaxSpeed params{1};
+                    g_SetMaxSpd params{1};
                     ! between 0-20 mm/s 
                     ok:=SERVER_OK;
                 ELSE
@@ -587,7 +587,7 @@ MODULE SERVER_R
             CASE 24:
                 ! Set gripping force 
                 IF nParams=1 THEN
-                    Hand_SetHoldForce params{1};
+                    g_SetForce params{1};
                     ! between 0-20 Newtons
                     ok:=SERVER_OK;
                 ELSE
@@ -598,12 +598,12 @@ MODULE SERVER_R
             CASE 25:
                 ! Move the gripper to a specified position 
                 IF nParams=1 THEN
-                    Hand_MoveTo params{1};
+                    g_MoveTo params{1};
                     ! between 0-25 mm or 0-phyLimit if phyLimit is set in CASE 22
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=2 THEN
-                    Hand_MoveTo params{1}\NoWait;
+                    g_MoveTo params{1}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -614,7 +614,7 @@ MODULE SERVER_R
             CASE 26:
                 !Get Gripper Width
                 IF nParams=0 THEN
-                    addString:=NumToStr(Hand_GetActualPos(),2);
+                    addString:=NumToStr(g_GetPos(),2);
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -623,7 +623,7 @@ MODULE SERVER_R
             CASE 29:
                 ! Stop any action of the gripper (motors will lose power)
                 IF nParams=0 THEN
-                    Hand_Stop;
+                    g_Stop;
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -823,7 +823,7 @@ ERROR
                 SocketSend clientSocket\Str:=FormateRes( "ERR_HAND_NOTCALIBRATED: "+NumToStr(ERRNO,0));
                 
                 ! Gripper not calibrated.
-                Hand_Initialize\Calibrate;
+                g_Init\Calibrate;
                 RETRY;
 
             CASE ERR_COLL_STOP:
