@@ -1,4 +1,4 @@
-MODULE SERVER_R
+MODULE SERVER_RIGHT
 
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !GLOBAL VARIABLES
@@ -513,10 +513,6 @@ MODULE SERVER_R
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
-                ELSEIF nParams=1 THEN
-                    g_GripIn\targetPos:=params{1};
-                    ok:=SERVER_OK;
-
                 ELSEIF nParams=2 THEN
                     g_GripIn\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
@@ -537,7 +533,7 @@ MODULE SERVER_R
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=1 THEN
-                    g_GripOut\targetPos:=params{1};
+                    g_GripOut\holdForce:=params{1};
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
@@ -721,12 +717,13 @@ MODULE SERVER_R
                 !returns 1 if given pose is reachable. 0 other wise.
                 IF nParams=7 THEN
                     cartesianTarget := [[params{1},params{2},params{3}],
-                                       [params{4},params{5},params{6},params{7}],
-                                       R_CONF,
-                                       externalAxis];
+                                        [params{4},params{5},params{6},params{7}],
+                                        R_CONF,
+                                        externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         addString := "1";
                     ELSE
+                        !TPWrite "not reachable";
                         addString := "0";
                     ENDIF
                     ok:=SERVER_OK;
