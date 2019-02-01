@@ -24,7 +24,7 @@ class YuMiConstants:
             "torques":5015
         },
     }
-    
+
     BUFSIZE = 4096
     MOTION_TIMEOUT = 8
     COMM_TIMEOUT = 5
@@ -38,29 +38,29 @@ class YuMiConstants:
     GRASP_COUNTER_PATH = '/home/autolab/Public/alan/grasp_counts'
 
     # used to rate limit real-time YuMi controls (in seconds)
-    COMM_PERIOD = 0.04 
-    
+    COMM_PERIOD = 0.04
+
     DEBUG = False
     LOGGING_LEVEL = logging.WARNING
-    
+
     # reset mechanism
     RESET_RIGHT_COMM = '/dev/ttyACM0'
     RESET_BAUDRATE = 115200
-    
+
     CMD_CODES = {
         'ping': 0,
-        'goto_pose_linear':1,  # MoveL
+        'goto_pose_linear': 1,  # MoveL
         'goto_joints': 2,  # MoveAbsJ
         'get_pose': 3,  # CRobT
-        'get_joints':4,  # CJointT
-        'goto_pose':5,  # MoveJ
-        'set_tool':6,
-        'set_speed':8,
-        'set_zone':9,
+        'get_joints': 4,  # CJointT
+        'goto_pose': 5,  # MoveJ
+        'set_tool': 6,
+        'set_speed': 8,
+        'set_zone': 9,
 
-        'goto_pose_sync':11,  # MoveL with sync
-        'goto_joints_sync':12,  # MoveAbsJ with sync
-        'goto_pose_delta':13,  # MoveL to "current pose + delta"
+        'goto_pose_sync': 11,  # MoveL with sync
+        'goto_joints_sync': 12,  # MoveAbsJ with sync
+        'goto_pose_delta': 13,  # MoveL to "current pose + delta"
 
         'close_gripper': 20,  # g_GripIn
         'open_gripper': 21,  # g_GripOut
@@ -74,8 +74,8 @@ class YuMiConstants:
         'buffer_clear': 31,
         'buffer_size': 32,
         'buffer_move': 33,  # A series of MoveL
-        'set_circ_point':35,
-        'move_by_circ_point':36,  # MoveC
+        'set_circ_point': 35,
+        'move_by_circ_point': 36,  # MoveC
 
         'is_pose_reachable': 40, # isPoseReachable
         'is_joints_reachable': 41,  # isJointsReachable
@@ -84,7 +84,7 @@ class YuMiConstants:
 
         'reset_home': 100,  # MoveAbsJ to Home
     }
-    
+
     RES_CODES = {
         'failure': 0,
         'success': 1
@@ -94,13 +94,13 @@ class YuMiConstants:
         'pose': 0,
         'state': 1
     }
-    MOVEIT_PLANNER_IDS = { 
+    MOVEIT_PLANNER_IDS = {
         'SBL': 'SBLkConfigDefault',
         'EST': 'ESTkConfigDefault',
         'LBKPIECE': 'LBKPIECEkConfigDefault',
         'BKPIECE': 'BKPIECEkConfigDefault',
-        'KPIECE': 'KPIECEkConfigDefault',    
-        'RRT': 'RRTkConfigDefault',    
+        'KPIECE': 'KPIECEkConfigDefault',
+        'RRT': 'RRTkConfigDefault',
         'RRTConnect': 'RRTConnectkConfigDefault',
         'RRTstar': 'RRTstarkConfigDefault',
         'TRRT': 'TRRTkConfigDefault',
@@ -108,23 +108,23 @@ class YuMiConstants:
         'PRMstar': 'PRMstarkConfigDefault'
     }
     MOVEIT_PLANNING_REFERENCE_FRAME = 'yumi_body'
-    
+
     ROS_TIMEOUT = 10
-    
+
     T_GRIPPER_HAND = RigidTransform(translation=[0,0,-0.157], from_frame='gripper', to_frame='gripper')
-    
+
     TCP_ABB_GRIPPER = RigidTransform(translation=[0,0,0.13])
     TCP_ABB_GRASP_GRIPPER = RigidTransform(translation=[0,0,0.136-0.0065])
     TCP_LONG_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
-    
+
     L_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, 135])
     L_HOME_POSE = RigidTransform(translation=[0.123, 0.147, 0.124], rotation=[0.06551, 0.84892, -0.11147, 0.51246])
-    
+
     R_HOME_STATE = YuMiState([0, -130, 30, 0, 40, 0, -135])
     R_HOME_POSE = RigidTransform(translation=[-0.0101, -0.1816, 0.19775], rotation=[-0.52426, 0.06481, -0.84133, -0.11456])
-    
+
     R_FORWARD_STATE = YuMiState([9.66, -133.36, 34.69, -13.19, 28.85, 28.81, -110.18])
     R_FORWARD_POSE = RigidTransform(translation=[0.07058, -0.26519, 0.19775], rotation=[-0.52425, 0.0648, -0.84133, -0.11454])
 
@@ -164,13 +164,13 @@ class YuMiConstants:
 
     L_RAISED_STATE = YuMiState([5.5, -99.46, 20.52, -21.03, 67, -22.31, 110.11])
     L_RAISED_POSE = RigidTransform(translation=[-0.0073, 0.39902, 0.31828], rotation=[0.54882, 0.07398, 0.82585, -0.10630])
-    
+
     L_FORWARD_STATE = YuMiState([-21.71, -142.45, 43.82, 31.14, 10.43, -40.67, 106.63])
     L_FORWARD_POSE = RigidTransform(translation=[0.13885, 0.21543, 0.19774], rotation=[0.55491, 0.07064, 0.82274, -0.1009])
 
     L_PREDROP_POSE = RigidTransform(translation=[0.55, 0.0, 0.20],
                                     rotation=[0.09815, -0.20528, 0.97156, -0.06565])
-    
+
     L_BOX_POSE = RigidTransform(translation=[0.06, 0.038, 0.34],
                                     rotation=[0.5, -0.5, 0.5, -0.5])
 
@@ -187,7 +187,7 @@ class YuMiConstants:
                                         rotation=[0,0,-1,0])
     L_BIN_DROP_POSE = RigidTransform(translation=[0.4, 0.42, 0.2],
                                      rotation=[0,0,-1,0])
-    
+
     L_PACKAGE_DROP_POSES = [
         RigidTransform(translation=[0.33, 0.42, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),
         RigidTransform(translation=[0.33, 0.33, 0.25], rotation=[0.09078, -0.31101, 0.91820, -0.22790]),

@@ -586,7 +586,7 @@ MODULE SERVER_R
                 !---------------------------------------------------------------------------------------------------------------
             CASE 24:
                 ! Set gripping force 
-                IF nParams=0 THEN
+                IF nParams=1 THEN
                     Hand_SetHoldForce params{1};
                     ! between 0-20 Newtons
                     ok:=SERVER_OK;
@@ -729,9 +729,9 @@ MODULE SERVER_R
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         addString := "1";
                     ELSE
-                        TPWrite "not reachable";
                         addString := "0";
                     ENDIF
+                    ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
@@ -745,6 +745,7 @@ MODULE SERVER_R
                     ELSE
                         addString := "0";
                     ENDIF
+                    ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
@@ -768,6 +769,7 @@ MODULE SERVER_R
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
+                !---------------------------------------------------------------------------------------------------------------
             CASE 100:
                 ! LEFT ARM: Send robot to home    
                 IF nParams=0 THEN
