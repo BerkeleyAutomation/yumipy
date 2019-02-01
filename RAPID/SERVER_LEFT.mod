@@ -51,7 +51,7 @@ MODULE SERVER_L
     PERS tasks tasklistArms{2}:=[["T_ROB_L"],["T_ROB_R"]];
     VAR syncident Sync_Start_Arms;
     VAR syncident Sync_Stop_Arms;
-    CONST confdata L_CONF := [-1,-1,0,11];
+    CONST confdata L_CONF := [-1,-1,0,3];
 
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !LOCAL METHODS
