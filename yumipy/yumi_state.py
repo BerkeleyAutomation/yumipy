@@ -5,7 +5,7 @@ Author: Jacky
 import numpy as np
 
 
-class YuMiState:
+class YuMiState(object):
     """ Object that encapsulates a yumi arm joint angle configuration.
     """
 
@@ -21,9 +21,10 @@ class YuMiState:
             # Add YuMiState._joint1 and similars, containing the value in deg.
             setattr(self, _joint_name, val)
             # Add YuMiState.joint1 and similars as property.
-            setattr(YuMiState, joint_name,
-                    getx=lambda self: getattr(self, _joint_name),
-                    setx=lambda self, val: setattr(self, _joint_name, val))
+            setattr(self, joint_name, property(
+                fget=lambda self: getattr(self, _joint_name),
+                fset=lambda self, val: setattr(self, _joint_name, val),
+                doc=joint_name + ' (rad)'))
 
     def __str__(self):
         return str(self.joints)
