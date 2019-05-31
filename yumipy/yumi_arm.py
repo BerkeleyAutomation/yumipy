@@ -701,13 +701,12 @@ class YuMiArm:
         return self._request(req, wait_for_res)
 
     def set_zone(self, zone_data, wait_for_res=True):
-        '''Goto a target pose by transforming the current pose using the given translation and rotation
+        '''Set zone data for future moves
 
         Parameters
         ----------
-        speed_data : list-like with length 4
-            Specifies the speed data that will be used by RAPID when executing motions.
-            Should be generated using YuMiRobot.get_v
+        zone_data: list-like with length 4
+            Specifies the zone data that will be used by RAPID when executing motions.
         wait_for_res : bool, optional
             If True, will block main process until response received from RAPID server.
             Defaults to True
