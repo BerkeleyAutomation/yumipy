@@ -54,9 +54,10 @@ class YuMiConstants:
         'get_pose': 3,  # CRobT
         'get_joints': 4,  # CJointT
         'goto_pose': 5,  # MoveJ
-        'set_tool': 6,
-        'set_speed': 8,
-        'set_zone': 9,
+        'set_tool': 6,  # Redefine currentTool in SERVER_*.mod
+        'set_speed': 8,  # Redefine currentSpeed in SERVER_*.mod
+        'set_zone': 9,  # Redefine currentZone in SERVER_*.mod
+        'set_confdata': 10,  # Redefine currentConf in SERVER_*.mod
 
         'goto_pose_sync': 11,  # MoveL with sync
         'goto_joints_sync': 12,  # MoveAbsJ with sync

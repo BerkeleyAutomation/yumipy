@@ -11,6 +11,7 @@ MODULE SERVER_RIGHT
     PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
     PERS speeddata currentSpeed;
     PERS zonedata currentZone;
+    PERS confdata currentConf := [0, 0, 0, 3];
 
     !//PC communication
     VAR socketdev clientSocket;
@@ -53,7 +54,6 @@ MODULE SERVER_RIGHT
     PERS tasks tasklistArms{2}:=[["T_ROB_L"],["T_ROB_R"]];
     VAR syncident Sync_Start_Arms;
     VAR syncident Sync_Stop_Arms;
-    CONST confdata R_CONF := [0,0,0,3];
 
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !LOCAL METHODS
@@ -162,6 +162,7 @@ MODULE SERVER_RIGHT
         currentSpeed:=[1000,1000,1000,1000];
         !currentZone:=[FALSE,0.3,0.3,0.3,0.03,0.3,0.03];
         currentZone:=fine; !z0
+        currentConf := [0, 0, 0, 3];
 
         !Find the current external axis values so they don't move when we start
         jointsTarget:=CJointT();
@@ -245,7 +246,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         ok:=SERVER_OK;
@@ -324,7 +325,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         ok:=SERVER_OK;
@@ -408,12 +409,21 @@ MODULE SERVER_RIGHT
                     ok:=SERVER_BAD_MSG;
                 ENDIF
                 !---------------------------------------------------------------------------------------------------------------
+            CASE 10:
+                !Set arm configuration data (currentConf).
+                IF nParams=4 THEN
+                    currentConf := [params{1}, params{2}, params{3}, params{4}];
+                    ok := SERVER_OK;
+                ELSE
+                    ok := SERVER_BAD_MSG;
+                ENDIF
+                !---------------------------------------------------------------------------------------------------------------
             CASE 11:
                 !Cartesian Move (synchronized)
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         ok:=SERVER_OK;
@@ -488,7 +498,7 @@ MODULE SERVER_RIGHT
                 IF nParams=8 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     ok:=SERVER_OK;
                     ContactL\DesiredTorque:=params{8},cartesianTarget,v100,\Zone:=currentZone,currentTool,\WObj:=currentWobj;
@@ -498,7 +508,7 @@ MODULE SERVER_RIGHT
                 ELSEIF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     ok:=SERVER_OK;
                     ContactL cartesianTarget,v100,\Zone:=currentZone,currentTool,\WObj:=currentWobj;
@@ -630,7 +640,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         IF BUFFER_POS<MAX_BUFFER THEN
@@ -695,7 +705,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     circPoint:=[[params{1},params{2},params{3}],
                                 [params{4},params{5},params{6},params{7}],
-                                R_CONF,
+                                currentConf,
                                 externalAxis];
                     ok:=SERVER_OK;
                 ELSE
@@ -707,7 +717,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     cartesianTarget:=[[params{1},params{2},params{3}],
                                       [params{4},params{5},params{6},params{7}],
-                                      R_CONF,
+                                      currentConf,
                                       externalAxis];
                     MoveC circPoint,cartesianTarget,currentSpeed,currentZone,currentTool\WObj:=currentWobj;
                     ok:=SERVER_OK;
@@ -720,7 +730,7 @@ MODULE SERVER_RIGHT
                 IF nParams=7 THEN
                     cartesianTarget := [[params{1},params{2},params{3}],
                                         [params{4},params{5},params{6},params{7}],
-                                        R_CONF,
+                                        currentConf,
                                         externalAxis];
                     IF isPoseReachable(cartesianTarget, currentTool, currentWobj) THEN
                         addString := "1";

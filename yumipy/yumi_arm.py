@@ -207,6 +207,7 @@ class YuMiArm:
             'zone': None,
             'speed': None,
             'tool': None,
+            'conf': None,
             'gripper_force': None,
             'gripper_max_speed': None,
         }
@@ -726,6 +727,32 @@ class YuMiArm:
         body = YuMiArm._iter_to_str('{:2f}', data)
         req = YuMiArm._construct_req('set_zone', body)
         self._last_sets['zone'] = zone_data
+        return self._request(req, wait_for_res)
+
+    def set_conf(self, conf_data, wait_for_res=True):
+        '''Set confdata for future moves
+
+        Parameters
+        ----------
+        conf_data : list-like with length 4
+            Specifies the arm configuration data that will be used by RAPID when executing motions.
+        wait_for_res : bool, optional
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
+
+        Returns
+        -------
+        None if wait_for_res is False
+        namedtuple('_RAW_RES', 'mirror_code res_code message') otherwise
+
+        Raises
+        ------
+        YuMiCommException
+            If communication times out or socket error.
+        '''
+        body = YuMiArm._iter_to_str('{:d}', conf_data)
+        req = YuMiArm._construct_req('set_conf', body)
+        self._last_sets['conf'] = conf_data
         return self._request(req, wait_for_res)
 
     def move_circular(self, center_pose, target_pose, wait_for_res=True):
