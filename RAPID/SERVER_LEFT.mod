@@ -5,7 +5,9 @@ MODULE SERVER_LEFT
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     !//Robot configuration
-    PERS tooldata currentTool:=[TRUE,[[0,0,156],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
+    ! Tool definition for the standard left hand (Servo + Vision + Vacuum).
+    ! Can be overridden with YuMiArm.set_tool().
+    PERS tooldata currentTool:= [TRUE, [[0, 0, 0], [1, 0, 0, 0]], [0.262, [7.8, 11.9, 50.7], [1, 0, 0, 0], 0.00022, 0.00024, 0.00009]];
     PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
     PERS speeddata currentSpeed;
     PERS zonedata currentZone;
@@ -51,7 +53,7 @@ MODULE SERVER_LEFT
     PERS tasks tasklistArms{2}:=[["T_ROB_L"],["T_ROB_R"]];
     VAR syncident Sync_Start_Arms;
     VAR syncident Sync_Stop_Arms;
-    CONST confdata L_CONF := [-1,-1,0,11];
+    CONST confdata L_CONF := [-1,-1,0,3];
 
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !LOCAL METHODS
@@ -155,7 +157,7 @@ MODULE SERVER_LEFT
     !// - Zone.
     !// - Speed.
     PROC Initialize()
-        currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
+        currentTool:= [TRUE, [[0, 0, 0], [1, 0, 0, 0]], [0.262, [7.8, 11.9, 50.7], [1, 0, 0, 0], 0.00022, 0.00024, 0.00009]];
         currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
         currentSpeed:=[1000,1000,1000,1000];
         !currentZone:=[FALSE,0.3,0.3,0.3,0.03,0.3,0.03];
