@@ -57,7 +57,7 @@ class YuMiConstants:
         'set_tool': 6,  # Redefine currentTool in SERVER_*.mod
         'set_speed': 8,  # Redefine currentSpeed in SERVER_*.mod
         'set_zone': 9,  # Redefine currentZone in SERVER_*.mod
-        'set_confdata': 10,  # Redefine currentConf in SERVER_*.mod
+        'set_conf': 10,  # Redefine currentConf in SERVER_*.mod
 
         'goto_pose_sync': 11,  # MoveL with sync
         'goto_joints_sync': 12,  # MoveAbsJ with sync
