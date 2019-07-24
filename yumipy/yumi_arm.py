@@ -207,6 +207,7 @@ class YuMiArm:
             'zone': None,
             'speed': None,
             'tool': None,
+            'conf': None,
             'gripper_force': None,
             'gripper_max_speed': None,
         }
@@ -700,13 +701,12 @@ class YuMiArm:
         return self._request(req, wait_for_res)
 
     def set_zone(self, zone_data, wait_for_res=True):
-        '''Goto a target pose by transforming the current pose using the given translation and rotation
+        '''Set zone data for future moves
 
         Parameters
         ----------
-        speed_data : list-like with length 4
-            Specifies the speed data that will be used by RAPID when executing motions.
-            Should be generated using YuMiRobot.get_v
+        zone_data: list-like with length 4
+            Specifies the zone data that will be used by RAPID when executing motions.
         wait_for_res : bool, optional
             If True, will block main process until response received from RAPID server.
             Defaults to True
@@ -726,6 +726,32 @@ class YuMiArm:
         body = YuMiArm._iter_to_str('{:2f}', data)
         req = YuMiArm._construct_req('set_zone', body)
         self._last_sets['zone'] = zone_data
+        return self._request(req, wait_for_res)
+
+    def set_conf(self, conf_data, wait_for_res=True):
+        '''Set confdata for future moves
+
+        Parameters
+        ----------
+        conf_data : list-like with length 4
+            Specifies the arm configuration data that will be used by RAPID when executing motions.
+        wait_for_res : bool, optional
+            If True, will block main process until response received from RAPID server.
+            Defaults to True
+
+        Returns
+        -------
+        None if wait_for_res is False
+        namedtuple('_RAW_RES', 'mirror_code res_code message') otherwise
+
+        Raises
+        ------
+        YuMiCommException
+            If communication times out or socket error.
+        '''
+        body = YuMiArm._iter_to_str('{:d}', conf_data)
+        req = YuMiArm._construct_req('set_conf', body)
+        self._last_sets['conf'] = conf_data
         return self._request(req, wait_for_res)
 
     def move_circular(self, center_pose, target_pose, wait_for_res=True):
@@ -889,11 +915,17 @@ class YuMiArm:
         req = YuMiArm._construct_req('buffer_move')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def open_gripper(self, no_wait=False, wait_for_res=True):
-        '''Opens the gripper to the target_width
+    def open_gripper(self, force=None, width=None, no_wait=False, wait_for_res=True):
+        '''Opens the gripper to the target width
 
         Parameters
         ----------
+        force : float, optional, in newtons.
+            Sets the corresponding outward force in Newtons.
+            Defaults to 20 N, which is the maximum grip force.
+        width : float, optional, in meters.
+            Sets the target width of gripper open motion.
+            Defaults to maximum opening.
         wait_for_res : bool, optional
             If True, will block main process until response received from RAPID server.
             Defaults to True
@@ -910,20 +942,30 @@ class YuMiArm:
         YuMiControlException
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
-        req = YuMiArm._construct_req('open_gripper', '')
+        if force is None:
+            force = YMC.MAX_GRIPPER_FORCE
+        if width is not None:
+            width = METERS_TO_MM * width
+            body = YuMiArm._iter_to_str('{0:.1f}',
+                                        [force, width] + ([0] if no_wait else []))
+            req = YuMiArm._construct_req('open_gripper', body)
+        else:
+            body = YuMiArm._iter_to_str('{0:.1f}',
+                                        [force] + ([0] if no_wait else []))
+            req = YuMiArm._construct_req('open_gripper', '')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
     def close_gripper(self, force=YMC.MAX_GRIPPER_FORCE, width=0., no_wait=False,
                       wait_for_res=True):
-        '''Closes the gripper as close to 0 as possible with maximum force.
+        '''Closes the gripper as close to  as possible with maximum force.
 
         Parameters
         ----------
-        force : float, optional
+        force : float, optional, in newtons.
             Sets the corresponding gripping force in Newtons.
-            Defaults to 20, which is the maximum grip force.
-        width : float, optional
-            Sets the target width of gripper close motion in m. Cannot be greater than max gripper width.
+            Defaults to 20 N, which is the maximum grip force.
+        width : float, optional, in meters.
+            Sets the target width of gripper close motion. Cannot be greater than max gripper width.
             Defaults to 0.
         no_wait : bool, optional
             If True, the RAPID server will continue without waiting for the gripper to reach its target width
@@ -946,7 +988,7 @@ class YuMiArm:
         '''
         if force < 0 or force > YMC.MAX_GRIPPER_FORCE:
             raise ValueError("Gripper force can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_FORCE, force))
-        if width < 0 or width > YMC>MAX_GRIPPER_WIDTH:
+        if width < 0 or width > YMC.MAX_GRIPPER_WIDTH:
             raise ValueError("Gripper width can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_WIDTH, width))
 
         width = METERS_TO_MM * width

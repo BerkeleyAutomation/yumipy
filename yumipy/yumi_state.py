@@ -4,31 +4,34 @@ Author: Jacky
 '''
 import numpy as np
 
-class YuMiState:
-    """ Object that encapsulates a yumi arm joint angle configuration.
-    """
+
+class YuMiState(object):
+    """Object that encapsulates a yumi arm joint angle configuration"""
 
     NUM_JOINTS = 7
-    NAME = "YuMi"
+    NAME = 'YuMi'
 
-    def __init__(self, vals = [0] * NUM_JOINTS):
+    def __init__(self, vals=[0] * NUM_JOINTS):
+        """Construct a YuMiState from joint values in degrees"""
+        if len(vals) != self.NUM_JOINTS:
+            raise ValueError('A list of {} values must be given'.format(self.NUM_JOINTS))
+        self._joint_names = []
         for i, val in enumerate(vals):
-            setattr(self, '_joint{0}'.format(i+1), val)
+            joint_name = 'joint{}'.format(i + 1)
+            _joint_name = '_' + joint_name
+            self._joint_names.append(joint_name)
+            # Add YuMiState._joint1 and similars, containing the value in deg.
+            setattr(self, _joint_name, val)
 
     def __str__(self):
         return str(self.joints)
 
     def __repr__(self):
-        return "YuMiState({0})".format(self.joints)
-
-    @property
-    def joints(self):
-        joints = [getattr(self, '_joints{0}'.format(i)) for i in range(YuMiState.NUM_JOINTS)]
-        return joints
+        return 'YuMiState({})'.format(self.joints)
 
     @property
     def in_radians(self):
-        return [np.pi / 180.0 * t for t in self.joints]
+        return [np.radians(t) for t in self.joints]
 
     @property
     def in_degrees(self):
@@ -91,29 +94,26 @@ class YuMiState:
         self._joint7 = val
 
     @property
+    def joint_names(self):
+        return self._joint_names
+
+    @property
     def joints(self):
-        joints = [getattr(self, 'joint{0}'.format(i+1)) for i in range(YuMiState.NUM_JOINTS)]
-        return joints
+        return [getattr(self, jn) for jn in self.joint_names]
 
     def copy(self):
         return YuMiState(self.joints)
 
     def mirror(self):
         return YuMiState([
-            self.joint1 * -1,
+            -self.joint1,
             self.joint2,
             self.joint3,
-            self.joint4 * -1,
+            -self.joint4,
             self.joint5,
             self.joint6,
-            self.joint7 * -1
+            -self.joint7,
         ])
-
-    def __str__(self):
-        return str(self.joints)
-
-    def __repr__(self):
-        return "YuMiState({0})".format(str(self.joints))
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
