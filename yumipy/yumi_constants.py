@@ -3,7 +3,7 @@ Constants for YuMi interface and control
 Author: Jacky Liang
 '''
 import logging
-from yumi_state import YuMiState
+from .yumi_state import YuMiState
 from autolab_core import RigidTransform
 
 class YuMiConstants:
@@ -26,7 +26,7 @@ class YuMiConstants:
     }
     
     BUFSIZE = 4096
-    MOTION_TIMEOUT = 3
+    MOTION_TIMEOUT = 10
     COMM_TIMEOUT = 1
     PROCESS_TIMEOUT = 10
     PROCESS_SLEEP_TIME = 0.01
@@ -78,6 +78,10 @@ class YuMiConstants:
         'buffer_clear': 31,
         'buffer_size': 32,
         'buffer_move': 33,
+        'joint_buffer_add':101,
+        'joint_buffer_clear':102,
+        'joint_buffer_move':103,
+        'joint_buffer_size':104,
         
         'is_pose_reachable': 40,
         'is_joints_reachable': 41,
@@ -109,16 +113,17 @@ class YuMiConstants:
         'PRM': 'PRMkConfigDefault',
         'PRMstar': 'PRMstarkConfigDefault'
     }
-    MOVEIT_PLANNING_REFERENCE_FRAME = 'yumi_body'
+    MOVEIT_PLANNING_REFERENCE_FRAME = 'base_link'
     
     ROS_TIMEOUT = 10
     
-    T_GRIPPER_HAND = RigidTransform(translation=[0,0,-0.157], from_frame='gripper', to_frame='gripper')
+    T_GRIPPER_HAND = RigidTransform(translation=[0,0,-0.156], from_frame='gripper', to_frame='gripper')
     
     TCP_ABB_GRIPPER = RigidTransform(translation=[0,0,0.13])
     TCP_ABB_GRASP_GRIPPER = RigidTransform(translation=[0,0,0.136-0.0065])
     TCP_LONG_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
     TCP_DEFAULT_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12)/1000.])
+    TCP_GRIPPER_BASE=RigidTransform()#none
     TCP_GECKO_GRIPPER = RigidTransform(translation=[0,0,(136-56+88-12+19)/1000.])
     TCP_SUCTION = RigidTransform(translation=[0.5/1000,-8.0/1000.,(136.-56.+88.-12.-75.)/1000.])
     TCP_SUCTION_STIFF = RigidTransform(translation=[-1.0/1000,0.0/1000.,(136.-56.+88.-12.-53.+34.)/1000.])

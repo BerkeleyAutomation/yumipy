@@ -14,15 +14,15 @@ except ImportError:
     logging.error("Unable to load ROS! Will not be able to use client-side motion planner!")
 
 from autolab_core import RigidTransform
-from yumi_state import YuMiState
-from yumi_trajectory import YuMiTrajectory
-from yumi_constants import YuMiConstants as ymc
+from .yumi_state import YuMiState
+from .yumi_trajectory import YuMiTrajectory
+from .yumi_constants import YuMiConstants as ymc
 
 class YuMiMotionPlanner:
     """ Client-side motion planner for the ABB YuMi, based on MoveIt!
     """
     
-    def __init__(self, arm='left', planner='RRTstar',
+    def __init__(self, arm, ee_link_name, planner='RRTstar',
                  goal_pos_tol=0.001,
                  planning_time=0.1,
                  eef_delta=0.01,
@@ -32,6 +32,7 @@ class YuMiMotionPlanner:
             self._arm = 'left_arm'
         self._goal_pos_tol = goal_pos_tol
         self._planning_time = planning_time
+        self._ee_link=ee_link_name
 
         self._init_planning_interface()
         self._update_planning_params()
@@ -47,6 +48,7 @@ class YuMiMotionPlanner:
         """ Updates the parameters of the planner """
         self._planning_group.set_goal_position_tolerance(self._goal_pos_tol)
         self._planning_group.set_planning_time(self._planning_time)
+        self._planning_group.set_end_effector_link(self._ee_link)
 
     def set_planner(self, planner):
         """ Sets the motion planner for the YuMi """
@@ -85,40 +87,17 @@ class YuMiMotionPlanner:
     def planner(self, planner):
         self.set_planner(planner)
 
-    def plan_linear_path(self, start_state, start_pose, goal_pose,
-                         traj_len=10, eef_delta=0.01, jump_thresh=0.0):
-        """
-        Plans a linear trajectory between the start and goal pose from the initial joint configuration. The poses should be specified in the frame of reference of the end effector tip. Start state must correspond to the start pose - right now this is up to the user.
-        
-        Parameters
-        ----------
-        start_state : YuMiState
-            initial state of the arm
-        start_pose : RigidTransform
-            initial pose of end effector tip
-        goal_pose : RigidTransform
-            goal pose of end effector tip
-        traj_len : int
-            number of waypoints to use in planning
-        eef_delta : float
-            distance for interpolation of the final planner path in cartesian space
-        jump_thresh : float
-            the threshold for jumping between poses 
-
-        Returns
-        -------
-        traj : YuMiTrajectory
-            the planned trajectory to execute
-        """
-        # check valid state types
+    def plan_waypoints(self,start_state,waypoints,eef_delta=0.01, jump_thresh=0.00):
+        #returns a plan from the current state to each of the waypoints with the 
+        #end effector pose linearly interpolated
         if not isinstance(start_state, YuMiState):
             raise ValueError('Start state must be specified')
 
         # check valid pose types
-        if not isinstance(start_pose, RigidTransform) or not isinstance(goal_pose, RigidTransform):
+        if not isinstance(waypoints[0], RigidTransform):
             raise ValueError('Start and goal poses must be specified as RigidTransformations')
         # check valid frames
-        if start_pose.from_frame != 'gripper' or goal_pose.from_frame != 'gripper' or (start_pose.to_frame != 'world' and start_pose.to_frame != 'base') or (goal_pose.to_frame != 'world' and goal_pose.to_frame != 'base'):
+        if waypoints[0].from_frame != 'gripper' or (waypoints[0].to_frame != 'world' and waypoints[0].to_frame != 'base'):
             raise ValueError('Start and goal poses must be from frame \'gripper\' to frame \{\'world\', \'base\'\}')
             
         # set start state of planner
@@ -129,19 +108,16 @@ class YuMiMotionPlanner:
         start_state_msg.joint_state.position = start_state.in_radians
         self._planning_group.set_start_state(start_state_msg)
      
-        # convert start and end pose to the planner's reference frame
-        start_pose_hand = start_pose * ymc.T_GRIPPER_HAND
-        goal_pose_hand = goal_pose * ymc.T_GRIPPER_HAND
-
+        # convert poses to the planner's reference frame
         # get waypoints
-        pose_traj = start_pose_hand.linear_trajectory_to(goal_pose_hand, traj_len)
+        pose_traj = [w*ymc.T_GRIPPER_HAND for w in waypoints]
         waypoints = [t.pose_msg for t in pose_traj]
 
         # plan plath
         plan, fraction = self._planning_group.compute_cartesian_path(waypoints, eef_delta, jump_thresh)
+
         if fraction >= 0.0 and fraction < 1.0:
             logging.warning('Failed to plan full path.')
-            return None
         if fraction < 0.0:
             logging.warning('Error while planning path.')
             return None
@@ -154,9 +130,9 @@ class YuMiMotionPlanner:
             joints_and_names.sort(key = lambda x: x[0])
             joint_traj.append(YuMiState([np.rad2deg(x[1]) for x in joints_and_names]))
 
-        return YuMiTrajectory(joint_traj)
+        return fraction,YuMiTrajectory(joint_traj)
 
-    def plan_shortest_path(self, start_state, start_pose, goal_pose, timeout=0.1):
+    def plan_shortest_path(self, start_state, goal_pose):
         """
         Plans the shortest path in joint space between the start and goal pose from the initial joint configuration. The poses should be specified in the frame of reference of the end effector tip. Start state must correspond to the start pose - right now this is up to the user.
         
@@ -168,8 +144,6 @@ class YuMiMotionPlanner:
             initial pose of end effector tip
         goal_pose : RigidTransform
             goal pose of end effector tip
-        timeout : float
-            planner timeout (shorthand for setting new planning time then planning)
 
         Returns
         -------
@@ -181,16 +155,13 @@ class YuMiMotionPlanner:
             raise ValueError('Start state must be specified')
 
         # check valid pose types
-        if not isinstance(start_pose, RigidTransform) or not isinstance(goal_pose, RigidTransform):
+        if not isinstance(goal_pose, RigidTransform):
             raise ValueError('Start and goal poses must be specified as RigidTransformations')
 
         # check valid frames
-        if start_pose.from_frame != 'gripper' or goal_pose.from_frame != 'gripper' or (start_pose.to_frame != 'world' and start_pose.to_frame != 'base') or (goal_pose.to_frame != 'world' and goal_pose.to_frame != 'base'):
+        if goal_pose.from_frame != 'gripper' or (goal_pose.to_frame != 'world' and goal_pose.to_frame != 'base'):
             raise ValueError('Start and goal poses must be from frame \'gripper\' to frame \{\'world\', \'base\'\}')
             
-        # set planning time
-        self.planning_time = timeout
-
         # set start state of planner
         start_state_msg = moveit_msgs.msg.RobotState()
         start_state_msg.joint_state.name = ['yumi_joint_%d_r' %i for i in range(1,8)]
@@ -199,8 +170,7 @@ class YuMiMotionPlanner:
         start_state_msg.joint_state.position = start_state.in_radians
         self._planning_group.set_start_state(start_state_msg)
      
-        # convert start and end pose to the planner's reference frame
-        start_pose_hand = start_pose * ymc.T_GRIPPER_HAND
+        # convert end pose to the planner's reference frame
         goal_pose_hand = goal_pose * ymc.T_GRIPPER_HAND
 
         # plan plath

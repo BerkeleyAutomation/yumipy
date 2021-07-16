@@ -13,7 +13,7 @@ class YuMiRobot:
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT_GRIPPER,
+    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_GRIPPER_BASE,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False,
                     arm_type='local', ros_namespace = None, use_suction=False):
@@ -91,7 +91,7 @@ class YuMiRobot:
                 raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.right)
 
-        self.set_tool(self.tcp)
+        # self.set_tool(self.tcp)
         self.set_z('fine')
 
     def reset(self):
@@ -143,7 +143,7 @@ class YuMiRobot:
         if len(self._arms) != 2:
             raise Exception("Cannot goto state sync when not both arms are included!")
 
-        self.left._goto_state_sync(left_state)
+        self.left._goto_state_sync(left_state,wait_for_res=False)
         self.right._goto_state_sync(right_state)
 
     def goto_pose_sync(self, left_pose, right_pose):
@@ -170,7 +170,7 @@ class YuMiRobot:
         self.left._goto_pose_sync(left_pose)
         self.right._goto_pose_sync(right_pose)
 
-    def set_v(self, n):
+    def set_v(self, n,rotspeed):
         '''Sets speed for both arms using n as the speed number.
 
         Parameters
@@ -184,7 +184,7 @@ class YuMiRobot:
         YuMiCommException
             If communication times out or socket error.
         '''
-        speed_data = YuMiRobot.get_v(n)
+        speed_data = YuMiRobot.get_v(n,rotspeed)
         for arm in self._arms:
             arm.set_speed(speed_data)
 
@@ -306,10 +306,10 @@ class YuMiRobot:
         Returns:
             A tuple of correctly formatted speed data: (tra, rot, tra, rot)
         '''
-        return (tra, rot, tra, rot)
+        return (tra, rot)
 
     @staticmethod
-    def get_v(n):
+    def get_v(n,rotspeed=150):
         '''Gets the corresponding speed data for n as the speed number.
 
         Parameters
@@ -321,7 +321,7 @@ class YuMiRobot:
         -------
             Corresponding speed data tuple using n as speed number
         '''
-        return YuMiRobot.construct_speed_data(n, 500)
+        return YuMiRobot.construct_speed_data(n, rotspeed)
 
     @staticmethod
     def get_z(name):

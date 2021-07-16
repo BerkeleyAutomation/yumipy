@@ -4,7 +4,7 @@ Author: Jacky Liang
 '''
 
 from multiprocessing import Process, Queue
-from Queue import Empty
+from queue import Empty
 import logging
 import socket
 import sys
@@ -112,13 +112,13 @@ class _YuMiEthernet(Process):
                 try:
                     self._socket.send(req_packet.req)
                     break
-                except socket.error, e:
+                except socket.error as e:
                     # TODO: better way to handle this mysterious bad file descriptor error
                     if e.errno == 9:
                         self._reset_socket()
             try:
                 raw_res = self._socket.recv(self._bufsize)
-            except socket.error, e:
+            except socket.error as e:
                 if e.errno == 114: # request time out
                     raise YuMiCommException('Request timed out: {0}'.format(req_packet))
 
@@ -667,6 +667,7 @@ class YuMiArm:
             delta_pose = cur_pose.inverse() * pose
             tra = delta_pose.translation
             rot = np.rad2deg(delta_pose.euler_angles)
+            print("delta: ",tra,rot)
             res = self.goto_pose_delta(tra, rot, wait_for_res=wait_for_res)
         else:
             body = YuMiArm._get_pose_body(pose)
@@ -698,37 +699,21 @@ class YuMiArm:
         body = YuMiArm._get_pose_body(pose)
         req = YuMiArm._construct_req('goto_pose_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
-
-    def goto_pose_linear_path(self, pose, wait_for_res=True,
-                              traj_len=10, eef_delta=0.01, jump_thresh=0.0):
+    
+    def goto_pose_shortest_path(self, pose, wait_for_res=True):
         """ Go to a pose via the shortest path in joint space """
         if self._motion_planner is None:
             raise ValueError('Motion planning not enabled')
 
         current_state = self.get_state()
-        current_pose = self.get_pose().as_frames('gripper', 'world')
-        traj = self._motion_planner.plan_linear_path(current_state, current_pose,
-                                                     pose, traj_len=traj_len,
-                                                     eef_delta=eef_delta,
-                                                     jump_thresh=jump_thresh)
+        traj = self._motion_planner.plan_shortest_path(current_state,
+                                                       pose)
         if traj is None:
             return
+        self.joint_buffer_clear()
         for state in traj:
-            self.goto_state(state, wait_for_res=wait_for_res)
-
-    def goto_pose_shortest_path(self, pose, wait_for_res=True, plan_timeout=0.1):
-        """ Go to a pose via the shortest path in joint space """
-        if self._motion_planner is None:
-            raise ValueError('Motion planning not enabled')
-
-        current_state = self.get_state()
-        current_pose = self.get_pose().as_frames('gripper', 'world')
-        traj = self._motion_planner.plan_shortest_path(current_state, current_pose,
-                                                       pose, timeout=plan_timeout)
-        if traj is None:
-            return
-        for state in traj:
-            self.goto_state(state, wait_for_res=wait_for_res)
+            self.joint_buffer_add(state)
+        self.joint_buffer_execute()
 
     def goto_pose_delta(self, translation, rotation=None, wait_for_res=True):
         '''Goto a target pose by transforming the current pose using the given translation and rotation
@@ -797,7 +782,7 @@ class YuMiArm:
 
         Parameters
         ----------
-        speed_data : list-like with length 4
+        speed_data : list-like with length 4 or 2
             Specifies the speed data that will be used by RAPID when executing motions.
             Should be generated using YuMiRobot.get_v
         wait_for_res : bool, optional
@@ -984,7 +969,7 @@ class YuMiArm:
                     return _RES(res, size)
                 else:
                     return size
-            except Exception, e:
+            except Exception as e:
                 logging.error(e)
 
     def buffer_move(self, wait_for_res=True):
@@ -1008,6 +993,30 @@ class YuMiArm:
         '''
         req = YuMiArm._construct_req('buffer_move')
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
+
+    def joint_buffer_add(self,state,wait_for_res=True):
+        body = YuMiArm._iter_to_str('{:.2f}', state.joints)
+        req = YuMiArm._construct_req('joint_buffer_add', body)
+        res = self._request(req, wait_for_res)
+
+    def joint_buffer_clear(self,wait_for_res=True):
+        req = YuMiArm._construct_req('joint_buffer_clear')
+        return self._request(req, wait_for_res)
+
+    def joint_buffer_execute(self,wait_for_res=True):
+        req = YuMiArm._construct_req('joint_buffer_move')
+        return self._request(req, wait_for_res, timeout=self._motion_timeout)
+
+    def joint_buffer_size(self):
+        req = YuMiArm._construct_req('joint_buffer_size')
+        res = self._request(req, True)
+
+        if res is not None:
+            try:
+                size = int(res.message)
+                return size
+            except Exception as e:
+                logging.error(e)
 
     def open_gripper(self, no_wait=False, wait_for_res=True):
         '''Opens the gripper to the target_width
@@ -1354,7 +1363,7 @@ class YuMiArm_ROS:
                     kwargs['wait_for_res'] = True
                 try:
                     response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
-                except rospy.ServiceException, e:
+                except rospy.ServiceException as e:
                     raise RuntimeError("Service call failed: {0}".format(str(e)))
                 return pickle.loads(response.ret)
             return handle_remote_call
@@ -1363,7 +1372,7 @@ class YuMiArm_ROS:
             arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
             try:
                 response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), pickle.dumps(None))
-            except rospy.ServiceException, e:
+            except rospy.ServiceException as e:
                 raise RuntimeError("Could not get attribute: {0}".format(str(e)))
             return pickle.loads(response.ret)
 

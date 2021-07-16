@@ -1,6 +1,4 @@
 from robot import Robot, SimRobot
-from parallel_jaw_gripper import ParallelJawGripper
-from suction_cup_gripper import SuctionCupGripper
 from action import NoAction
 from yumipy import YuMiRobot, YuMiKinematics, YuMiState
 from yumipy import YuMiCommException, YuMiControlException
