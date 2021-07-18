@@ -20,7 +20,8 @@ while True:
 	ypos = float(input("Enter y coord:"))
 	zpos = float(input("Enter z coord:"))
 	curpose = y.left.get_pose()
-	target=RigidTransform(translation=[xpos,ypos,zpos],rotation=grip_down_r)
+	target=RigidTransform(translation=[xpos,ypos,zpos],rotation=grip_down_r,
+            from_frame=yk.l_tcp_frame,to_frame=yk.base_fram)
 	lpts=[curpose,target]
 
 	#compute the actual path (THESE ARE IN URDF ORDER (see urdf_order_2_yumi for details))

@@ -17,10 +17,10 @@ input('Enter to run waypoints')
 
 print("Computing waypoints")
 #poses that we want the arms to follow
-L_TWIST_POSE = RigidTransform(translation=(.35,.1,.18),rotation=[0.2439,.95426,.16741,.04325],from_frame='gripper',to_frame='world')
-R_TWIST_POSE = RigidTransform(translation=(.35,-.12,.18),rotation=[0.3776,-.92516,.02571,-.02827],from_frame='gripper',to_frame='world')
-L_OUT_POSE=RigidTransform(translation=(.35,.4,.3),rotation=[0,1,0,0],from_frame='gripper_l_base',to_frame='base_link')
-R_OUT_POSE=RigidTransform(translation=(.35,-.3,.3),rotation=[0,1,0,0],from_frame='gripper',to_frame='world')
+L_TWIST_POSE = RigidTransform(translation=(.35,.1,.18),rotation=[0.2439,.95426,.16741,.04325],from_frame='l_tcp',to_frame='base_link')
+R_TWIST_POSE = RigidTransform(translation=(.35,-.12,.18),rotation=[0.3776,-.92516,.02571,-.02827],from_frame='r_tcp',to_frame='base_link')
+L_OUT_POSE=RigidTransform(translation=(.35,.4,.3),rotation=[0,1,0,0],from_frame='l_tcp',to_frame='base_link')
+R_OUT_POSE=RigidTransform(translation=(.35,-.3,.3),rotation=[0,1,0,0],from_frame='r_tcp',to_frame='world')
 lpts=[YK.L_NICE_POSE,L_TWIST_POSE,L_OUT_POSE,YK.L_NICE_POSE]
 rpts=[YK.R_NICE_POSE,R_TWIST_POSE,R_OUT_POSE,YK.R_NICE_POSE]
 
