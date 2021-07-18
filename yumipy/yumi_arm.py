@@ -44,7 +44,6 @@ class _YuMiEthernet(Process):
         self._current_state = None
 
         self._debug = debug
-        self._from_frame="gripper"
 
     def run(self):
         logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
@@ -159,6 +158,7 @@ class YuMiArm:
         self._port = port
         self._bufsize = bufsize
         self._debug = debug
+        self._from_frame="gripper"
 
         self._name = name
 

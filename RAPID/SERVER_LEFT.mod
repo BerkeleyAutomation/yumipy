@@ -3,15 +3,13 @@ MODULE SERVER_L
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     !GLOBAL VARIABLES
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    VAR num x;
     
     !//Robot configuration
-    PERS tooldata currentTool:=[TRUE,[[0,0,156],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
-    PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
-    PERS speeddata currentSpeed;
+    TASK PERS tooldata currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
+    TASK PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
+    TASK PERS speeddata currentSpeed:=[300,200,800,500];
     PERS zonedata currentZone;
-
+    !//hi
     !//PC communication
     VAR socketdev clientSocket;
     VAR socketdev serverSocket;
@@ -21,7 +19,6 @@ MODULE SERVER_L
 
     PERS string ipController:="192.168.125.1";
     !robot default IP
-    !PERS string ipController:= "127.0.0.1"; !local IP for testing in simulation
     VAR num serverPort:=5000;
 
     !//Motion of the robot
@@ -31,17 +28,19 @@ MODULE SERVER_L
     !Set to true after finishing a Move instruction.
 
     !//Buffered move variables
-    CONST num MAX_BUFFER:=512;
+    CONST num MAX_BUFFER:=1024;
     VAR num BUFFER_POS:=0;
     VAR robtarget bufferTargets{MAX_BUFFER};
     VAR speeddata bufferSpeeds{MAX_BUFFER};
-
+    
+    VAR jointtarget bufferJoints{MAX_BUFFER};
+    VAR num JOINT_BUFFER_POS:=0;
     !//External axis position variables
     VAR extjoint externalAxis;
 
     !//Circular move buffer
     VAR robtarget circPoint;
-
+    
     !//Correct Instruction Execution and possible return values
     VAR num ok;
     VAR bool should_send_res;
@@ -49,7 +48,6 @@ MODULE SERVER_L
     CONST num SERVER_OK:=1;
 
     !//Robot Constants
-    CONST jointtarget jposHomeYuMiL:=[[0,-130,30,0,40,0],[135,9E+09,9E+09,9E+09,9E+09,9E+09]];
     PERS tasks tasklistArms{2}:=[["T_ROB_L"],["T_ROB_R"]];
     VAR syncident Sync_Start_Arms;
     VAR syncident Sync_Stop_Arms;
@@ -157,13 +155,7 @@ MODULE SERVER_L
     !// - Zone.
     !// - Speed.
     PROC Initialize()
-        currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
-        currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
-        currentSpeed:=[1000,1000,1000,1000];
-        !currentZone:=[FALSE,0.3,0.3,0.3,0.03,0.3,0.03]; 
         currentZone:=fine;
-        !z0
-
         !Find the current external axis values so they don't move when we start
         jointsTarget:=CJointT();
         externalAxis:=jointsTarget.extax;
@@ -205,6 +197,7 @@ MODULE SERVER_L
         !//Motion configuration
         ConfL\Off;
         SingArea\Wrist;
+        MotionSup\Off;
         moveCompleted:=TRUE;
 
         !//Initialization of WorkObject, Tool, Speed and Zone
@@ -298,7 +291,7 @@ MODULE SERVER_L
                     addString:=addString+NumToStr(cartesianPose.rot.q2,3)+" ";
                     addString:=addString+NumToStr(cartesianPose.rot.q3,3)+" ";
                     addString:=addString+NumToStr(cartesianPose.rot.q4,3);
-                    !End of string	
+                    !End of string  
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -507,17 +500,17 @@ MODULE SERVER_L
             CASE 20:
                 !Gripper Close
                 IF nParams=0 THEN
-                    Hand_GripInward;
+                    g_GripIn;
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
                 ELSEIF nParams=2 THEN
-                    Hand_GripInward\holdForce:=params{1}\targetPos:=params{2};
+                    g_GripIn\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
 
                     ! Program won't wait until gripper completion or failure to move on.
                 ELSEIF nParams=3 THEN
-                    Hand_GripInward\holdForce:=params{1}\targetPos:=params{2}\NoWait;
+                    g_GripIn\holdForce:=params{1}\targetPos:=params{2}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -527,21 +520,21 @@ MODULE SERVER_L
             CASE 21:
                 !Gripper Open
                 IF nParams=0 THEN
-                    Hand_GripOutward;
+                    g_GripOut;
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=1 THEN
-                    Hand_GripOutward\targetPos:=params{2};
+                    g_GripOut\targetPos:=params{2};
                     ok:=SERVER_OK;
 
                     ! holdForce range = 0 - 20 N, targetPos = 0 - 25 mm, posAllowance = tolerance of gripper closure value
                 ELSEIF nParams=2 THEN
-                    Hand_GripOutward\holdForce:=params{1}\targetPos:=params{2};
+                    g_GripOut\holdForce:=params{1}\targetPos:=params{2};
                     ok:=SERVER_OK;
 
                     ! Program won't wait until gripper completion or failure to move on.
                 ELSEIF nParams=3 THEN
-                    Hand_GripOutward\holdForce:=params{1}\targetPos:=params{2}\NoWait;
+                    g_GripOut\holdForce:=params{1}\targetPos:=params{2}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -553,12 +546,12 @@ MODULE SERVER_L
 
                 ! calibrate only
                 IF nParams=0 THEN
-                    Hand_Initialize\Calibrate;
+                    g_Init\Calibrate;
                     ok:=SERVER_OK;
 
                     ! set maxSpeed, holdForce, physicalLimit (0-25 mm), and calibrate                    
                 ELSEIF nParams=3 THEN
-                    Hand_Initialize\maxSpd:=params{1}\holdForce:=params{2}\phyLimit:=params{3}\Calibrate;
+                    g_Init\maxSpd:=params{1}\holdForce:=params{2}\phyLimit:=params{3}\Calibrate;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -568,7 +561,7 @@ MODULE SERVER_L
             CASE 23:
                 ! Set Max Speed
                 IF nParams=1 THEN
-                    Hand_SetMaxSpeed params{1};
+                    g_SetMaxSpd params{1};
                     ! between 0-20 mm/s 
                     ok:=SERVER_OK;
                 ELSE
@@ -578,8 +571,8 @@ MODULE SERVER_L
                 !---------------------------------------------------------------------------------------------------------------
             CASE 24:
                 ! Set gripping force 
-                IF nParams=0 THEN
-                    Hand_SetHoldForce params{1};
+                IF nParams=1 THEN
+                    g_SetForce params{1};
                     ! between 0-20 Newtons
                     ok:=SERVER_OK;
                 ELSE
@@ -590,12 +583,12 @@ MODULE SERVER_L
             CASE 25:
                 ! Move the gripper to a specified position 
                 IF nParams=1 THEN
-                    Hand_MoveTo params{1};
+                    g_MoveTo params{1};
                     ! between 0-25 mm or 0-phyLimit if phyLimit is set in CASE 22
                     ok:=SERVER_OK;
 
                 ELSEIF nParams=2 THEN
-                    Hand_MoveTo params{1}\NoWait;
+                    g_MoveTo params{1}\NoWait;
                     ok:=SERVER_OK;
 
                 ELSE
@@ -606,7 +599,7 @@ MODULE SERVER_L
             CASE 26:
                 !Get Gripper Width
                 IF nParams=0 THEN
-                    addString:=NumToStr(Hand_GetActualPos(),2);
+                    addString:=NumToStr(g_GetPos(),2);
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -615,7 +608,7 @@ MODULE SERVER_L
             CASE 29:
                 ! Stop any action of the gripper (motors will lose power)
                 IF nParams=0 THEN
-                    Hand_Stop;
+                    g_Stop;
                     ok:=SERVER_OK;
                 ELSE
                     ok:=SERVER_BAD_MSG;
@@ -643,6 +636,50 @@ MODULE SERVER_L
                     ok:=SERVER_BAD_MSG;
                 ENDIF
                 !---------------------------------------------------------------------------------------------------------------
+            CASE 101:
+                !add joint target to buffer
+                IF nParams=7 THEN
+                    IF JOINT_BUFFER_POS<MAX_BUFFER THEN
+                        !to access the 7th joint need to use the first external axis
+                        externalAxis.eax_a:=params{7};
+                        !arrays are 1 indexed
+                        JOINT_BUFFER_POS:=JOINT_BUFFER_POS+1;
+                        bufferJoints{JOINT_BUFFER_POS}:=[[params{1},params{2},params{3},params{4},params{5},params{6}],externalAxis];
+                        ok:=SERVER_OK;
+                    ENDIF
+                ELSE
+                    ok:=SERVER_BAD_MSG;
+                ENDIF
+            CASE 102:
+                !clear the joint buffer
+                IF nParams=0 THEN
+                    JOINT_BUFFER_POS:=0;
+                    ok:=SERVER_OK;
+                ELSE
+                    ok:=SERVER_BAD_MSG;
+                ENDIF
+            CASE 103:
+                !execute the joint buffer
+                IF nParams=0 THEN
+                    IF JOINT_BUFFER_POS>0 THEN
+                        FOR i FROM 1 TO JOINT_BUFFER_POS-1 DO
+                            MoveAbsJ bufferJoints{i},currentSpeed,z1,currentTool,\Wobj:=currentWobj;
+                        ENDFOR
+                        !use current zone only for last one
+                        MoveAbsJ bufferJoints{JOINT_BUFFER_POS},currentSpeed,currentZone,currentTool,\Wobj:=currentWobj;
+                    ENDIF
+                    ok:=SERVER_OK;
+                ELSE
+                    ok:=SERVER_BAD_MSG;
+                ENDIF
+            CASE 104:
+                !return joint buffer size
+                IF nParams=0 THEN
+                    addString:=NumToStr(JOINT_BUFFER_POS,0);
+                    ok:=SERVER_OK;
+                ELSE
+                    ok:=SERVER_BAD_MSG;
+                ENDIF
             CASE 31:
                 !Clear Cartesian Buffer
                 IF nParams=0 THEN
@@ -760,14 +797,6 @@ MODULE SERVER_L
                 ELSE
                     ok:=SERVER_BAD_MSG;
                 ENDIF
-            CASE 100:
-                ! LEFT ARM: Send robot to home    
-                IF nParams=0 THEN
-                    MoveAbsJ jposHomeYuMiL\NoEOffs,currentSpeed,fine,tool0;
-                    ok:=SERVER_OK;
-                ELSE
-                    ok:=SERVER_BAD_MSG;
-                ENDIF
                 !---------------------------------------------------------------------------------------------------------------
             DEFAULT:
                 ok:=SERVER_BAD_MSG;
@@ -793,11 +822,12 @@ MODULE SERVER_L
         
     ERROR 
         ok:=SERVER_BAD_MSG;
-        should_send_res:=FALSE;    
-
+        should_send_res:=FALSE;
+        
         TEST ERRNO
             CASE ERR_HAND_WRONGSTATE:
                 ok := SERVER_OK;
+                should_send_res:=TRUE;
                 RETRY;
             CASE ERR_SOCK_CLOSED:
                 connected:=FALSE;
@@ -815,11 +845,10 @@ MODULE SERVER_L
                 SocketSend clientSocket\Str:=FormateRes( "ERR_HAND_NOTCALIBRATED: "+NumToStr(ERRNO,0));
                 
                 ! Gripper not calibrated.
-                Hand_Initialize\Calibrate;
+                g_Init\Calibrate;
                 RETRY;
 
             CASE ERR_COLL_STOP:
-                TPWrite "Collision Error L";
                 SocketSend clientSocket\Str:=FormateRes("ERR_COLL_STOP: "+NumToStr(ERRNO,0));
 
                 StopMove\Quick;

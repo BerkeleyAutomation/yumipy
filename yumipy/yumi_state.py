@@ -96,7 +96,10 @@ class YuMiState:
         return joints
 
     @property
-    def moveit(self):
+    def urdf_format(self):
+        '''
+        converts to physical joint order in radians
+        '''
         joint_arr = np.array([self.joint1,
                               self.joint2,
                               self.joint7,
@@ -104,7 +107,7 @@ class YuMiState:
                               self.joint4,
                               self.joint5,
                               self.joint6])
-        return np.deg2rad(joint_arr).tolist()
+        return np.deg2rad(joint_arr)
     
     def copy(self):
         return YuMiState(self.joints)
