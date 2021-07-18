@@ -72,8 +72,7 @@ class YuMiRobot:
 
         if include_left:
             if arm_type == 'local':
-                self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug, log_pose_histories=log_pose_histories,
-                                    log_state_histories=log_state_histories)
+                self.left = YuMiArm('left', ip=ip, port=port_l, debug=debug)
             elif arm_type == 'remote':
                 self.left = YuMiArmFactory.YuMiArm('remote', 'left', ros_namespace)
             else:
@@ -81,9 +80,7 @@ class YuMiRobot:
             self._arms.append(self.left)
         if include_right:
             if arm_type =='local':
-                self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug, log_pose_histories=log_pose_histories,
-                                     log_state_histories=log_state_histories,
-                                     use_suction=use_suction)
+                self.right = YuMiArm('right', ip=ip, port=port_r, debug=debug)
             elif arm_type == 'remote':
                 self.right = YuMiArmFactory.YuMiArm('remote', 'right', ros_namespace)
             else:
@@ -203,82 +200,6 @@ class YuMiRobot:
         for arm in self._arms:
             arm.set_zone(zone_data)
 
-    def set_tool(self, pose):
-        '''Sets TCP (Tool Center Point) for both arms using given pose as offset
-
-        Parameters
-        ----------
-            pose : RigidTransform
-                Pose of new TCP as offset from the default TCP
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        '''
-        for arm in self._arms:
-            arm.set_tool(pose)
-
-    def reset_home(self):
-        '''Moves both arms to home position
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        YuMiControlException
-            If commanded pose triggers any motion errors that are catchable by RAPID sever.
-        '''
-        if hasattr(self, 'left'):
-            self.left.goto_state(YMC.L_HOME_STATE, wait_for_res=True)
-        if hasattr(self, 'right'):
-            self.right.goto_state(YMC.R_HOME_STATE, wait_for_res=True)
-
-    def reset_bin(self, arm_name=None, dist_thresh=0.001):
-        '''Moves both arms to home position on the sides of the bin
-
-        Parameters
-        ----------
-        arm_name : str
-            string name of the arm to reset
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        YuMiControlException
-            If commanded pose triggers any motion errors that are catchable by RAPID sever.
-        '''
-        if arm_name == 'left' and hasattr(self, 'left'):
-            self.left.goto_state(YMC.L_KINEMATIC_AVOIDANCE_STATE,
-                                 wait_for_res=True)
-            T_cur = self.left.get_pose()
-            delta_t = YMC.L_BIN_HOME_POSE.translation - T_cur.translation
-            self.left.goto_pose_delta(delta_t, wait_for_res=True)
-        elif arm_name == 'right' and hasattr(self, 'right'):
-            self.right.goto_state(YMC.R_KINEMATIC_AVOIDANCE_STATE,
-                                  wait_for_res=True)
-            T_cur = self.right.get_pose()
-            delta_t = YMC.R_BIN_HOME_POSE.translation - T_cur.translation
-            self.right.goto_pose_delta(delta_t, wait_for_res=True)
-        elif hasattr(self, 'right') and hasattr(self, 'left'):
-            T_left = self.left.get_pose()
-            T_right = self.right.get_pose()
-            left_avoidance_dist = np.linalg.norm(T_left.translation[:2] - YMC.L_KINEMATIC_AVOIDANCE_POSE.translation[:2])
-            right_avoidance_dist = np.linalg.norm(T_right.translation[:2] - YMC.R_KINEMATIC_AVOIDANCE_POSE.translation[:2])
-            left_home_dist = np.linalg.norm(T_left.translation - YMC.L_BIN_HOME_POSE.translation)
-            right_home_dist = np.linalg.norm(T_right.translation - YMC.R_BIN_HOME_POSE.translation)
-            if left_avoidance_dist < right_avoidance_dist:
-                if left_home_dist > dist_thresh:
-                    self.reset_bin(arm_name='left')
-                if right_home_dist > dist_thresh:
-                    self.reset_bin(arm_name='right')
-            else:
-                if right_home_dist > dist_thresh:
-                    self.reset_bin(arm_name='right')
-                if left_home_dist > dist_thresh:
-                    self.reset_bin(arm_name='left')            
-            
     def calibrate_grippers(self):
         '''Calibrates grippers for instantiated arms.
 
@@ -372,6 +293,3 @@ class YuMiRobot:
         'z100': (100,150,15),
         'z200': (200,300,30)
     }
-
-if __name__ == '__main__':
-    logging.getLogger().setLevel(YMC.LOGGING_LEVEL)

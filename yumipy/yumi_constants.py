@@ -29,14 +29,10 @@ class YuMiConstants:
     MOTION_TIMEOUT = 10
     COMM_TIMEOUT = 1
     PROCESS_TIMEOUT = 10
-    PROCESS_SLEEP_TIME = 0.01
-    MOTION_BUFFER_SIZE = 512
+    PROCESS_SLEEP_TIME = 0.005
 
     MAX_GRIPPER_WIDTH = 0.02
     MAX_GRIPPER_FORCE = 20
-
-    # used to rate limit real-time YuMi controls (in seconds)
-    COMM_PERIOD = 0.02 
     
     DEBUG = False
     LOGGING_LEVEL = logging.WARNING
@@ -83,8 +79,6 @@ class YuMiConstants:
         'is_joints_reachable': 41,
 
         'close_connection': 99,
-        
-        'reset_home': 100,
     }
     
     RES_CODES = {
@@ -96,3 +90,5 @@ class YuMiConstants:
         'pose': 0,
         'state': 1
     }
+    #by default the TCP is inside the wrist frame (called gripper_l_base and gripper_r_base in the urdf)
+    TCP_DEFAULT = RigidTransform(from_frame="tcp",to_frame="gripper_base")

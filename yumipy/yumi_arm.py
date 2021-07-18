@@ -44,6 +44,7 @@ class _YuMiEthernet(Process):
         self._current_state = None
 
         self._debug = debug
+        self._from_frame="gripper"
 
     def run(self):
         logging.getLogger().setLevel(YMC.LOGGING_LEVEL)
@@ -61,8 +62,6 @@ class _YuMiEthernet(Process):
                 res = self._send_request(req_packet)
                 if req_packet.return_res:
                     self._res_q.put(res)
-
-                sleep(YMC.PROCESS_SLEEP_TIME)
 
         except KeyboardInterrupt:
             self._stop()
@@ -96,7 +95,7 @@ class _YuMiEthernet(Process):
 
             while True:
                 try:
-                    self._socket.send(req_packet.req)
+                    self._socket.send(bytearray(req_packet.req,"utf-8"))
                     break
                 except socket.error as e:
                     # TODO: better way to handle this mysterious bad file descriptor error
@@ -112,7 +111,7 @@ class _YuMiEthernet(Process):
 
         if raw_res is None or len(raw_res) == 0:
             raise YuMiCommException('Empty response! For req: {0}'.format(req_packet))
-
+        raw_res = raw_res.decode("utf-8")
         tokens = raw_res.split()
         res = _RAW_RES(int(tokens[0]), int(tokens[1]), ' '.join(tokens[2:]))
         return res
@@ -124,9 +123,7 @@ class YuMiArm:
 
     def __init__(self, name, ip=YMC.IP, port=YMC.PORTS["left"]["server"], bufsize=YMC.BUFSIZE,
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
-                 from_frame='tool', to_frame='base',
-                 debug=YMC.DEBUG,
-                 log_pose_histories=False, log_state_histories=False):
+                 debug=YMC.DEBUG):
         '''Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
 
@@ -154,18 +151,6 @@ class YuMiArm:
             debug : bool, optional
                     Boolean to indicate whether or not in debug mode. If in debug mode no ethernet communication is attempted. Mock responses will be returned.
                     Default to YuMiConstants.DEBUG
-            log_pose_histories : bool, optional
-                    If True, uses yumi_history_logger to log pose histories. Enables usage of flush_pose_histories.
-                    Defaults to False
-            log_state_histories : bool, optional
-                    If True, uses yumi_history_logger to log state histories. Enables usage of flush_state_histories.
-                    Defaults to False
-            motion_planner : YuMiMotionPlanner, optional
-                    If given, will use for planning trajectories in joint space.
-                    Defaults to None
-            use_suction : bool, optional
-                    If True, initializes the AUTOLAB suction control interface.
-                    Defaults to False
         '''
         self._motion_timeout = motion_timeout
         self._comm_timeout = comm_timeout
@@ -173,16 +158,9 @@ class YuMiArm:
         self._ip = ip
         self._port = port
         self._bufsize = bufsize
-        self._from_frame = from_frame
-        self._to_frame = to_frame
         self._debug = debug
 
         self._name = name
-
-        if log_pose_histories:
-            self._pose_logger = YuMiMotionLogger()
-        if log_state_histories:
-            self._state_logger = YuMiMotionLogger()
 
         self.start()
 
@@ -193,24 +171,6 @@ class YuMiArm:
             'gripper_force': None,
             'gripper_max_speed': None,
         }
-
-        self._motion_planner = motion_planner
-
-        self._vacuum_servo = None
-        self._vacuum = None
-        if use_suction and not self._debug:
-            self.init_suction()
-
-    def init_suction(self):
-        """ Initialize suction. """
-        if self._debug:
-            self._vacuum = None
-            return
-        if ROS_ENABLED:
-            rospy.wait_for_service('toggle_suction')
-            self._vacuum = rospy.ServiceProxy('toggle_suction', Suction)
-        else:
-            self._vacuum = Vacuum()
                 
     def reset_settings(self):
         '''Reset zone, tool, and speed settings to their last known values. This is used when reconnecting to the RAPID server after a server restart.
@@ -223,12 +183,6 @@ class YuMiArm:
     def reset(self):
         '''Resets the underlying yumi ethernet process and socket, and resets all the settings.
         '''
-        # empty motion logs
-        if hasattr(self, '_state_logger'):
-            self._state_logger.reset_log()
-        if hasattr(self, '_pose_logger'):
-            self._pose_logger.reset_log()
-
         # terminate ethernet
         try:
             self._yumi_ethernet.terminate()
@@ -239,34 +193,6 @@ class YuMiArm:
         self._create_yumi_ethernet()
 
         self.reset_settings()
-
-    def set_motion_planner(self, motion_planner):
-        '''
-        Parameters
-        ----------
-        motion_planner : YuMiMotionPlanner
-                Sets the current motion planner to the given motion planner.
-        '''
-        self._motion_planner = motion_planner
-
-    def flush_pose_histories(self, filename):
-        '''
-        Parameters
-        ----------
-        filename : string
-                Saves the pose history logger data to filename. Empties logger.
-        '''
-        self._pose_logger.flush_to_file(filename)
-
-    def flush_state_histories(self, filename):
-        '''
-        Parameters
-        ----------
-        filename : string
-                Saves the state history logger data to filename. Empties logger
-        '''
-        self._state_logger.flush_to_file(filename)
-
     def _create_yumi_ethernet(self):
         self._req_q = Queue()
         self._res_q = Queue()
@@ -336,14 +262,6 @@ class YuMiArm:
         body = '{0}{1}'.format(YuMiArm._iter_to_str('{:.1f}', pose.position.tolist()),
                                             YuMiArm._iter_to_str('{:.5f}', pose.quaternion.tolist()))
         return body
-
-    @staticmethod
-    def from_frame(self):
-        return self._from_frame
-
-    @staticmethod
-    def to_frame(self):
-        return self._to_frame
 
     def ping(self, wait_for_res=True):
         '''Pings the remote server.
@@ -421,9 +339,6 @@ class YuMiArm:
         YuMiCommException
             If communication times out or socket error.
         '''
-        if self._debug:
-            return RigidTransform(from_frame=self._from_frame, to_frame=self._to_frame)
-
         req = YuMiArm._construct_req('get_pose')
         res = self._request(req, True)
 
@@ -488,21 +403,6 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_joints', body)
         res = self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-        if hasattr(self, '_state_logger') and wait_for_res and res is not None:
-            if self._debug:
-                time = -1.
-            else:
-                time = float(res.message)
-            actual_state = self.get_state()
-            self._state_logger.append_time(time)
-            self._state_logger.append_expected(state)
-            self._state_logger.append_actual(actual_state)
-            return {
-                'time': time,
-                'state': actual_state,
-                'res': res
-            }
-
         return res
 
     def _goto_state_sync(self, state, wait_for_res=True):
@@ -510,104 +410,7 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_joints_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def set_vacuum_servo_angle(self, angle):
-        """ Sets the angle of the vacuum servo.
-
-        Parameters
-        ----------
-        angle : float
-            angle to servo the vacuum tip to, in degrees
-        """
-        if self._vacuum_servo is None:
-            raise ValueError('Vacuum servo not initialized. Cannot set angle!')
-
-        # move the servo
-        if not self._debug:
-            self._vacuum_servo.move(angle)
-
-    def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True, use_suction=False, debug=False):
-        '''Commands the YuMi to goto the given pose
-
-        Parameters
-        ----------
-        pose : RigidTransform
-        linear : bool, optional
-            If True, will use MoveL in RAPID to ensure linear path. Otherwise use MoveJ in RAPID, which does not ensure linear path.
-            Defaults to True
-        relative : bool, optional
-            If True, will use goto_pose_relative by computing the delta pose from current pose to target pose.
-            Defaults to False
-        wait_for_res : bool, optional
-            If True, will block main process until response received from RAPID server.
-            Defaults to True
-
-        Returns
-        -------
-        None if wait_for_res is False
-        namedtuple('_RAW_RES', 'mirror_code res_code message') if pose logging is not enabled and wait_for_res is False
-
-        {
-            'time': <flaot>,
-            'pose': <RigidTransform>,
-            'res': <namedtuple('_RAW_RES', 'mirror_code res_code message')>
-        } otherwise. The time field indicates the duration it took for the arm to complete the motion.
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        YuMiControlException
-            If commanded pose triggers any motion errors that are catchable by RAPID sever.
-        '''
-        # default to standard goto_pose
-        if self._vacuum is None or not use_suction:
-            return self._goto_pose(pose, linear=linear, relative=relative, wait_for_res=wait_for_res)
-
-        # otherwise assume the pose is for the suction tip and use IK to command the robot
-
-        # cannot go to poses with an approach in the upward direction
-        if pose.z_axis[2] > 0:
-            raise ValueError('Cannot go to a suction pose with an upward-facing approach')
-
-        # determine the rotation that aligns the pose with the z axis
-        dot_prod = min(max(pose.z_axis.dot(np.array([0,0,-1])), -1.0), 1.0)
-        angle_rad = np.arccos(dot_prod)
-        angle_deg = np.rad2deg(angle_rad)        
-        Rx = RigidTransform.x_axis_rotation(angle_rad)
-        T_tool_world = pose
-
-        # choose the rotation that minimizes the inner product with the world z (aka most orthogonal to the table)
-        T_pivot1_tool = RigidTransform(rotation=Rx,
-                                       translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
-                                       from_frame='pivot',
-                                       to_frame=T_tool_world.from_frame)
-        T_pivot1_world = T_tool_world * T_pivot1_tool
-
-        T_pivot2_tool = RigidTransform(rotation=Rx.T,
-                                       translation=np.array([0,0,-YMC.SUCTION_TIP_LENGTH]),
-                                       from_frame='pivot',
-                                       to_frame=T_tool_world.from_frame)
-        T_pivot2_world = T_tool_world * T_pivot2_tool
-
-        T_pivot_world = T_pivot1_world
-        if T_pivot2_world.z_axis[2] < T_pivot1_world.z_axis[2]:
-            T_pivot_world = T_pivot2_world            
-            angle_deg = -angle_deg
-
-        # visualize, for debugging
-        if debug:
-            from visualization import Visualizer3D as vis
-            vis.figure()
-            vis.pose(RigidTransform())
-            vis.pose(T_tool_world, show_frame=True)
-            vis.pose(T_pivot_world, show_frame=True)
-            vis.show()
-
-        # send the end-effector to the given pose
-        self._vacuum_servo.move(-angle_deg)
-        self._goto_pose(T_pivot_world, linear=linear, relative=relative, wait_for_res=wait_for_res)
-
-    def _goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
+    def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
         '''Commands the YuMi to goto the given pose
 
         Parameters
@@ -657,20 +460,6 @@ class YuMiArm:
             req = YuMiArm._construct_req(cmd, body)
             res = self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-        if hasattr(self, '_pose_logger') and wait_for_res and res is not None:
-            if self._debug:
-                time = -1.
-            else:
-                time = float(res.message)
-            actual_pose = self.get_pose()
-            self._pose_logger.append_time(time)
-            self._pose_logger.append_expected(pose)
-            self._pose_logger.append_actual(actual_pose)
-            return {
-                'time': time,
-                'pose': actual_pose,
-                'res': res
-            }
 
         return res
 
@@ -679,21 +468,6 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_pose_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
     
-    def goto_pose_shortest_path(self, pose, wait_for_res=True):
-        """ Go to a pose via the shortest path in joint space """
-        if self._motion_planner is None:
-            raise ValueError('Motion planning not enabled')
-
-        current_state = self.get_state()
-        traj = self._motion_planner.plan_shortest_path(current_state,
-                                                       pose)
-        if traj is None:
-            return
-        self.joint_buffer_clear()
-        for state in traj:
-            self.joint_buffer_add(state)
-        self.joint_buffer_execute()
-
     def goto_pose_delta(self, translation, rotation=None, wait_for_res=True):
         '''Goto a target pose by transforming the current pose using the given translation and rotation
 
@@ -729,32 +503,6 @@ class YuMiArm:
         body = translation_str + rotation_str
         req = YuMiArm._construct_req('goto_pose_delta', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
-
-    def set_tool(self, pose, wait_for_res=True):
-        '''Sets the Tool Center Point (TCP) of the arm using the given pose.
-
-        Parameters
-        ----------
-        pose : RigidTransform
-        wait_for_res : bool, optional
-            If True, will block main process until response received from RAPID server.
-            Defaults to True
-
-        Returns
-        -------
-        None if wait_for_res is False
-        namedtuple('_RAW_RES', 'mirror_code res_code message') otherwise
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        '''
-        body = YuMiArm._get_pose_body(pose)
-        req = YuMiArm._construct_req('set_tool', body)
-
-        self._last_sets['tool'] = pose
-        return self._request(req, wait_for_res)
 
     def set_speed(self, speed_data, wait_for_res=True):
         '''Sets the target speed of the arm's movements.
@@ -1054,7 +802,7 @@ class YuMiArm:
         '''
         if force < 0 or force > YMC.MAX_GRIPPER_FORCE:
             raise ValueError("Gripper force can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_FORCE, force))
-        if width < 0 or width > YMC>MAX_GRIPPER_WIDTH:
+        if width < 0 or width > YMC.MAX_GRIPPER_WIDTH:
             raise ValueError("Gripper width can only be between {} and {}. Got {}.".format(0, YMC.MAX_GRIPPER_WIDTH, width))
 
         width = METERS_TO_MM * width
@@ -1237,123 +985,41 @@ class YuMiArm:
         else:
             return width
 
-    def reset_home(self, wait_for_res=True):
-        '''Resets the arm to home using joints
+    #removed for now because using goto_pose is dangerous -Justin
+    # def shake(self, radius, angle, num_shakes,
+    #           wait_for_res=False):
+    #     """ Shakes the gripper along an arc relative to the current pose.
 
-        Parameters
-        ----------
-        wait_for_res : bool, optional
-            If True, will block main process until response received from RAPID server.
-            Defaults to True
+    #     Parameters
+    #     ----------
+    #     radius : float
+    #         radius of the shake
+    #     angle : float
+    #         angle to shape, in radians
+    #     num_shakes : int
+    #         how many times to move back and forth along the arc
+    #     wait_for_res : bool, optional
+    #         If True, will block main process until response received from RAPID server.
+    #         Defaults to True
+    #     """
+    #     # get current pose
+    #     T_cur = self.get_pose()
 
-        Returns
-        -------
-        None if wait_for_res is False
-        namedtuple('_RAW_RES', 'mirror_code res_code message') otherwise
+    #     # compute shake poses
+    #     delta_T = RigidTransform(translation=[0,0,radius], from_frame='gripper', to_frame='gripper')
+    #     R_shake = RigidTransform.x_axis_rotation(angle)
+    #     delta_T_up = RigidTransform(rotation=R_shake, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
+    #     delta_T_down = RigidTransform(rotation=R_shake.T, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
+    #     T_shake_up = T_cur.as_frames('gripper', 'world') * delta_T_up * delta_T
+    #     T_shake_down = T_cur.as_frames('gripper', 'world') * delta_T_down * delta_T
 
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        YuMiControlException
-            If commanded pose triggers any motion errors that are catchable by RAPID sever.
-        '''
-        req = YuMiArm._construct_req('reset_home')
-        return self._request(req, wait_for_res)
-
-    def shake(self, radius, angle, num_shakes,
-              wait_for_res=False):
-        """ Shakes the gripper along an arc relative to the current pose.
-
-        Parameters
-        ----------
-        radius : float
-            radius of the shake
-        angle : float
-            angle to shape, in radians
-        num_shakes : int
-            how many times to move back and forth along the arc
-        wait_for_res : bool, optional
-            If True, will block main process until response received from RAPID server.
-            Defaults to True
-        """
-        # get current pose
-        T_cur = self.get_pose()
-
-        # compute shake poses
-        delta_T = RigidTransform(translation=[0,0,radius], from_frame='gripper', to_frame='gripper')
-        R_shake = RigidTransform.x_axis_rotation(angle)
-        delta_T_up = RigidTransform(rotation=R_shake, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
-        delta_T_down = RigidTransform(rotation=R_shake.T, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
-        T_shake_up = T_cur.as_frames('gripper', 'world') * delta_T_up * delta_T
-        T_shake_down = T_cur.as_frames('gripper', 'world') * delta_T_down * delta_T
-
-        # move for the number of shakes
-        for i in range(num_shakes):
-            self.goto_pose(T_shake_up, wait_for_res=wait_for_res)
-            self.goto_pose(T_cur, wait_for_res=wait_for_res)
-            self.goto_pose(T_shake_down, wait_for_res=wait_for_res)
-            self.goto_pose(T_cur, wait_for_res=wait_for_res)
+    #     # move for the number of shakes
+    #     for i in range(num_shakes):
+    #         self.goto_pose(T_shake_up, wait_for_res=wait_for_res)
+    #         self.goto_pose(T_cur, wait_for_res=wait_for_res)
+    #         self.goto_pose(T_shake_down, wait_for_res=wait_for_res)
+    #         self.goto_pose(T_cur, wait_for_res=wait_for_res)
         
-class YuMiArm_ROS:
-    """ Interface to remotely control a single arm of an ABB YuMi robot.
-    Communicates over ROS to a yumi arm server (initialize server through roslaunch)
-
-    Parameters
-    ----------
-    arm_service : string
-        ROSYumiArm service to interface with. If the ROSYumiArm services are started through
-        yumi_arms.launch they will be called left_arm and right_arm
-    namespace : string, optional
-        Namespace to prepend to arm_service. If None, current namespace is prepended.
-    """
-    def __init__(self, arm_service, namespace = None, timeout = YMC.ROS_TIMEOUT):
-        if namespace == None:
-            self.arm_service = rospy.get_namespace() + arm_service
-        else:
-            self.arm_service = namespace + arm_service
-
-        self.timeout = timeout
-
-    def __getattr__(self, name):
-        """ Override the __getattr__ method so that function calls become server requests
-
-        If the name is a method of the YuMiArm class, this returns a function that calls that
-        function on the YuMiArm instance in the server. The wait_for_res argument is not available
-        remotely and will always be set to True. This is to prevent odd desynchronized crashes
-
-        Otherwise, the name is considered to be an attribute, and getattr is called on the
-        YuMiArm instance in the server. Note that if it isn't an attribute either a RuntimeError
-        will be raised.
-
-        The difference here is that functions access the server *on call* and non-functions do
-        *on getting the name*
-
-        Also note that this is __getattr__, so things like __init__ and __dict__ WILL NOT trigger
-        this function as the YuMiArm_ROS object already has these as attributes.
-        """
-        if name in YuMiArm.__dict__:
-            def handle_remote_call(*args, **kwargs):
-                """ Handle the remote call to some YuMiArm function.
-                """
-                rospy.wait_for_service(self.arm_service, timeout = self.timeout)
-                arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
-                if 'wait_for_res' in kwargs:
-                    kwargs['wait_for_res'] = True
-                try:
-                    response = arm(pickle.dumps(name), pickle.dumps(args), pickle.dumps(kwargs))
-                except rospy.ServiceException as e:
-                    raise RuntimeError("Service call failed: {0}".format(str(e)))
-                return pickle.loads(response.ret)
-            return handle_remote_call
-        else:
-            rospy.wait_for_service(self.arm_service, timeout = self.timeout)
-            arm = rospy.ServiceProxy(self.arm_service, ROSYumiArm)
-            try:
-                response = arm(pickle.dumps('__getattribute__'), pickle.dumps(name), pickle.dumps(None))
-            except rospy.ServiceException as e:
-                raise RuntimeError("Could not get attribute: {0}".format(str(e)))
-            return pickle.loads(response.ret)
 
 class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """

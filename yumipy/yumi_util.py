@@ -10,7 +10,7 @@ MM_TO_METERS = 1.0 / METERS_TO_MM
 from .yumi_state import YuMiState
 from autolab_core import RigidTransform
 
-def message_to_pose(message, from_frame='yumi'):
+def message_to_pose(message, from_frame='gripper'):
     tokens = message.split()
     try:
         if len(tokens) != 7:
@@ -21,7 +21,6 @@ def message_to_pose(message, from_frame='yumi'):
         R = RigidTransform.rotation_from_quaternion(q)
         pose = RigidTransform(R, t, from_frame=from_frame)
         pose.position = pose.position * MM_TO_METERS
-
         return pose
 
     except Exception as e:

@@ -1,16 +1,17 @@
-from yumipy import YuMiRobot,YuMiMotionPlanner, YuMiState
+from yumipy.yumi_robot import YuMiRobot
+from yumipy.yumi_state import YuMiState
 from autolab_core import RigidTransform
+import numpy as np
+from yumiplanning.yumi_kinematics import YuMiKinematics as YK
 y=YuMiRobot()
-l_nice_state=YuMiState([-71.52785377, -62.91241387,  17.98294573, 108.93368164,  75.65987325,
- 139.55185761,  61.09700753])
-r_nice_state=YuMiState([  69.58162107,  -59.13245666,   17.11626609, -106.14485253,   71.82808192,
- -138.76000321,  -63.06703326])
-y.set_v(150,200)#set speed (lienar mm/s, rotational deg/s)
-raw_input("Enter to move left to home")
+l_nice_state=YuMiState(np.rad2deg(YK.urdf_order_2_yumi(YK.L_NICE_STATE)))
+r_nice_state=YuMiState(np.rad2deg(YK.urdf_order_2_yumi(YK.R_NICE_STATE)))
+y.set_v(200,200)#set speed (lienar mm/s, rotational deg/s)
+input("Enter to move left to home")
 y.left.goto_state(l_nice_state)
-raw_input("Enter to move right to home")
+input("Enter to move right to home")
 y.right.goto_state(r_nice_state)
-raw_input('Enter to run waypoints')
+input('Enter to run waypoints')
 l_waypoints=[
 [-71.527854,-62.912414,17.982946,108.933682,75.659873,139.551858,61.097008],
 [-71.460068,-64.963268,21.113450,109.985099,73.691359,135.942861,62.369340],
@@ -90,10 +91,9 @@ r_waypoints=[
 
 y.left.joint_buffer_clear()
 y.right.joint_buffer_clear()
+y.left.close_gripper()
+y.left.open_gripper()
 for i in range(len(r_waypoints)):
-	# raw_input("go?")
-	# y.left.goto_state(YuMiState(l_waypoints[i]),wait_for_res=False)
-	# y.right.goto_state(YuMiState(r_waypoints[i]))
 	y.left.joint_buffer_add(YuMiState(l_waypoints[i]))
 	y.right.joint_buffer_add(YuMiState(r_waypoints[i]))
 y.left.joint_buffer_execute(wait_for_res=False)
