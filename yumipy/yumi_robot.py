@@ -4,8 +4,8 @@ Authors: Jacky Liang
 '''
 import logging
 import numpy as np
-from yumi_arm import YuMiArm, YuMiArmFactory
-from yumi_constants import YuMiConstants as YMC
+from .yumi_arm import YuMiArm, YuMiArmFactory
+from .yumi_constants import YuMiConstants as YMC
 from time import sleep
 
 class YuMiRobot:
@@ -13,7 +13,7 @@ class YuMiRobot:
     Communicates with the robot over Ethernet.
     """
 
-    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_GRIPPER_BASE,
+    def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
                     log_pose_histories=False, log_state_histories=False,
                     arm_type='local', ros_namespace = None, use_suction=False):
@@ -68,7 +68,6 @@ class YuMiRobot:
         if not include_left and not include_right:
             raise Exception("Must include one of the arms for YuMiRobot!")
 
-        self.tcp = tcp
         self._arms = []
 
         if include_left:
@@ -91,7 +90,6 @@ class YuMiRobot:
                 raise RuntimeError("arm_type {0} for YuMiArm is not a valid arm type".format(arm_type))
             self._arms.append(self.right)
 
-        # self.set_tool(self.tcp)
         self.set_z('fine')
 
     def reset(self):

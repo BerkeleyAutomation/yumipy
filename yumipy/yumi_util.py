@@ -7,7 +7,7 @@ import numpy as np
 METERS_TO_MM = 1000.0
 MM_TO_METERS = 1.0 / METERS_TO_MM
 
-from yumi_state import YuMiState
+from .yumi_state import YuMiState
 from autolab_core import RigidTransform
 
 def message_to_pose(message, from_frame='yumi'):
@@ -24,7 +24,7 @@ def message_to_pose(message, from_frame='yumi'):
 
         return pose
 
-    except Exception, e:
+    except Exception as e:
         logging.error(e)
 
 def message_to_state(message):
@@ -38,7 +38,7 @@ def message_to_state(message):
 
         return state
 
-    except Exception, e:
+    except Exception as e:
         logging.error(e)
 
 def message_to_torques(message):

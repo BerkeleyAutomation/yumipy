@@ -13,26 +13,12 @@ from time import sleep, time
 from collections import namedtuple
 import numpy as np
 from autolab_core import RigidTransform
-from autolab_suction import Vacuum
-from yumi_constants import YuMiConstants as YMC
-from yumi_state import YuMiState
-from yumi_motion_logger import YuMiMotionLogger
-from yumi_util import message_to_state, message_to_pose
-from yumi_exceptions import YuMiCommException,YuMiControlException
+from .yumi_constants import YuMiConstants as YMC
+from .yumi_state import YuMiState
+from .yumi_util import message_to_state, message_to_pose
+from .yumi_exceptions import YuMiCommException,YuMiControlException
 import pickle
 
-# Check if ROS and the service file can be imported
-ROS_ENABLED = False
-try:
-    import rospy
-    try:
-        from yumipy.srv import *
-        from autolab_suction.srv import Suction
-        ROS_ENABLED = True
-    except ImportError:
-        logging.warning("yumipy not installed as catkin package, yumi over ros will be unavailable")
-except ImportError:
-    logging.warning("rospy could not be imported, yumi over ros will be unavailable")
 
 _RAW_RES = namedtuple('_RAW_RES', 'mirror_code res_code message')
 _RES = namedtuple('_RES', 'raw_res data')
@@ -140,8 +126,7 @@ class YuMiArm:
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
                  from_frame='tool', to_frame='base',
                  debug=YMC.DEBUG,
-                 log_pose_histories=False, log_state_histories=False,
-                 motion_planner=None, use_suction=False):
+                 log_pose_histories=False, log_state_histories=False):
         '''Initializes a YuMiArm interface. This interface will communicate with one arm (port) on the YuMi Robot.
         This uses a subprocess to handle non-blocking socket communication with the RAPID server.
 
@@ -166,12 +151,6 @@ class YuMiArm:
             process_timeout : float, optional
                     Timeout for ethernet process communication.
                     Default from YuMiConstants.PROCESS_TIMEOUT
-            from_frame : string, optional
-                    String name of robot arm frame.
-                    Default to "tool"
-            to_frame : string, optional
-                    String name of reference for robot frame
-                    Default to "base"
             debug : bool, optional
                     Boolean to indicate whether or not in debug mode. If in debug mode no ethernet communication is attempted. Mock responses will be returned.
                     Default to YuMiConstants.DEBUG
