@@ -158,7 +158,12 @@ class YuMiArm:
         self._port = port
         self._bufsize = bufsize
         self._debug = debug
-        self._from_frame="gripper"
+        if name=="left":
+            self._from_frame="gripper_l_base"
+        elif name=="right":
+            self._from_frame="gripper_r_base"
+        else:
+            raise Exception("Arm name must be either 'left' or 'right'")
 
         self._name = name
 
@@ -319,7 +324,15 @@ class YuMiArm:
                 return state
 
     def get_pose(self, raw_res=False):
-        '''Get the current pose of this arm to base frame of the arm.
+        '''
+        WARNING: this function uses the current tooltip inside the 
+        ABB's RAPID code, which may not match what you expect it to be.
+        For proper pose, just query get_state and use YuMiKinematics.fk
+        to give you the expected tooltip point
+
+
+
+        Get the current pose of this arm to base frame of the arm.
 
         Parameters
         ----------
