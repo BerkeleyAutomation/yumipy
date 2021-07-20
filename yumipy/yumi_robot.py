@@ -89,6 +89,12 @@ class YuMiRobot:
 
         self.set_z('fine')
 
+    def set_tcp(self,left=None,right=None,wait_for_res=True):
+        if left is not None:
+            self.left.set_tcp(left,wait_for_res)
+        if right is not None:
+            self.right.set_tcp(right,wait_for_res)
+
     def reset(self):
         '''Calls the reset function for each instantiated arm object.
         '''

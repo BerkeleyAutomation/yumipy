@@ -5,10 +5,10 @@ MODULE SERVER_L
     !/////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     !//Robot configuration
-    TASK PERS tooldata currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],[0.001,[0,0,0.001],[1,0,0,0],0,0,0]];
+    TASK PERS tooldata currentTool:=tool0;
     TASK PERS wobjdata currentWobj:=[FALSE,TRUE,"",[[0,0,0],[1,0,0,0]],[[0,0,0],[1,0,0,0]]];
     TASK PERS speeddata currentSpeed:=[300,200,800,500];
-    PERS zonedata currentZone;
+    PERS zonedata currentZone:=fine;
     !//hi
     !//PC communication
     VAR socketdev clientSocket;
@@ -156,6 +156,8 @@ MODULE SERVER_L
     !// - Speed.
     PROC Initialize()
         currentZone:=fine;
+        currentTool:=[TRUE,[[0,0,0],[1,0,0,0]],
+                [.001,[0,0,.001],[1,0,0,0],0,0,0]];
         !Find the current external axis values so they don't move when we start
         jointsTarget:=CJointT();
         externalAxis:=jointsTarget.extax;
@@ -666,7 +668,7 @@ MODULE SERVER_L
                             MoveAbsJ bufferJoints{i},currentSpeed,z1,currentTool,\Wobj:=currentWobj;
                         ENDFOR
                         !use current zone only for last one
-                        MoveAbsJ bufferJoints{JOINT_BUFFER_POS},currentSpeed,currentZone,currentTool,\Wobj:=currentWobj;
+                        MoveAbsJ bufferJoints{JOINT_BUFFER_POS},currentSpeed,fine,currentTool,\Wobj:=currentWobj;
                     ENDIF
                     ok:=SERVER_OK;
                 ELSE

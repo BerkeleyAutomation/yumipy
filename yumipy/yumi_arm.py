@@ -172,7 +172,7 @@ class YuMiArm:
         self._last_sets = {
             'zone': None,
             'speed': None,
-            'tool': None,
+            'tcp': None,
             'gripper_force': None,
             'gripper_max_speed': None,
         }
@@ -287,6 +287,13 @@ class YuMiArm:
             If communication times out or socket error.
         '''
         req = YuMiArm._construct_req('ping')
+        return self._request(req, wait_for_res)
+
+    def set_tcp(self,transform,wait_for_res=True):
+        body = YuMiArm._get_pose_body(transform)
+        req = YuMiArm._construct_req('set_tool', body)
+
+        self._last_sets['tcp'] = transform
         return self._request(req, wait_for_res)
 
     def get_state(self, raw_res=False):
