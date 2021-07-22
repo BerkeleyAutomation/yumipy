@@ -7,6 +7,7 @@ import numpy as np
 from .yumi_arm import YuMiArm, YuMiArmFactory
 from .yumi_constants import YuMiConstants as YMC
 from time import sleep
+from autolab_core import RigidTransform
 
 class YuMiRobot:
     """ Interface to both arms of an ABB YuMi robot.
@@ -15,8 +16,7 @@ class YuMiRobot:
 
     def __init__(self, ip=YMC.IP, port_l=YMC.PORTS["left"]["server"], port_r=YMC.PORTS["right"]["server"], tcp=YMC.TCP_DEFAULT,
                     include_left=True, include_right=True, debug=YMC.DEBUG,
-                    log_pose_histories=False, log_state_histories=False,
-                    arm_type='local', ros_namespace = None, use_suction=False):
+                    arm_type='local', ros_namespace = None):
         """Initializes a YuMiRobot
 
         Parameters
@@ -88,12 +88,18 @@ class YuMiRobot:
             self._arms.append(self.right)
 
         self.set_z('fine')
+        self.left.joint_buffer_clear()
+        self.right.joint_buffer_clear()
 
     def set_tcp(self,left=None,right=None,wait_for_res=True):
         if left is not None:
             self.left.set_tcp(left,wait_for_res)
+        else:
+            self.left.set_tcp(RigidTransform())
         if right is not None:
             self.right.set_tcp(right,wait_for_res)
+        else:
+            self.right.set_tcp(RigidTransform())
 
     def reset(self):
         '''Calls the reset function for each instantiated arm object.
@@ -112,16 +118,7 @@ class YuMiRobot:
         '''
         for arm in self._arms:
             arm.stop()
-        sleep(1)
-
-    def open_grippers(self):
-        ''' Calls open_gripper function for each instantiated arm object.
-        '''
-        if len(self._arms) == 2:
-            self.left.open_gripper(wait_for_res=False)
-            self.right.open_gripper(wait_for_res=True)
-        else:
-            self._arms[0].open_gripper()
+        sleep(.2)
 
     def goto_state_sync(self, left_state, right_state):
         '''Commands both arms to go to assigned states in sync. Sync means both
@@ -205,17 +202,6 @@ class YuMiRobot:
         zone_data = YuMiRobot.get_z(name)
         for arm in self._arms:
             arm.set_zone(zone_data)
-
-    def calibrate_grippers(self):
-        '''Calibrates grippers for instantiated arms.
-
-        Raises
-        ------
-        YuMiCommException
-            If communication times out or socket error.
-        '''
-        for arm in self._arms:
-            arm.calibrate_gripper()
 
     @staticmethod
     def construct_speed_data(tra, rot):

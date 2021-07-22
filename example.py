@@ -37,6 +37,11 @@ y.set_tcp(L_TCP,R_TCP)
 lpts=[YK.L_NICE_POSE*L_TCP,L_TWIST_POSE,L_OUT_POSE,YK.L_NICE_POSE*L_TCP]
 rpts=[YK.R_NICE_POSE*R_TCP,R_TWIST_POSE,R_OUT_POSE,YK.R_NICE_POSE*R_TCP]
 lpath,rpath=yk.interpolate_cartesian_waypoints(lpts,rpts,YK.L_NICE_STATE,YK.R_NICE_STATE)
+#print("waypoints=[")
+#for l in lpath:
+#    q=np.rad2deg(YK.urdf_order_2_yumi(l))
+#    print("[%f,%f,%f,%f,%f,%f,%f],"%(q[0],q[1],q[2],q[3],q[4],q[5],q[6]))
+#print("]")
 #convert to yumi joint order and degrees
 l_waypoints=[np.rad2deg(YK.urdf_order_2_yumi(q)) for q in lpath]
 r_waypoints=[np.rad2deg(YK.urdf_order_2_yumi(q)) for q in rpath]

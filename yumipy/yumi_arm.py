@@ -1005,42 +1005,6 @@ class YuMiArm:
         else:
             return width
 
-    #removed for now because using goto_pose is dangerous -Justin
-    # def shake(self, radius, angle, num_shakes,
-    #           wait_for_res=False):
-    #     """ Shakes the gripper along an arc relative to the current pose.
-
-    #     Parameters
-    #     ----------
-    #     radius : float
-    #         radius of the shake
-    #     angle : float
-    #         angle to shape, in radians
-    #     num_shakes : int
-    #         how many times to move back and forth along the arc
-    #     wait_for_res : bool, optional
-    #         If True, will block main process until response received from RAPID server.
-    #         Defaults to True
-    #     """
-    #     # get current pose
-    #     T_cur = self.get_pose()
-
-    #     # compute shake poses
-    #     delta_T = RigidTransform(translation=[0,0,radius], from_frame='gripper', to_frame='gripper')
-    #     R_shake = RigidTransform.x_axis_rotation(angle)
-    #     delta_T_up = RigidTransform(rotation=R_shake, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
-    #     delta_T_down = RigidTransform(rotation=R_shake.T, translation=[0,0,-radius], from_frame='gripper', to_frame='gripper')
-    #     T_shake_up = T_cur.as_frames('gripper', 'world') * delta_T_up * delta_T
-    #     T_shake_down = T_cur.as_frames('gripper', 'world') * delta_T_down * delta_T
-
-    #     # move for the number of shakes
-    #     for i in range(num_shakes):
-    #         self.goto_pose(T_shake_up, wait_for_res=wait_for_res)
-    #         self.goto_pose(T_cur, wait_for_res=wait_for_res)
-    #         self.goto_pose(T_shake_down, wait_for_res=wait_for_res)
-    #         self.goto_pose(T_cur, wait_for_res=wait_for_res)
-        
-
 class YuMiArmFactory:
     """ Factory class for YuMiArm interfaces. """
 
