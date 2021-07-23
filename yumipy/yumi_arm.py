@@ -138,7 +138,7 @@ class YuMiArm:
 
     def __init__(self, name, ip=YMC.IP, port=YMC.PORTS["left"]["server"], bufsize=YMC.BUFSIZE,
                  motion_timeout=YMC.MOTION_TIMEOUT, comm_timeout=YMC.COMM_TIMEOUT, process_timeout=YMC.PROCESS_TIMEOUT,
-                 from_frame='tool', to_frame='base',
+                 from_frame='tool', to_frame='base_link',
                  debug=YMC.DEBUG,
                  log_pose_histories=False, log_state_histories=False,
                  motion_planner=None, use_suction=False):
@@ -663,7 +663,7 @@ class YuMiArm:
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
         if relative:
-            cur_pose = self.get_pose()
+            cur_pose = self.get_pose().as_frames(from_frame="gripper",to_frame="base_link")
             delta_pose = cur_pose.inverse() * pose
             tra = delta_pose.translation
             rot = np.rad2deg(delta_pose.euler_angles)
