@@ -159,9 +159,9 @@ class YuMiArm:
         self._bufsize = bufsize
         self._debug = debug
         if name=="left":
-            self._from_frame="gripper_l_base"
+            self._from_frame="l_tcp"
         elif name=="right":
-            self._from_frame="gripper_r_base"
+            self._from_frame="r_tcp"
         else:
             raise Exception("Arm name must be either 'left' or 'right'")
 
@@ -430,7 +430,7 @@ class YuMiArm:
         req = YuMiArm._construct_req('goto_joints_sync', body)
         return self._request(req, wait_for_res, timeout=self._motion_timeout)
 
-    def goto_pose(self, pose, linear=True, relative=False, wait_for_res=True):
+    def goto_pose(self, pose, linear=False, relative=True, wait_for_res=True):
         '''Commands the YuMi to goto the given pose
 
         Parameters
@@ -465,11 +465,10 @@ class YuMiArm:
             If commanded pose triggers any motion errors that are catchable by RAPID sever.
         '''
         if relative:
-            cur_pose = self.get_pose()
+            cur_pose = self.get_pose().as_frames(to_frame="base_link",from_frame=self._from_frame)
             delta_pose = cur_pose.inverse() * pose
             tra = delta_pose.translation
             rot = np.rad2deg(delta_pose.euler_angles)
-            print("delta: ",tra,rot)
             res = self.goto_pose_delta(tra, rot, wait_for_res=wait_for_res)
         else:
             body = YuMiArm._get_pose_body(pose)
