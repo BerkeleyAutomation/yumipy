@@ -10,7 +10,7 @@ requirements = [
     'matplotlib',
     'multiprocess',
     'setproctitle',
-    'ipython==5.5.0',
+    'ipython==7.16.3',
     'rospkg',
     'catkin_pkg',
     'empy',
